@@ -6,18 +6,18 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Cooklog</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/css/main/style.css}"/>
 </head>
 <body>
 <header>
-    <a th:href="@{/}">
-        <img th:src="@{/img/CookLog.png}" alt="Log" class="logo-img">
+    <a th:href="@{/static}">
+        <img th:src="@{/img/main/CookLog.png}" alt="Log" class="logo-img">
     </a>
     <section>
         <form th:action="@{/search}" method="get" class="search-form">
             <input type="text" class="search-input" placeholder="해쉬태그로 검색하실려면 #을 추가해주세요" aria-label="검색바">
             <button type="submit" class="search-button" aria-label="검색">
-                <img th:src="@{/img/magnifier.png}" alt="검색">
+                <img th:src="@{/img/main/magnifier.png}" alt="검색">
             </button>
         </form>
     </section>
@@ -64,7 +64,7 @@
                 </ul>
             </div>
         </header>
-        <img th:src="@{/img/food1.png}" alt=" user 요리 사진" />
+        <img th:src="@{/img/main/food1.png}" alt=" user 요리 사진" />
         <div class="content">
         오늘은 맛있는 스파게티를 만들어 보았습니다!
         </div>

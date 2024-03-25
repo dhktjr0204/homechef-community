@@ -229,7 +229,7 @@ main img{
 .like-section button {
     width: 35px;
     height: 35px;
-    background: no-repeat center / cover url(../img/heart.png);
+    background: no-repeat center / cover url(../../img/main/heart.png);
     border: none;
     margin-right: 10px;
 }

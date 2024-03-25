@@ -1,5 +1,6 @@
 package com.cooklog.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -8,14 +9,10 @@ import com.cooklog.model.User;
 import com.cooklog.repository.UserRepository;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
 	private UserRepository userRepository;
-
-	@Autowired
-	public UserServiceImpl(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
 
 	@Override
 	public UserDTO findUserById(Long id) {
