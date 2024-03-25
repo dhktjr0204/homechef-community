@@ -60,7 +60,7 @@ main {
 }
 
 .slider-container{
-    width: 850px;
+    width: 550px;
     overflow: hidden;
     margin:0 auto;
 }
@@ -79,8 +79,8 @@ main {
 }
 
 .image-item {
-    width: 850px;
-    height: 1100px;
+    width: 550px;
+    height: 700px;
     background-color: black;
     /*사진 업로드 시 image-item의 크기가 줄어들 지 않는다.*/
     flex: 0 0 auto;
@@ -136,7 +136,7 @@ main {
 }
 .content-input{
     font-size: 26px;
-    height: 500px;
+    height: 300px;
 }
 .text-count{
     font-size: 20px;
