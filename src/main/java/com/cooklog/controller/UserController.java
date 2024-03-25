@@ -4,13 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
 import com.cooklog.dto.UserDTO;
 import com.cooklog.service.UserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.validation.Valid;
 
@@ -20,24 +17,41 @@ public class UserController {
 
     private final UserService userService;
 
-    	@GetMapping("/user/profile")
-	public String userProfile(Model model) {
-		// 예시로 1번 ID 사용자 정보를 조회
-		UserDTO userDto = userService.findUserById(1L);
+    @GetMapping("/user/profile")
+    public String userProfile(Model model) {
+        // 예시로 1번 ID 사용자 정보를 조회
+        UserDTO userDto = userService.findUserById(1L);
 
-		if (userDto != null) {
-			model.addAttribute("user", userDto);
-		}
-		return "main/index";
-	}
+        if (userDto != null) {
+            model.addAttribute("user", userDto);
+        }
+        return "main/index";
+    }
+
+
+//    @PostMapping("/signin/signup")
+//    @ResponseBody
+//    public ResponseEntity<String> signup(@RequestBody @Valid UserDTO userDTO) {
+//        userService.join(userDTO);
+//        return ResponseEntity.ok("OK");
+//    }
+
+    @GetMapping("/signin/signup")
+    public String signupForm(@ModelAttribute("userDTO") UserDTO userDTO){
+        return "user/signup";
+    }
 
 
     @PostMapping("/signin/signup")
-    @ResponseBody
-    public ResponseEntity<String> signup(@RequestBody @Valid UserDTO userDTO) {
+    public String signup(@ModelAttribute("userDTO") UserDTO userDTO){
         userService.join(userDTO);
-        return ResponseEntity.ok("OK");
+        return "user/signin";
     }
 
+
+    @GetMapping("/signin")
+    public String signinForm(){
+        return "user/signin";
+    }
 
 }
