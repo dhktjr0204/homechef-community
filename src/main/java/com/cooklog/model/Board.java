@@ -51,9 +51,6 @@ public class Board {
 	private Set<Image> images = new HashSet<>();
 
 	@OneToMany(mappedBy = "board")
-	private Set<BoardTag> boardTags = new HashSet<>();
-
-	@OneToMany(mappedBy = "board")
 	private Set<Likes> likes = new HashSet<>();
 
 }
