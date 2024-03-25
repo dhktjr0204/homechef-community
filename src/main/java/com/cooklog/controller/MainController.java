@@ -20,6 +20,6 @@ public class MainController {
 
 		model.addAttribute("user", userDto);
 
-		return "index";
+		return "main/index";
 	}
 }

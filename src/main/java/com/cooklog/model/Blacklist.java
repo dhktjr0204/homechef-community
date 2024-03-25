@@ -18,7 +18,7 @@ public class Blacklist {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "idx")
+	@JoinColumn(name = "user_idx")
 	private User user;
 
 	@Column(name = "created_at")
