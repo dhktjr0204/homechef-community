@@ -1,0 +1,162 @@
+/* 공통 부분 시작 */
+*{
+    box-sizing: border-box;
+}
+ul, ol{
+    padding: 0;
+    list-style: none;
+}
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #ffffff;
+}
+textarea{
+    width: 100%;
+    height: auto;
+    resize: none;
+    padding: 10px 10px;
+    border-radius: 10px;
+    font-family: 'Wemakeprice-Bold';
+}
+/* 공통 부분 끝 */
+main {
+    max-width:65%;
+    padding: 50px 0;
+    margin: auto;
+}
+
+/*해시태그 부분*/
+.hash-tag-container{
+    margin-bottom: 70px;
+}
+.hash-tag-list {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.hash-tag-button{
+    padding: 5px 20px;
+    border: none;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+.hash-tag-input{
+    font-size: 27px;
+    padding: 20px 10px;
+}
+
+/* 이미지 */
+/*이전,다음*/
+
+.image-container{
+    width: 100%;
+    margin-bottom: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.slider-container{
+    width: 850px;
+    overflow: hidden;
+    margin:0 auto;
+}
+
+.image-rule-text{
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+    color: white;
+}
+
+.image-list {
+    display: flex;
+    align-items: center;
+    transition: transform 0.5s ease;
+}
+
+.image-item {
+    width: 850px;
+    height: 1100px;
+    background-color: black;
+    /*사진 업로드 시 image-item의 크기가 줄어들 지 않는다.*/
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.image-upload-button {
+    width: 100px;
+    height: 100px;
+    padding: 20px 20px;
+    border: 1px solid #c4c4c4;
+    background-color: #fff;
+    border-radius: 50%;
+    font-size: 50px;
+    text-align: center;
+    cursor: pointer;
+}
+.prev-btn, .next-btn {
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+}
+.image-preview{
+    display: flex;
+    flex-direction: column;
+}
+
+.image-index{
+    text-align: center;
+    padding-top: 10px;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.image-delete-button{
+    align-self: flex-end;
+    margin: 0 10px 10px 0;
+    font-size: 20px;
+    padding: 5px 5px;
+    color: red;
+    border: 1px solid red;
+    background-color: white;
+}
+
+/*내용부분*/
+.content-contianer{
+    margin-bottom: 30px;
+}
+.content-input{
+    font-size: 26px;
+    height: 500px;
+}
+.text-count{
+    font-size: 20px;
+}
+/*제출 버튼*/
+.button-container{
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+}
+.submit-button, .cancel-button{
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 30px;
+}
+.submit-button{
+    color: white;
+    border: 1px solid rgba(0, 0, 0, 0.26);
+    background-color: #FFAA06;
+}
+.cancel-button{
+    background-color: white;
+}

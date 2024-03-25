@@ -12,7 +12,7 @@ import com.cooklog.repository.UserRepository;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-	private UserRepository userRepository;
+	private final UserRepository userRepository;
 
 	@Override
 	public UserDTO findUserById(Long id) {
