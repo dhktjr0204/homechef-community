@@ -1,15 +1,12 @@
 package com.cooklog.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import com.cooklog.dto.UserDTO;
 import com.cooklog.service.UserService;
-
-import javax.validation.Valid;
 
 @Controller
 @RequiredArgsConstructor
@@ -37,21 +34,26 @@ public class UserController {
 //    }
 
     @GetMapping("/signin/signup")
-    public String signupForm(@ModelAttribute("userDTO") UserDTO userDTO){
+    public String signUpForm(@ModelAttribute("userDTO") UserDTO userDTO){
         return "user/signup";
     }
 
 
     @PostMapping("/signin/signup")
-    public String signup(@ModelAttribute("userDTO") UserDTO userDTO){
+    public String signUp(@ModelAttribute("userDTO") UserDTO userDTO){
         userService.join(userDTO);
         return "user/signin";
     }
 
 
     @GetMapping("/signin")
-    public String signinForm(){
+    public String signInForm(@ModelAttribute("userDTO") UserDTO userDTO){
         return "user/signin";
     }
+
+//    @PostMapping("/signIn")
+//    public String signIn(){
+//
+//    }
 
 }

@@ -75,15 +75,16 @@
 <body>
 <div class="form-container">
     <h1 class="center-layout">Cook Log</h1>
-    <form action="#" th:action="@{/login}" method="post">
+    <form action="/signin" th:action th:object="${userDTO}" method="post">
         <div class="center-layout">
-            <input type="text" id="email" name="email" class="input-container" placeholder="이메일"/>
+            <input type="text" id="email" name="email" th:field="*{email}"
+                   class="input-container" placeholder="이메일"/>
         </div>
 
         <div class="height-size-box"></div>
 
         <div class="center-layout">
-            <input type="password" id="password" name="password" class="input-container" placeholder="비밀번호"/>
+            <input type="password" id="password" th:field="*{password}" name="password" class="input-container" placeholder="비밀번호"/>
         </div>
 
         <div class="height-size-box"></div>
@@ -94,7 +95,8 @@
 
         <div class="center-layout">
             <div class="block-layout">
-                <button type="submit" id="login-button-container">
+                <button type="submit" id="login-button-container"
+                        onclick="location.href='/user/profile'">
                     <p id="login-button-text">
                         로그인
                     </p>
@@ -102,8 +104,7 @@
                 <p class="center-layout">or 계정이 없으신가요?</p>
 
                 <button id="signup-button-container"
-                        onclick="location.href='signup.html'"
-                        th:onclick="|location.href='@{/signin/signup}'|"
+                        onclick="location.href='/signin/signup'"
                         type="button">
                 <h3 id="signup-button-text">가입하기</h3>
                 </button>
