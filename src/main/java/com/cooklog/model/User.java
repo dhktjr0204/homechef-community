@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,7 +30,10 @@ public class User {
 	private String email;
 	private String password;
 	private String introduction;
-	private String role;
+
+	@Column(name = "role", nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'USER'")
+	private String role = "USER";
+
 
 	@Column(name = "profile_image")
 	private String profileImage;
@@ -40,4 +44,10 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private Set<Board> boards = new HashSet<>();
 
+	@Builder
+	public User (String nickname, String email, String password){
+		this.nickname = nickname;
+		this.email = email;
+		this.password = password;
+	}
 }
