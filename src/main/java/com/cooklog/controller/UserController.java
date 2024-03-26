@@ -12,7 +12,7 @@ import com.cooklog.service.UserService;
 @RequiredArgsConstructor
 public class UserController {
 
-	private UserService userService;
+	private final UserService userService;
 
 	@GetMapping("/user/profile")
 	public String userProfile(Model model) {
@@ -22,6 +22,6 @@ public class UserController {
 		if (userDto != null) {
 			model.addAttribute("user", userDto);
 		}
-		return "index";
+		return "main/index";
 	}
 }
