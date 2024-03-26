@@ -72,7 +72,9 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     @Override
     public void updateReadCnt(Long boardId) {
+
         boardRepository.updateReadCnt(boardId);
+
     }
 
     @Transactional
@@ -82,8 +84,5 @@ public class BoardServiceImpl implements BoardService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 boardId가 없습니다."));
         boardRepository.delete(board);
     }
-
-
-    //구현 로직
 }
 

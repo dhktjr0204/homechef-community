@@ -14,19 +14,23 @@ function wordCount(textarea) {
 
 const submitButton = document.querySelector('.submit-button');
 if (submitButton) {
+
     submitButton.addEventListener('click', () => {
         handleSubmit("/board/write", "POST")
     });
 }
 const editButton = document.querySelector('.edit-button');
 if (editButton) {
+
     const boardId = document.querySelector('.board-id').value;
+
     editButton.addEventListener('click', () => {
         handleSubmit('/board/edit/' + boardId, 'PUT');
     });
 }
 
 function handleSubmit(url, method) {
+
     const formData = new FormData(document.querySelector('.board-form'));
 
     const tags = document.querySelectorAll('.hash-tag-list .hash-tag-button');
@@ -35,6 +39,11 @@ function handleSubmit(url, method) {
     });
 
     const imageList = document.querySelectorAll('.image-item');
+
+    if(imageList.length<=1){
+        alert("한 장 이상의 사진을 첨부해주세요.");
+        return;
+    }
 
     for (let i = 1; i < imageList.length; i++) {
         const file = imageList[i].file;

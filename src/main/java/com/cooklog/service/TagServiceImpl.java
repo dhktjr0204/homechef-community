@@ -33,8 +33,9 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public List<String> getTags(String tags) {
-
+        if(tags==null){
+            return null;
+        }
         return Arrays.asList(tags.split(","));
-
     }
 }
