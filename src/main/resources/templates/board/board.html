@@ -60,7 +60,7 @@
             </aside>
             <div class="hash-tag-container">
                 <div class="hash-tag-list">
-                    <button class="hash-tag-button" th:each="tag: ${tags}" th:text="${tag}"></button>
+                    <button class="hash-tag-button" th:each="tag: ${board.tags}" th:text="${tag}"></button>
                 </div>
             </div>
         </article>

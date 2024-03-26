@@ -12,7 +12,7 @@
         <section class="hash-tag-container">
             <textarea class="hash-tag-input" rows="1" placeholder="해쉬태그를 입력해주세요! 최대 10개까지 가능합니다."></textarea>
             <div class="hash-tag-list">
-                <th:block th:each="tag: ${tags}">
+                <th:block th:each="tag: ${board.tags}">
                     <button class="hash-tag-button" th:text="${tag}"></button>
                 </th:block>
             </div>
@@ -27,7 +27,7 @@
                     </li>
                     <li class="image-preview" th:each="image, imageIndex:${images}">
                         <button class="image-delete-button">x</button>
-                        <img class="image-item" th:src="${image}" th:value="${imageNames[__${imageIndex.index}__]}" alt="첨부된 이미지">
+                        <img class="image-item" th:src="${image}" th:value="${board.imageUrls[__${imageIndex.index}__]}" alt="첨부된 이미지">
                         <span class="image-index" th:text="${imageIndex.index+1}"></span>
                     </li>
                 </ul>

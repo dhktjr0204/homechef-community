@@ -44,12 +44,12 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public List<String> fileListLoad(String fileNames) throws FileNotFoundException {
+    public List<String> fileListLoad(List<String> fileNames) throws FileNotFoundException {
         List<String> urlList = new ArrayList<>();
 
-        String[] imageNames = fileNames.split(",");
+//        String[] imageNames = fileNames.split(",");
 
-        for (String imageName : imageNames) {
+        for (String imageName : fileNames) {
 
             if (isNotExist(imageName)) {
                 throw new FileNotFoundException();

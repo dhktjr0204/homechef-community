@@ -1,6 +1,6 @@
 package com.cooklog.repository;
 
-import com.cooklog.dto.BoardDTO;
+import com.cooklog.dto.BoardDTOInterface;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.cooklog.model.Board;
@@ -25,7 +25,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "LEFT JOIN tag t ON b.id=t.board_id " +
             "WHERE b.id= :boardId " +
             "GROUP BY b.id ", nativeQuery = true)
-    Optional<BoardDTO> findByBoardIdAndUserId(@Param("boardId") Long BoardId, @Param("userId") Long userId);
+    Optional<BoardDTOInterface> findByBoardIdAndUserId(@Param("boardId") Long BoardId, @Param("userId") Long userId);
 
     @Modifying
     @Query(value = "update board set readcnt = readcnt+1 where id = :id", nativeQuery = true)

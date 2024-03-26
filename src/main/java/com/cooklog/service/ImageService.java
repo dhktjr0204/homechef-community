@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface ImageService {
 	List<String> fileListWrite(List<MultipartFile> file, Board board) throws IOException;
-    List<String> fileListLoad(String fileNames) throws FileNotFoundException;
+    List<String> fileListLoad(List<String> fileNames) throws FileNotFoundException;
     List<String> getFileNameList(String images);
     void updateFileList(Board board, List<String> originalFiles, List<MultipartFile> newFiles) throws IOException;
 }

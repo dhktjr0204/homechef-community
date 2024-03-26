@@ -1,20 +1,22 @@
 package com.cooklog.service;
 
+import com.cooklog.dto.BoardDTOInterface;
 import com.cooklog.dto.BoardDTO;
 import com.cooklog.dto.BoardUpdateRequestDTO;
 import com.cooklog.model.Board;
+import com.cooklog.model.Image;
 import com.cooklog.model.Tag;
 import com.cooklog.model.User;
 import com.cooklog.repository.TagRepository;
 import com.cooklog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cooklog.repository.BoardRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +25,27 @@ public class BoardServiceImpl implements BoardService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final TagRepository tagRepository;
+
+    @Override
+    public BoardDTO getBoard(Long boardId, Long userId) {
+        Board board = boardRepository.findById(boardId).orElseThrow();
+
+        BoardDTO boardDTO = BoardDTO.builder()
+                .id(board.getId())
+                .content(board.getContent())
+                .createdAt(board.getCreatedAt())
+                .readCount(board.getReadCount())
+                .userId(board.getUser().getIdx())
+                .userNickname(board.getUser().getNickname())
+                .profileImage(board.getUser().getProfileImage())
+                .imageUrls(board.getImages().stream().map(Image::getName).collect(Collectors.toList()))
+                .tags(board.getTags().stream().map(Tag::getName).collect(Collectors.toList()))
+                .likeCount(board.getLikes().size())
+                .isLike(board.getLikes().stream().anyMatch(like -> like.getUser().getIdx().equals(userId))).build();
+
+        return boardDTO;
+
+    }
 
     @Override
     public Board save(Long userId, String content) {
@@ -40,12 +63,12 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public BoardDTO findByBoardId(Long boardId, Long userId) {
+    public BoardDTOInterface findByBoardId(Long boardId, Long userId) {
 
-        BoardDTO boardDTO = boardRepository.findByBoardIdAndUserId(boardId, userId)
+        BoardDTOInterface boardDTOInterface = boardRepository.findByBoardIdAndUserId(boardId, userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 boardId가 없습니다."));
 
-        return boardDTO;
+        return boardDTOInterface;
     }
 
     @Transactional
@@ -60,7 +83,7 @@ public class BoardServiceImpl implements BoardService {
         tagRepository.deleteByBoard_Id(boardId);
 
         //새 태그 저장
-        if(boardDTO.getTags()!=null){
+        if (boardDTO.getTags() != null) {
             for (String tag : boardDTO.getTags()) {
                 tagRepository.save(Tag.builder().board(board).name(tag).build());
             }

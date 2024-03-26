@@ -1,7 +1,9 @@
 package com.cooklog.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.Column;
@@ -13,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -49,13 +52,19 @@ public class Board {
 	private Integer readCount;
 
 	@OneToMany(mappedBy = "board")
-	private Set<Comment> comments = new HashSet<>();
+	@OrderBy("createdAt DESC ")
+	private List<Comment> comments = new ArrayList<>();
 
 	@OneToMany(mappedBy = "board")
-	private Set<Image> images = new HashSet<>();
+	@OrderBy("order ASC")
+	private List<Image> images = new ArrayList<>();
 
 	@OneToMany(mappedBy = "board")
-	private Set<Likes> likes = new HashSet<>();
+	private List<Likes> likes = new ArrayList<>();
+
+	@OneToMany(mappedBy = "board")
+	@OrderBy("id ASC")
+	private List<Tag> tags=new ArrayList<>();
 
 	public void update(String content, LocalDateTime updatedAt){
 		this.content=content;
