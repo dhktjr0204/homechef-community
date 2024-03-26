@@ -132,7 +132,6 @@ header {
     display: block;
 }
 /* 네비 끝*/
-
 /* 메인 시작 */
 main {
     max-width:65%;
@@ -156,9 +155,15 @@ img {
     width: 100%;
     display: block;
 }
-
+.username{
+    font-size: 21px;
+    font-weight: 700;
+}
 .content {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 21px;
     padding: 10px;
+    white-space: pre-wrap;
 }
 
 .more-options {
@@ -172,9 +177,10 @@ img {
 .options-menu {
     display: none;
     position: absolute;
+    width: 100px;
     right: 0;
-    margin-right: 17%;
-    margin-top: 4%;
+    margin-right: 15%;
+    margin-top: 6%;
     background: #fff;
     border: 1px solid #ccc;
     z-index: 100;
@@ -195,13 +201,23 @@ img {
     padding: 10px;
     border: none;
     background: none;
-    text-align: left;
+    text-align: center;
     width: 100%;
 }
 
 .options-menu li button:hover {
     background-color: #f0f0f0;
 }
+
+.report-button{
+    color: red;
+    font-weight: 800;
+}
+
+.delete-board-button{
+    color: red;
+}
+
 main hr{
     border:1px solid #c4c4c4;
 }
@@ -227,13 +243,17 @@ main img{
 
 /* 좋아요 아이콘 스타일 */
 .like-section button {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     background: no-repeat center / cover url(../../img/main/heart.png);
     border: none;
     margin-right: 10px;
 }
 
+.like-count{
+    font-size: 18px;
+    font-weight: 500;
+}
 /* 유저명, 댓글, 날짜를 담는 섹션 */
 .user-comment {
     flex-grow: 1;

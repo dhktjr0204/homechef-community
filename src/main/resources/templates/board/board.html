@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Board</title>
+    <link rel="stylesheet" href="../../static/css/main/style.css" th:href="@{/css/main/style.css}"/>
+    <link rel="stylesheet" href="../../static/css/board/board.css" th:href="@{/css/board/board.css}"/>
+</head>
+<body>
+<div th:replace="~{layout/header.html::main-header}"></div>
+<main>
+    <input class="board-id" type="hidden" th:value="${board.id}"/>
+    <article>
+        <header>
+            <div class="user-info">
+                <figure class="profile-picture" aria-label="프로필">
+                    <img src="../../static/img/main/profile4.jpg" th:src="@{/img/main/profile4.jpg}" alt="프로필 사진">
+                </figure>
+                <span class="username" th:text="${board.userNickname}"></span>
+            </div>
+            <button class="more-options">⋮</button>
+            <div class="options-menu">
+                <ul>
+                    <li>
+                        <button class="report-button">신고</button>
+                    </li>
+                    <li>
+                        <button class="update-board-button" onclick="clickUpdateBoard()">수정</button>
+                    </li>
+                    <li>
+                        <button class="delete-board-button" onclick="clickDeleteBoard()">삭제</button>
+                    </li>
+                </ul>
+            </div>
+        </header>
+        <section class="content-info">
+            <p class="content-createdAt" th:text="${#temporals.format(board.createdAt,'yyyy-MM-dd HH:mm')}"></p>
+            <p class="content-read-count" th:text="'조회수: '+${board.readCount}"></p>
+        </section>
+        <section class="image-container">
+            <button class="prev-btn" onclick="prevSlide()">&#10094;</button>
+            <div class="slider-container">
+                <ul class="image-list">
+                    <li th:each="image: ${images}">
+                        <img class="image-item" src="../../static/img/main/food1.png"
+                             th:src="${image}" alt="user 요리 사진"/>
+                    </li>
+                </ul>
+            </div>
+            <button class="next-btn" onclick="nextSlide()">&#10095;</button>
+        </section>
+
+        <pre class="content" th:text="${board.content}"></pre>
+
+        <article class="content-bottom-container">
+            <aside class="like-section">
+                <button>
+                </button>
+                <span class="like-count" th:text="${board.likeCount}"></span>
+            </aside>
+            <div class="hash-tag-container">
+                <div class="hash-tag-list">
+                    <button class="hash-tag-button" th:each="tag: ${tags}" th:text="${tag}"></button>
+                </div>
+            </div>
+        </article>
+    </article>
+</main>
+<script src="../../static/js/board/board.js" th:src="@{/js/board/board.js}"></script>
+</body>
+</html>

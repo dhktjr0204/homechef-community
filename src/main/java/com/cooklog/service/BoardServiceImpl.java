@@ -1,13 +1,18 @@
 package com.cooklog.service;
 
+import com.cooklog.dto.BoardDTO;
+import com.cooklog.dto.BoardUpdateRequestDTO;
 import com.cooklog.model.Board;
+import com.cooklog.model.Tag;
 import com.cooklog.model.User;
+import com.cooklog.repository.TagRepository;
 import com.cooklog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cooklog.repository.BoardRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +22,7 @@ public class BoardServiceImpl implements BoardService {
 
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
+    private final TagRepository tagRepository;
 
     @Override
     public Board save(Long userId, String content) {
@@ -31,6 +37,50 @@ public class BoardServiceImpl implements BoardService {
                 .readCount(0).build();
 
         return boardRepository.save(board);
+    }
+
+    @Override
+    public BoardDTO findByBoardId(Long boardId, Long userId) {
+
+        BoardDTO boardDTO = boardRepository.findByBoardIdAndUserId(boardId, userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 boardId가 없습니다."));
+
+        return boardDTO;
+    }
+
+    @Transactional
+    @Override
+    public Board updateBoardAndTags(Long boardId, BoardUpdateRequestDTO boardDTO) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 boardId가 없습니다."));
+
+        board.update(boardDTO.getContent(), LocalDateTime.now());
+
+        //기존 태그 모두 삭제
+        tagRepository.deleteByBoard_Id(boardId);
+
+        //새 태그 저장
+        if(boardDTO.getTags()!=null){
+            for (String tag : boardDTO.getTags()) {
+                tagRepository.save(Tag.builder().board(board).name(tag).build());
+            }
+        }
+
+        return board;
+    }
+
+    @Transactional
+    @Override
+    public void updateReadCnt(Long boardId) {
+        boardRepository.updateReadCnt(boardId);
+    }
+
+    @Transactional
+    @Override
+    public void deleteBoard(Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 boardId가 없습니다."));
+        boardRepository.delete(board);
     }
 
 

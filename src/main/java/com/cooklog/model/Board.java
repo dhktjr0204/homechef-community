@@ -56,4 +56,9 @@ public class Board {
 
 	@OneToMany(mappedBy = "board")
 	private Set<Likes> likes = new HashSet<>();
+
+	public void update(String content, LocalDateTime updatedAt){
+		this.content=content;
+		this.updatedAt=updatedAt;
+	}
 }

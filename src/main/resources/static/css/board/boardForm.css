@@ -131,7 +131,7 @@ main {
 }
 
 /*내용부분*/
-.content-contianer{
+.content-container{
     margin-bottom: 30px;
 }
 .content-input{
@@ -147,12 +147,12 @@ main {
     justify-content: flex-end;
     gap: 20px;
 }
-.submit-button, .cancel-button{
+.submit-button, .cancel-button, .edit-button{
     padding: 15px 30px;
     border-radius: 10px;
     font-size: 30px;
 }
-.submit-button{
+.submit-button, .edit-button{
     color: white;
     border: 1px solid rgba(0, 0, 0, 0.26);
     background-color: #FFAA06;

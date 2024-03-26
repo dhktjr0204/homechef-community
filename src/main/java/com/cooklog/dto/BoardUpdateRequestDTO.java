@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -12,7 +11,9 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class BoardRequestDTO {
+public class BoardUpdateRequestDTO {
     private String content;
-    private String tags;
+    private List<String> tags;
+    //기존에 있는 이미지들
+    private List<String> imageUrls;
 }
