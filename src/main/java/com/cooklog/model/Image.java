@@ -1,13 +1,17 @@
 package com.cooklog.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Entity
 @Table(name = "image")
 public class Image {
@@ -22,7 +26,7 @@ public class Image {
 
 	private String name;
 
-	@Column(name = "order")
+	@Column(name = "`order`")
 	private Integer order;
 
 }
