@@ -85,20 +85,6 @@ public class UserServiceImpl implements UserService {
         return pattern.matcher(email).matches();
     }
 
-	// @Override
-	// public UserDTO findUserById(Long id) {
-	// 	User user = userRepository.findById(id).orElse(null);
-	// 	if (user != null) {
-	// 		UserDTO dto = new UserDTO();
-	// 		dto.setIdx(user.getIdx());
-	// 		dto.setNickname(user.getNickname());
-	// 		dto.setEmail(user.getEmail());
-	// 		dto.setProfileImage(user.getProfileImage());
-	// 		return dto;
-	// 	}
-	// 	return null;
-	// }
-
     // 모든 유저의 정보를 UserDTO 리스트로 변환하여 반환
     @Override
     public List<UserDTO> findAllUsers() {
