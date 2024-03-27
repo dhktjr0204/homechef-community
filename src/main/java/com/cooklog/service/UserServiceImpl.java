@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
 
 
     private final UserRepository userRepository;
-//    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public void join(JoinDTO joinDTO){
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
         user.setNickname(joinDTO.getNickname());
         user.setEmail(joinDTO.getEmail());
-//        user.setPassword(bCryptPasswordEncoder.encode(joinDTO.getPassword()));
+        user.setPassword(bCryptPasswordEncoder.encode(joinDTO.getPassword()));
         user.setRole(Role.USER);
 
         userRepository.save(user);
