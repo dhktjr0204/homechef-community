@@ -1,13 +1,16 @@
 package com.cooklog.service;
 
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import com.cooklog.dto.UserDTO;
 import com.cooklog.model.User;
 import com.cooklog.repository.UserRepository;
-import java.util.regex.Pattern;
 
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -82,20 +85,26 @@ public class UserServiceImpl implements UserService {
         return pattern.matcher(email).matches();
     }
 
-	@Override
-	public UserDTO findUserById(Long id) {
-		User user = userRepository.findById(id).orElse(null);
-		if (user != null) {
-			UserDTO dto = new UserDTO();
-			dto.setIdx(user.getIdx());
-			dto.setNickname(user.getNickname());
-			dto.setEmail(user.getEmail());
-			dto.setProfileImage(user.getProfileImage());
-			return dto;
-		}
-		return null;
-	}
+	// @Override
+	// public UserDTO findUserById(Long id) {
+	// 	User user = userRepository.findById(id).orElse(null);
+	// 	if (user != null) {
+	// 		UserDTO dto = new UserDTO();
+	// 		dto.setIdx(user.getIdx());
+	// 		dto.setNickname(user.getNickname());
+	// 		dto.setEmail(user.getEmail());
+	// 		dto.setProfileImage(user.getProfileImage());
+	// 		return dto;
+	// 	}
+	// 	return null;
+	// }
 
-
+    // 모든 유저의 정보를 UserDTO 리스트로 변환하여 반환
+    @Override
+    public List<UserDTO> findAllUsers() {
+        return userRepository.findAll().stream()
+            .map(user -> new UserDTO(user.getIdx(), user.getNickname(), user.getEmail(), user.getRole(), user.getReportCount(),user.isDeleted())
+            ).collect(Collectors.toList());
+    }
 }
 
