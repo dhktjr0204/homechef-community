@@ -5,6 +5,8 @@ import lombok.Setter;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
+import com.cooklog.model.Role;
+
 @Getter
 @Setter
 public class UserDTO {
@@ -17,12 +19,12 @@ public class UserDTO {
 	@NotBlank(message = "비밀번호를 입력해주세요.")
 	private String password;
 	private String introduction;
-	private String role;
+	private Role role;
 	private String profileImage;
 	private int reportCount;
 	private boolean isDeleted;
 
-	public UserDTO(Long idx, String nickname, String email, String role, int reportCount, boolean isDeleted) {
+	public UserDTO(Long idx, String nickname, String email, Role role, int reportCount, boolean isDeleted) {
 		this.idx = idx;
 		this.nickname = nickname;
 		this.email = email;
