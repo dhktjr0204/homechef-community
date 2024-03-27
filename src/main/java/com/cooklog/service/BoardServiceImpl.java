@@ -29,7 +29,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public BoardDTO getBoard(Long boardId, Long userId) {
         Board board = boardRepository.findById(boardId).orElseThrow();
-
+        //양방향 이용했을때
         BoardDTO boardDTO = BoardDTO.builder()
                 .id(board.getId())
                 .content(board.getContent())
@@ -90,6 +90,7 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return board;
+
     }
 
     @Transactional
