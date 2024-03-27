@@ -1,33 +1,25 @@
 package com.cooklog.repository;
 
-import com.cooklog.dto.BoardDTOInterface;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.cooklog.model.Board;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.util.Optional;
 
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
-    @Query(value = "select b.id , b.content, b.created_at as createdAt, b.readcnt AS readCount, u.idx AS userId, u.nickname AS userNickname, u.profile_image as profileImage, " +
-            "case when EXISTS (SELECT 1 FROM likes WHERE board_id=b.id AND user_idx= :userId) then 1 ELSE 0 end AS isLike, " +
-            "(SELECT COUNT(*) FROM likes WHERE board_id=b.id) AS likeCount, " +
-            "GROUP_CONCAT(DISTINCT i.name ORDER BY `order`) AS imageUrls, " +
-            "GROUP_CONCAT(DISTINCT t.name ORDER BY t.id) AS tags " +
-            "FROM board b " +
-            "LEFT JOIN user u ON b.user_idx=u.idx " +
-            "LEFT JOIN likes l ON b.id=l.board_id " +
-            "LEFT JOIN image i ON b.id=i.board_id " +
-            "LEFT JOIN tag t ON b.id=t.board_id " +
-            "WHERE b.id= :boardId " +
-            "GROUP BY b.id ", nativeQuery = true)
-    Optional<BoardDTOInterface> findByBoardIdAndUserId(@Param("boardId") Long BoardId, @Param("userId") Long userId);
 
     @Modifying
     @Query(value = "update board set readcnt = readcnt+1 where id = :id", nativeQuery = true)
     void updateReadCnt(Long id);
+
+    //마지막 board id가 없을 경우(첫 요청일 경우)
+    Page<Board> findAll(Pageable pageable);
+
+    //두번째 요청일 경우
+    @Query(value = "select b from Board b where b.id < :id order by b.createdAt DESC")
+    Page<Board> findAll(Long id, Pageable pageable);
+
 }

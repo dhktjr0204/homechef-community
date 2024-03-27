@@ -6,85 +6,37 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Cooklog</title>
-    <link rel="stylesheet" th:href="@{/css/main/style.css}"/>
+    <link rel="stylesheet" href="../../static/css/main/style.css" th:href="@{/css/main/style.css}"/>
+    <link rel="stylesheet" href="../../static/css/board/board.css" th:href="@{/css/board/board.css}"/>
 </head>
 <body>
-<header>
-    <a th:href="@{/static}">
-        <img th:src="@{/img/main/CookLog.png}" alt="Log" class="logo-img">
-    </a>
-    <section>
-        <form th:action="@{/search}" method="get" class="search-form">
-            <input type="text" class="search-input" placeholder="해쉬태그로 검색하실려면 #을 추가해주세요" aria-label="검색바">
-            <button type="submit" class="search-button" aria-label="검색">
-                <img th:src="@{/img/main/magnifier.png}" alt="검색">
-            </button>
-        </form>
-    </section>
-<!--    로그인 전 = 로그인 / 로그인 후 = 프로필 + 아이디 필요.-->
-    <div class="user-info">
-        <figure class="profile-picture" aria-label="프로필">
-<!--            <img th:src="@{/media/img/{filename}(filename=${user.profileImage})}" alt="프로필 사진">-->
-        </figure>
-        <span class="username" th:text="${user.nickname}"></span>
-    </div>
-</header>
+<div th:replace="~{layout/header.html::main-header}"></div>
+
 <!-- 포스트#1 -->
 <nav>
     <ul class="menu">
         <li class="menu-item">
-            <button class="write-button">+</button>
+            <a class="write-button" th:href="@{/board/write}">+</a>
         </li>
         <li class="menu-item dropdown">
-            <button class="dropbtn">최신순 <span class="divider">|</span><i class="arrow-down"></i></button>
+            <button class="dropbtn" value="latest">최신순 <span class="divider">|</span><i class="arrow-down"></i></button>
             <ul class="dropdown-content">
-                <li><a href="#">최신순</a></li>
-                <li><a href="#">인기순</a></li>
-                <li><a href="#">팔로우만 조회</a></li>
+                <li class="content-order-type" value="latest">최신순</li>
+                <li class="content-order-type" value="popularity">인기순</li>
+                <li class="content-order-type" value="follow">팔로우만 조회</li>
             </ul>
         </li>
     </ul>
 </nav>
 <main>
     <hr>
-    <article>
-        <header>
-            <div class="user-info">
-                <figure class="profile-picture" aria-label="프로필">
-<!--                    <img th:src="@{/media/img/{filename}(filename=${user.profileImage})}" alt="프로필 사진">-->
-                </figure>
-                <span class="username" th:text="${user.nickname}"></span>
-            </div>
-            <button class="more-options">⋮</button>
-            <div class="options-menu">
-                <ul>
-                    <li><button>신고</button></li>
-                    <li><button>게시글 이동</button></li>
-                    <li><button>취소</button></li>
-                </ul>
-            </div>
-        </header>
-        <img th:src="@{/img/main/food1.png}" alt=" user 요리 사진" />
-        <div class="content">
-        오늘은 맛있는 스파게티를 만들어 보았습니다!
-        </div>
-        <article class="comment-container">
-            <aside class="like-section">
-                <button>
-                </button>
-                <span>17</span>
-            </aside>
-            <section class="user-comment">
-                <p>
-                    <strong>user1</strong> 너무 맛있어 보여요!
-                </p>
-                <time datetime="2024-03-22">2024.03.22</time>
-            </section>
-            <nav>
-                <a href="#"><button class="view-comments">댓글 50개 모두 보기</button></a>
-            </nav>
-        </article>
-    </article>
+    <div th:replace="~{layout/boardPreview.html::board-preview}"></div>
 </main>
+<script th:inline="javascript">
+    let totalPage=[[${boards.totalPages}]];
+    let lastBoardId=[[${boards.content[0].id}]];
+</script>
+<script src="../../static/js/board/board.js" th:src="@{/js/board/board.js}"></script>
+<script src="../../static/js/main/infinityScroll.js" th:src="@{/js/main/infinityScroll.js}"></script>
 </body>
 </html>
