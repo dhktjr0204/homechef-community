@@ -1,10 +1,6 @@
 package com.cooklog.service;
 
-
-import com.cooklog.dto.JoinDTO;
-
 import java.util.List;
-
 
 import com.cooklog.dto.UserDTO;
 import org.springframework.stereotype.Service;
@@ -18,9 +14,8 @@ public interface UserService {
 
 	//회원 가입
 
-	void join(JoinDTO joinDTO);
-
-	void join(@Valid UserDTO userDTO);
+	public void join(JoinDTO joinDTO);
+	
 
 	//이메일 중복 검색
 	boolean emailExists(String email);

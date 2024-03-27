@@ -53,38 +53,39 @@
     </style>
 </head>
 <body>
+<div class="form-container">
+    <h1 class="center-layout">Cook Log</h1>
+    <form action="signin.html" th:action th:object="${userDTO}" method="post">
 
-<h1 class="center-layout">Cook Log</h1>
+        <div class="center-layout">
 
-<form action="/joinProc" method="post" name="joinForm">
-
-    <div class="center-layout">
-        <input type="text" name="nickname" placeholder="id" class="input-container"/>
-    </div>
-
-    <div class="center-layout">
-        <input type="email" name="email" placeholder="Email" class="input-container" />
-    </div>
-
-    <div class="center-layout">
-        <input type="password" name="password" placeholder="Password" class="input-container"/>
-    </div>
-
-
-    <div class="height-size-box"></div>
-    <hr class="line-layout">
-    <div class="height-size-box"></div>
-
-    <div class="center-layout">
-        <div class="block-layout">
-            <button type="submit" value="Join" id="signup-button-container" >
-                <p id="signup-button-text">
-                    회원가입
-                </p>
-            </button>
+            <input type="text" id="nickname"  class="input-container" th:field="*{nickname}" placeholder="아이디"/>
         </div>
-    </div>
-</form>
 
+
+        <div class="center-layout">
+            <input type="text" id="signUpEmail"  class="input-container" th:field="*{email}" placeholder="이메일"/>
+        </div>
+
+
+        <div class="center-layout">
+            <input type="password" id="signUpPassword" class="input-container" th:field="*{password}" placeholder="비밀번호"/>
+        </div>
+
+        <div class="height-size-box"></div>
+        <hr class="line-layout">
+        <div class="height-size-box"></div>
+
+        <div class="center-layout">
+            <div class="block-layout">
+                <button type="submit" id="signup-button-container">
+                    <p id="signup-button-text">
+                        회원가입
+                    </p>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
 </body>
 </html>

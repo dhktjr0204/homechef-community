@@ -1,9 +1,7 @@
 package com.cooklog.service;
 
-import com.cooklog.dto.JoinDTO;
-import com.cooklog.model.Role;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.cooklog.dto.UserDTO;
@@ -14,28 +12,30 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
   
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    // 회원가입
     @Override
-    public void join(JoinDTO joinDTO){
-        User user = new User();
+    public void join(@Valid UserDTO userDTO) {
+        if (emailExists(userDTO.getEmail())) {
+            throw new IllegalArgumentException("이미 존재하는 회원입니다: " + userDTO.getEmail());
+        }
+        //비밀번호 유효성 검사
+        isValidPassword(userDTO.getPassword());
 
-        boolean isUser = userRepository.existsByEmail(joinDTO.getEmail());
-        if (isUser) {
-            return;
+        //이메일 유효성 검사
+        if (!isValidEmail(userDTO.getEmail())) {
+            throw new IllegalArgumentException("유효하지 않은 이메일 주소입니다: " + userDTO.getEmail());
         }
 
-        user.setNickname(joinDTO.getNickname());
-        user.setEmail(joinDTO.getEmail());
-        user.setPassword(bCryptPasswordEncoder.encode(joinDTO.getPassword()));
-        user.setRole(Role.USER);
-
+        User user = new User(userDTO.getNickname(), userDTO.getEmail(), userDTO.getPassword());
         userRepository.save(user);
     }
 
@@ -102,6 +102,25 @@ public class UserServiceImpl implements UserService {
 //        // 주어진 이메일이 패턴과 일치하는지 검사하여 반환
 //        return pattern.matcher(email).matches();
 //    }
+
+	
+    // 이메일 중복 검사
+    public boolean emailExists(String email) {
+        return userRepository.findByEmail(email).isPresent();
+    }
+
+    // id로 회원 찾기
+    @Override
+    public UserDTO findUserById(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user != null) {
+            UserDTO dto = new UserDTO();
+            dto.setNickname(user.getNickname());
+            dto.setEmail(user.getEmail());
+            return dto;
+        }
+        return null;
+    }
 
     // 모든 유저의 정보를 UserDTO 리스트로 변환하여 반환
     @Override
