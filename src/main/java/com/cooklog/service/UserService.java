@@ -13,7 +13,9 @@ import javax.validation.Valid;
 public interface UserService {
 
 	//회원 가입
-	void join(@Valid UserDTO userDTO);
+
+	public void join(JoinDTO joinDTO);
+	
 
 	//이메일 중복 검색
 	boolean emailExists(String email);
@@ -25,4 +27,5 @@ public interface UserService {
 
 	// 모든 유저의 정보를 가져오는 메소드
 	List<UserDTO> findAllUsers();
+
 }
