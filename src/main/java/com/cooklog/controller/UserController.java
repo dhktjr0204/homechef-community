@@ -1,5 +1,6 @@
 package com.cooklog.controller;
 
+import com.cooklog.dto.JoinDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,35 +26,26 @@ public class UserController {
         return "main/index";
     }
 
-
-//    @PostMapping("/signin/signup")
-//    @ResponseBody
-//    public ResponseEntity<String> signup(@RequestBody @Valid UserDTO userDTO) {
-//        userService.join(userDTO);
-//        return ResponseEntity.ok("OK");
-//    }
-
-    @GetMapping("/signin/signup")
-    public String signUpForm(@ModelAttribute("userDTO") UserDTO userDTO){
-        return "user/signup";
+    //로그인
+    @GetMapping("/login")
+    public String loginP() {
+        return "user/login";
     }
 
-
-    @PostMapping("/signin/signup")
-    public String signUp(@ModelAttribute("userDTO") UserDTO userDTO){
-        userService.join(userDTO);
-        return "user/signin";
+    //회원가입
+    @GetMapping("/join")
+    public String joinP() {
+        return "user/join";
+    }
+    @PostMapping("/joinProc")
+    public String joinProcess(JoinDTO joinDTO) {
+        userService.join(joinDTO);
+        return "redirect:/login";
     }
 
-
-    @GetMapping("/signin")
-    public String signInForm(@ModelAttribute("userDTO") UserDTO userDTO){
-        return "user/signin";
+    @GetMapping("/")
+    public String mainP() {
+        return "user/main";
     }
-
-//    @PostMapping("/signIn")
-//    public String signIn(){
-//
-//    }
 
 }

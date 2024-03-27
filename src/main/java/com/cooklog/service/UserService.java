@@ -13,4 +13,5 @@ public interface UserService {
 
 	//회원 가입
 	public void join(JoinDTO joinDTO);
+	UserDTO findUserById(Long id);
 }
