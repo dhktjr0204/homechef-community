@@ -1,14 +1,43 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>CookLog 관리자 페이지</title>
-    <link rel="stylesheet" th:href="@{/css/manager/manager.css}"/>
+    <title>CookLog 관리자 페이지 - 신고 유저 관리</title>
+    <link rel="stylesheet" th:href="@{/css/manager/board.css}"/>
 </head>
 <body>
-2re
+<div class="container">
+    <div class="header">
+        <a th:href="@{/manager/main}">
+            <img th:src="@{/img/main/CookLog.png}" alt="Log" class="logo-img">
+        </a>
+        <h2>신고 유저 관리</h2>
+    </div>
+    <div class="search-container">
+        <div class="selectBox">
+            <input type="search" class="search-box" placeholder="조회할 닉네임을 입력하세요.">
+        </div>
+        <table class="content-table">
+            <thead>
+            <tr>
+                <th>신고된 유저</th>
+                <th>내용</th>
+                <th>신고된 횟수</th>
+                <th>블랙 관리</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>user1</td>
+                <td>첫번째 내용</td>
+                <td>2</td>
+                <td><button class="delete-btn">등록</button> <button class="delete-btn">해제</button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>

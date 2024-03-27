@@ -36,6 +36,9 @@ public class User {
 	@Column(name = "profile_image")
 	private String profileImage;
 
+	@Column(name = "report_count")
+	private int reportCount;
+
 	@Column(name = "is_deleted", columnDefinition = "TINYINT(4)")
 	private boolean isDeleted;
 

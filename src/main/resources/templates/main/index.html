@@ -24,7 +24,7 @@
 <!--    로그인 전 = 로그인 / 로그인 후 = 프로필 + 아이디 필요.-->
     <div class="user-info">
         <figure class="profile-picture" aria-label="프로필">
-            <img th:src="@{/media/img/{filename}(filename=${user.profileImage})}" alt="프로필 사진">
+<!--            <img th:src="@{/media/img/{filename}(filename=${user.profileImage})}" alt="프로필 사진">-->
         </figure>
         <span class="username" th:text="${user.nickname}"></span>
     </div>
@@ -51,7 +51,7 @@
         <header>
             <div class="user-info">
                 <figure class="profile-picture" aria-label="프로필">
-                    <img th:src="@{/media/img/{filename}(filename=${user.profileImage})}" alt="프로필 사진">
+<!--                    <img th:src="@{/media/img/{filename}(filename=${user.profileImage})}" alt="프로필 사진">-->
                 </figure>
                 <span class="username" th:text="${user.nickname}"></span>
             </div>

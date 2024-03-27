@@ -29,4 +29,8 @@ public class Image {
 	@Column(name = "`order`")
 	private Integer order;
 
+	public void update(int order){
+		this.order=order;
+	}
+
 }

@@ -16,9 +16,26 @@ public class UserDTO {
 	private String email;
 	@NotBlank(message = "비밀번호를 입력해주세요.")
 	private String password;
+	private String introduction;
+	private String role;
+	private String profileImage;
+	private int reportCount;
+	private boolean isDeleted;
 
+	public UserDTO(Long idx, String nickname, String email, String role, int reportCount, boolean isDeleted) {
+		this.idx = idx;
+		this.nickname = nickname;
+		this.email = email;
+		this.role = role;
+		this.reportCount = reportCount;
+		this.isDeleted = isDeleted;
+	}
 
-//	private String introduction; //마이페이지
+	public UserDTO() {
+
+	}
+
+	//	private String introduction; //마이페이지
 //	private String role; //마이페이지
 //	private String profileImage; //마이페이지
 //	private Boolean isDeleted; //마이페이지
