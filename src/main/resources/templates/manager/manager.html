@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CookLog 관리자 페이지</title>
+    <link rel="stylesheet" th:href="@{/css/manager/manager.css}"/>
+</head>
+<body>
+<header>
+    <img th:src="@{/img/main/CookLog.png}" alt="Log" class="logo-img">
+    <div class="user-info">
+        <figure class="profile-picture" aria-label="프로필">
+            <img th:src="@{/img/main/{filename}(filename=${user.profileImage})}" alt="프로필 사진">
+            <span class="username" th:text="${user.nickname}"></span>
+        </figure>
+    </div>
+</header>
+    <div class="button-group">
+        <a href="/manager/board" class="button">게시글 관리</a>
+        <a href="/manager/comment" class="button">댓글 관리</a>
+        <a href="/manager/report" class="button">신고 관리</a>
+    </div>
+</body>
+</html>

@@ -14,6 +14,7 @@ import com.cooklog.repository.UserRepository;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+  
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -98,6 +99,21 @@ public class UserServiceImpl implements UserService {
 //        // 주어진 이메일이 패턴과 일치하는지 검사하여 반환
 //        return pattern.matcher(email).matches();
 //    }
+
+	@Override
+	public UserDTO findUserById(Long id) {
+		User user = userRepository.findById(id).orElse(null);
+		if (user != null) {
+			UserDTO dto = new UserDTO();
+			dto.setIdx(user.getIdx());
+			dto.setNickname(user.getNickname());
+			dto.setEmail(user.getEmail());
+			dto.setProfileImage(user.getProfileImage());
+			return dto;
+		}
+		return null;
+	}
+
 
 }
 

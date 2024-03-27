@@ -1,6 +1,5 @@
 package com.cooklog.controller;
 
-import com.cooklog.dto.JoinDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,60 +14,42 @@ public class UserController {
 
     private final UserService userService;
 
-    //로그인
-    @GetMapping("/login")
-    public String loginP() {
-        return "user/login";
-    }
+    @GetMapping("/user/profile")
+    public String userProfile(Model model) {
+        // 예시로 1번 ID 사용자 정보를 조회
+        UserDTO userDto = userService.findUserById(1L);
 
-    //회원가입
-    @GetMapping("/join")
-    public String joinP() {
-        return "user/join";
-    }
-    @PostMapping("/joinProc")
-    public String joinProcess(JoinDTO joinDTO) {
-        userService.join(joinDTO);
-        return "redirect:/login";
-    }
-
-    @GetMapping("/")
-    public String mainP() {
-        return "user/main";
+        if (userDto != null) {
+            model.addAttribute("user", userDto);
+        }
+        return "main/index";
     }
 
 
-
-
-
-//    @GetMapping("/user/profile")
-//    public String userProfile(Model model) {
-//        // 예시로 1번 ID 사용자 정보를 조회
-//        UserDTO userDto = userService.findUserById(1L);
-//
-//        if (userDto != null) {
-//            model.addAttribute("user", userDto);
-//        }
-//        return "main/index";
-//    }
-//
-//    @GetMapping("/signin/signup")
-//    public String signUpForm(@ModelAttribute("userDTO") UserDTO userDTO){
-//        return "user/signup";
-//    }
-//
-//
 //    @PostMapping("/signin/signup")
-//    public String signUp(@ModelAttribute("userDTO") UserDTO userDTO){
+//    @ResponseBody
+//    public ResponseEntity<String> signup(@RequestBody @Valid UserDTO userDTO) {
 //        userService.join(userDTO);
-//        return "user/signin";
+//        return ResponseEntity.ok("OK");
 //    }
-//
-//
-//    @GetMapping("/signin")
-//    public String signInForm(@ModelAttribute("userDTO") UserDTO userDTO){
-//        return "user/signin";
-//    }
+
+    @GetMapping("/signin/signup")
+    public String signUpForm(@ModelAttribute("userDTO") UserDTO userDTO){
+        return "user/signup";
+    }
+
+
+    @PostMapping("/signin/signup")
+    public String signUp(@ModelAttribute("userDTO") UserDTO userDTO){
+        userService.join(userDTO);
+        return "user/signin";
+    }
+
+
+    @GetMapping("/signin")
+    public String signInForm(@ModelAttribute("userDTO") UserDTO userDTO){
+        return "user/signin";
+    }
 
 //    @PostMapping("/signIn")
 //    public String signIn(){

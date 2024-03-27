@@ -1,5 +1,7 @@
 package com.cooklog.service;
 
+import com.cooklog.model.Board;
+
 public interface BoardService {
-	//impl에서 만들어야할 메소드 정의
+	Board save(Long userId, String content);
 }
