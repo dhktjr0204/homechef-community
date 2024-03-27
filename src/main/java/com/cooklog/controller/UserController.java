@@ -46,10 +46,10 @@ public class UserController {
         return "redirect:/login";
     }
 
-    @GetMapping("/")
-    public String mainP() {
-        return "user/main";
-    }
+    // @GetMapping("/")
+    // public String mainP() {
+    //     return "user/main";
+    // }
 
 
 }
