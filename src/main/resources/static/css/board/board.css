@@ -1,0 +1,85 @@
+/*공통역역*/
+main{
+    margin-top: 10px;
+}
+ul, ol{
+    padding: 0;
+    list-style: none;
+}
+
+/*생성시간, 조회수*/
+.content-info{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 51px;
+}
+.content-createdAt{
+    color: #c4c4c4;
+}
+
+
+/*이미지 영역*/
+.image-container{
+    width: 100%;
+    margin-bottom: 50px;
+    display: flex;
+    align-items: center;
+}
+
+.slider-container{
+    width: 550px;
+    overflow: hidden;
+    margin:0 auto;
+}
+
+.image-list {
+    display: flex;
+    align-items: center;
+    transition: transform 0.5s ease;
+}
+
+.image-item {
+    width: 550px;
+    height: 700px;
+    background-color: black;
+    /*사진 업로드 시 image-item의 크기가 줄어들 지 않는다.*/
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.prev-btn, .next-btn {
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+}
+.image-index{
+    text-align: center;
+    padding-top: 10px;
+    font-weight: 700;
+    font-size: 20px;
+}
+
+/*좋아요 해시태그 영역*/
+.hash-tag-container{
+    margin-bottom: 70px;
+}
+.hash-tag-list {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.hash-tag-button{
+    padding: 5px 20px;
+    border: none;
+    font-size: 20px;
+    border-radius: 10px;
+}
+.like-section{
+    margin: 25px 0;
+}

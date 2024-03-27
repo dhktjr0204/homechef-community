@@ -18,7 +18,7 @@
             justify-content: center;
         }
 
-        .input-container {
+        .input-container{
             padding-left: 20px;
             width: 300px;
             height: 50px;
@@ -26,16 +26,16 @@
             border: 1px solid #ccc; /* 테두리 스타일 및 색상 설정 */
         }
 
-        .line-layout {
+        .line-layout{
 
             width: 400px;
         }
 
-        .height-size-box {
+        .height-size-box{
             height: 20px;
         }
 
-        #login-button-container {
+        #login-button-container{
             width: 300px;
             height: 50px;
             background-color: orange;
@@ -43,11 +43,11 @@
             border: 1px solid #ccc; /* 테두리 스타일 및 색상 설정 */
         }
 
-        #login-button-text {
-            color: white;
+        #login-button-text{
+            color:white;
         }
 
-        .block-layout {
+        .block-layout{
             display: block;
         }
 
@@ -67,40 +67,46 @@
             background-color: #f0f0f0; /* 마우스가 버튼 위에 있을 때 배경색 변경 */
         }
 
-        #signup-button-text {
-            color: orange;
+        #signup-button-text{
+            color:orange;
         }
     </style>
 </head>
 <body>
 <div class="form-container">
     <h1 class="center-layout">Cook Log</h1>
-    <form action="/loginProc" method="post" name="loginForm">
-
+    <form action="/signin" th:action th:object="${userDTO}" method="post">
         <div class="center-layout">
-            <input type="email" id="email" name="email" class="input-container" placeholder="email"/>
+            <input type="text" id="email" name="email" th:field="*{email}"
+                   class="input-container" placeholder="이메일"/>
         </div>
 
         <div class="height-size-box"></div>
+
         <div class="center-layout">
-            <input type="password" id="password" name="password" class="input-container" placeholder="PassWord"/>
+            <input type="password" id="password" th:field="*{password}" name="password" class="input-container" placeholder="비밀번호"/>
         </div>
 
         <div class="height-size-box"></div>
+
+
         <hr class="line-layout">
         <div class="height-size-box"></div>
+
         <div class="center-layout">
             <div class="block-layout">
-
-                <button type="submit" id="login-button-container" value="login"/>
-                <p id="login-button-text">
-                    로그인
-                </p>
+                <button type="submit" id="login-button-container"
+                        onclick="location.href='/user/profile'">
+                    <p id="login-button-text">
+                        로그인
+                    </p>
                 </button>
                 <p class="center-layout">or 계정이 없으신가요?</p>
 
-                <button id="signup-button-container">
-                    <h3 id="signup-button-text">가입하기</h3>
+                <button id="signup-button-container"
+                        onclick="location.href='/signin/signup'"
+                        type="button">
+                <h3 id="signup-button-text">가입하기</h3>
                 </button>
             </div>
         </div>

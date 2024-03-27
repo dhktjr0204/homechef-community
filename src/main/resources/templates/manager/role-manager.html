@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CookLog 관리자 페이지 - 등급 관리</title>
+    <link rel="stylesheet" th:href="@{/css/manager/board.css}"/>
+</head>
+<body>
+<div class="container">
+    <div class="search-container">
+        <form th:action="@{/role-manager/update}" th:object="${user}" method="post">
+            <table class="content-table">
+                <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>닉네임</th>
+                    <th>등급</th>
+                    <th>관리</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td th:text="${user.idx}"></td>
+                    <td th:text="${user.nickname}"></td>
+                    <td>
+                        <select th:field="*{role}">
+                            <option value="1" th:selected="*{role} == 'USER'">미식 초보</option>
+                            <option value="2" th:selected="*{role} == 'ADMIN'">요리 연습생</option>
+                            <option value="3" th:selected="*{role} == 'ADMIN'">요리사 지망생</option>
+                            <option value="4" th:selected="*{role} == 'ADMIN'">요리 전문가</option>
+                            <option value="5" th:selected="*{role} == 'ADMIN'">미식 마스터</option>
+                            <!-- 기타 등급을 여기에 추가 -->
+                        </select>
+                    </td>
+                    <td>
+                        <button type="submit">변경 저장</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+</div>
+</body>
+</html>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
@@ -11,7 +11,9 @@
 <body>
 <div class="container">
     <div class="header">
-        <img th:src="@{/img/main/CookLog.png}" alt="Log" class="logo-img">
+        <a th:href="@{/manager/main}">
+            <img th:src="@{/img/main/CookLog.png}" alt="Log" class="logo-img">
+        </a>
         <h2>게시글 관리</h2>
     </div>
     <div class="search-container">
@@ -21,7 +23,7 @@
                 <option value="title">제목</option>
                 <option value="writer">작성자</option>
             </select>
-        <input type="search" class="search-box" placeholder="검색">
+        <input type="search" class="search-box" placeholder="검색어를 입력해주세요.">
     </div>
     <table class="content-table">
         <thead>

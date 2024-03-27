@@ -2,6 +2,7 @@ package com.cooklog.controller;
 
 import com.cooklog.dto.JoinDTO;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,7 +14,9 @@ import com.cooklog.service.UserService;
 @RequiredArgsConstructor
 public class UserController {
 
+
     private final UserService userService;
+
 
     @GetMapping("/user/profile")
     public String userProfile(Model model) {
@@ -47,5 +50,6 @@ public class UserController {
     public String mainP() {
         return "user/main";
     }
+
 
 }

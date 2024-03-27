@@ -1,29 +1,17 @@
-const input = document.querySelector('.hash-tag-input');
-const list = document.querySelector('.hash-tag-list');
+let slideIndex;
 
-input.addEventListener('keyup', (e) => {
-    if (e.keyCode === 13 || e.keyCode == 32) {
-        const tag = e.target.value.trim();
-        if (tag) {
-            // 10개 이상의 해시태그 추가 제한
-            const list = document.querySelector('.hash-tag-list');
-            if (list.children.length >= 10) {
-                alert('최대 10개까지 해시태그를 추가할 수 있습니다.');
-                return;
-            }
-
-            //해시태그 생성 코드
-            const button = document.createElement('button');
-            button.classList.add('hash-tag-button');
-            button.textContent = `${tag}`;
-            button.addEventListener('click', () => {
-                button.remove();
-            });
-            list.appendChild(button);
-            e.target.value = '';
-        }
-    }
+//slide 사용하는 곳이 여러 곳이기 때문에 새로고침될 때마다 0으로 초기화 필요하다.
+document.addEventListener('DOMContentLoaded', function (){
+    slideIndex=0;
 });
+
+// 이미 생성된 이미지 파일이 있는 경우, clickDeleteImage를 적용해준다.(수정폼에 경우)
+const deleteButtons = document.querySelectorAll('.image-delete-button');
+deleteButtons.forEach(deleteButtons=>{
+    const li=deleteButtons.parentNode;
+    clickDeleteImage(deleteButtons, li);
+})
+
 
 function openFileUploader() {
     const input = document.createElement('input');
@@ -94,12 +82,12 @@ function createImageItem(imageList, existingImageCount, i, file){
 
     imageList.appendChild(li);
 
-    clickDeleteImage(deleteButton, file, li);
+    clickDeleteImage(deleteButton, li);
 
     return imageItem;
 }
 
-function clickDeleteImage(deleteButton, files, li) {
+function clickDeleteImage(deleteButton, li) {
     const imageList = document.querySelector('.image-list');
 
     deleteButton.addEventListener('click', function () {
@@ -107,7 +95,6 @@ function clickDeleteImage(deleteButton, files, li) {
         if (confirmation) {
             // 삭제 버튼을 클릭했을 때 해당 이미지와 파일을 삭제
             imageList.removeChild(li);
-            delete files;
 
             // 삭제된 이미지 이후의 이미지들의 인덱스를 업데이트
             const imageItems = imageList.querySelectorAll('.image-preview');
@@ -119,9 +106,6 @@ function clickDeleteImage(deleteButton, files, li) {
         prevSlide();
     });
 }
-
-
-let slideIndex = 0;
 
 function prevSlide() {
     const imageList = document.querySelector('.image-list');
