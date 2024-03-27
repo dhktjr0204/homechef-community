@@ -3,13 +3,7 @@ package com.cooklog.model;
 import java.util.HashSet;
 import java.util.Set;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,14 +19,18 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idx;
-
+	@Column
 	private String nickname;
+	@Column
 	private String email;
+	@Column
 	private String password;
+	@Column
 	private String introduction;
 
-	@Column(name = "role", nullable = false, columnDefinition = "VARCHAR(255) DEFAULT 'USER'")
-	private String role = "USER";
+	@Column(name = "role")
+	@Enumerated(EnumType.STRING)
+	private Role role;
 
 
 	@Column(name = "profile_image")
@@ -44,10 +42,10 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private Set<Board> boards = new HashSet<>();
 
-	@Builder
-	public User (String nickname, String email, String password){
-		this.nickname = nickname;
-		this.email = email;
-		this.password = password;
-	}
+//	@Builder
+//	public User (String nickname, String email, String password){
+//		this.nickname = nickname;
+//		this.email = email;
+//		this.password = password;
+//	}
 }
