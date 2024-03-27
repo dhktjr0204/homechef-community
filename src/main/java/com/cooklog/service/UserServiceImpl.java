@@ -82,19 +82,19 @@ public class UserServiceImpl implements UserService {
         return pattern.matcher(email).matches();
     }
 
-	@Override
-	public UserDTO findUserById(Long id) {
-		User user = userRepository.findById(id).orElse(null);
-		if (user != null) {
-			UserDTO dto = new UserDTO();
-			dto.setIdx(user.getIdx());
-			dto.setNickname(user.getNickname());
-			dto.setEmail(user.getEmail());
-			dto.setProfileImage(user.getProfileImage());
-			return dto;
-		}
-		return null;
-	}
+//	@Override
+//	public UserDTO findUserById(Long id) {
+//		User user = userRepository.findById(id).orElse(null);
+//		if (user != null) {
+//			UserDTO dto = new UserDTO();
+//			dto.setIdx(user.getIdx());
+//			dto.setNickname(user.getNickname());
+//			dto.setEmail(user.getEmail());
+//			dto.setProfileImage(user.getProfileImage());
+//			return dto;
+//		}
+//		return null;
+//	}
 
 
 }

@@ -1,0 +1,20 @@
+<header th:fragment="main-header" class="main-header">
+    <a th:href="@{/static}">
+        <img th:src="@{/img/main/CookLog.png}" alt="Log" class="logo-img">
+    </a>
+    <section>
+        <form th:action="@{/search}" method="get" class="search-form">
+            <input type="text" class="search-input" placeholder="해쉬태그로 검색하실려면 #을 추가해주세요" aria-label="검색바">
+            <button type="submit" class="search-button" aria-label="검색">
+                <img th:src="@{/img/main/magnifier.png}" alt="검색">
+            </button>
+        </form>
+    </section>
+    <!--    로그인 전 = 로그인 / 로그인 후 = 프로필 + 아이디 필요.-->
+    <div class="user-info">
+        <figure class="profile-picture" aria-label="프로필">
+            <img  src="../../static/img/main/profile4.jpg" alt="프로필 사진">
+        </figure>
+        <span class="username">dhktjr0204</span>
+    </div>
+</header>

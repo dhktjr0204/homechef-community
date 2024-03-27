@@ -2,13 +2,12 @@ package com.cooklog.service;
 
 import com.cooklog.model.Board;
 import com.cooklog.model.Tag;
+import com.cooklog.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cooklog.repository.TagRepository;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -18,19 +17,25 @@ public class TagServiceImpl implements TagService {
     private final TagRepository tagRepository;
 
     @Override
-    public List<Tag> save(String tags, Board board) {
+    public List<Tag> save(List<String> tags, Board board) {
         List<Tag> tagList=new ArrayList<>();
 
-        if (!tags.isEmpty()) {
-            String[] requestTags = tags.split(",");
-            for (String tag : requestTags) {
+        if(tags!=null){
+            for (String tag : tags) {
                 Tag saveTag = tagRepository.save(Tag.builder().board(board).name(tag).build());
                 tagList.add(saveTag);
             }
         }
 
         return tagList;
+
     }
 
-    //구현 로직
+    @Override
+    public List<String> getTags(String tags) {
+        if(tags==null){
+            return null;
+        }
+        return Arrays.asList(tags.split(","));
+    }
 }
