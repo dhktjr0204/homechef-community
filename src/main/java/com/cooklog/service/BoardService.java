@@ -1,5 +1,7 @@
 package com.cooklog.service;
 
+import java.util.List;
+
 import com.cooklog.dto.BoardDTOInterface;
 import com.cooklog.dto.BoardDTO;
 import com.cooklog.dto.BoardUpdateRequestDTO;
@@ -12,4 +14,5 @@ public interface BoardService {
 	void updateReadCnt(Long boardId);
 	void deleteBoard(Long boardId);
 	BoardDTO getBoard(Long boardId, Long userId);
+	List<BoardDTO> findAllBoards();
 }

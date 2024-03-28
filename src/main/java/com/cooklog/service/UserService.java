@@ -4,10 +4,10 @@ import java.util.List;
 
 import com.cooklog.dto.JoinDTO;
 import com.cooklog.dto.UserDTO;
+import com.cooklog.model.Role;
+
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
-
-import javax.validation.Valid;
 
 @Service
 @Validated
@@ -29,4 +29,6 @@ public interface UserService {
 	// 모든 유저의 정보를 가져오는 메소드
 	List<UserDTO> findAllUsers();
 
+	// 사용자의 역할을 업데이트하는 메소드 추가
+	void updateUserRole(Long userId, Role role);
 }

@@ -6,12 +6,18 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>CookLog 관리자 페이지 - 등급 관리</title>
-    <link rel="stylesheet" th:href="@{/css/manager/board.css}"/>
+    <link rel="stylesheet" th:href="@{/css/manager/role-manager.css}"/>
 </head>
 <body>
+<header>
+    <a th:href="@{/manager/main}">
+        <img th:src="@{/img/main/CookLog.png}" alt="Logo" class="logo-img">
+    </a>
+    <h2>유저 등급 관리</h2>
+</header>
 <div class="container">
     <div class="search-container">
-        <form th:action="@{/role-manager/update}" th:object="${user}" method="post">
+        <form th:action="@{/manager/role-manager/update}" th:object="${user}" method="post">
             <table class="content-table">
                 <thead>
                 <tr>
@@ -24,15 +30,13 @@
                 <tbody>
                 <tr>
                     <td th:text="${user.idx}"></td>
+                    <input type="hidden" name="userIdx" th:value="${user.idx}" />
                     <td th:text="${user.nickname}"></td>
                     <td>
                         <select th:field="*{role}">
-                            <option value="1" th:selected="*{role} == 'USER'">미식 초보</option>
-                            <option value="2" th:selected="*{role} == 'ADMIN'">요리 연습생</option>
-                            <option value="3" th:selected="*{role} == 'ADMIN'">요리사 지망생</option>
-                            <option value="4" th:selected="*{role} == 'ADMIN'">요리 전문가</option>
-                            <option value="5" th:selected="*{role} == 'ADMIN'">미식 마스터</option>
-                            <!-- 기타 등급을 여기에 추가 -->
+                            <option value="USER" th:selected="${role == '미식 초보'}">미식 초보</option>
+                            <option value="USER2" th:selected="${role == '요리 연습생'}">요리 연습생</option>
+                            <option value="USER3" th:selected="${role == '요리 전문가'}">요리 전문가</option>
                         </select>
                     </td>
                     <td>
@@ -44,5 +48,26 @@
         </form>
     </div>
 </div>
+<script>
+    document.querySelector('form').addEventListener('submit', function(e) {
+        e.preventDefault(); // 폼의 기본 제출 막기
+
+        // 폼 데이터 수집
+        var formData = new FormData(this);
+
+        // AJAX 요청 설정
+        fetch('/manager/role-manager/update', {
+            method: 'POST',
+            body: formData
+        }).then(response => {
+            if(response.ok) {
+                window.opener.location.reload(); // 부모 창 새로고침
+                window.close(); // 현재 창 닫기
+            } else {
+                alert('업데이트 실패');
+            }
+        }).catch(error => console.error('Error:', error));
+    });
+</script>
 </body>
 </html>

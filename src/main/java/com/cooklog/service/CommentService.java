@@ -1,5 +1,11 @@
 package com.cooklog.service;
 
+import java.util.List;
+
+import com.cooklog.dto.CommentDTO;
+
 public interface CommentService {
-	//impl에서 만들어야할 메소드 정의
+	List<CommentDTO> findAllComments();
+	void deleteComment(Long commentId);
+	// List<CommentDTO> findCommentsByUserId(Long userId);
 }

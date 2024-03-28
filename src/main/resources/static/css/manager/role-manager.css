@@ -1,31 +1,23 @@
-body, html {
-    height: 100%;
-    font-family: Arial, sans-serif;
+body{
+    width: 450px;
+    height: 200px;
 }
-
-.container {
-    width: 80%;
-    margin: 0 auto;
-    padding-top: 10%;
-}
-.header{
+header{
     display: flex;
     align-items: baseline;
     font-size: 30px;
     justify-content: space-between;
 }
 header img{
-    width:240px
+    width:100px;
+    height: auto;
 }
-
-.header h2 {
-    margin-bottom: 3%;
+header h2{
+    font-size: 20px;
 }
-
 .search-container {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
 }
 
 .select {
@@ -58,7 +50,7 @@ header img{
     padding: 12px;
     border-bottom: 1px solid #ddd;
 }
-.update-btn, .update-btn a, .block-btn, .block-btn a {
+.update-btn, .update-btn a{
     padding: 5px 10px;
     background-color: red;
     color: white;
@@ -68,18 +60,6 @@ header img{
     text-decoration: none;
 }
 
-.update-btn:hover .block-btn:hover {
-    background-color: darkred;
-}
-.delete-btn {
-    padding: 5px 10px;
-    background-color: red;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.delete-btn:hover {
+.update-btn:hover {
     background-color: darkred;
 }

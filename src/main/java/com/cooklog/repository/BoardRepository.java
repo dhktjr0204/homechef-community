@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -30,4 +31,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Modifying
     @Query(value = "update board set readcnt = readcnt+1 where id = :id", nativeQuery = true)
     void updateReadCnt(Long id);
+
+    List<Board> findByUserIdx(Long userId);
 }

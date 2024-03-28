@@ -2,13 +2,27 @@ package com.cooklog.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.cooklog.dto.BoardDTO;
+import com.cooklog.dto.CommentDTO;
+import com.cooklog.dto.ReportedContentDTO;
 import com.cooklog.dto.UserDTO;
+import com.cooklog.model.Role;
+import com.cooklog.service.BlacklistService;
+import com.cooklog.service.BoardService;
+import com.cooklog.service.CommentService;
+import com.cooklog.service.ReportService;
 import com.cooklog.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -19,6 +33,10 @@ import lombok.RequiredArgsConstructor;
 public class ManagerController {
 
 	private final UserService userService;
+	private final BoardService boardService;
+	private final CommentService commentService;
+	private final ReportService reportService;
+	private final BlacklistService blacklistService;
 
 	@GetMapping("/main")
 	public String userProfile(Model model) {
@@ -31,24 +49,75 @@ public class ManagerController {
 		return "manager/manager";
 	}
 
-	@GetMapping("/board")
-	public String board() {
-		return "manager/board-manager";
-	}
-
-	@GetMapping("/comment")
-	public String command() {
-		return "manager/comment-manager";
-	}
-
-	@GetMapping("/report")
-	public String report() {
-		return "manager/report-manager";
-	}
 	@GetMapping("/user")
 	public String listUsers(Model model) {
 		List<UserDTO> users = userService.findAllUsers();
 		model.addAttribute("users", users);
 		return "manager/user-manager";
+	}
+
+	@GetMapping("/role-manager/{userIdx}")
+	public String roleupdate(@PathVariable("userIdx") Long userId, Model model) {
+		// userId를 사용하여 비즈니스 로직 수행
+		UserDTO userDto = userService.findUserById(userId);
+		if (userDto != null) {
+			model.addAttribute("user", userDto);
+		} else {
+			// 사용자이 없는 경우
+			}
+		return "manager/role-manager";
+	}
+
+	@PostMapping("/role-manager/update")
+	public String updateUserRole(@RequestParam("userIdx") Long userId, @RequestParam("role") String roleString) {
+		Role role = Role.valueOf(roleString); // 문자열을 Enum으로 변환
+		userService.updateUserRole(userId, role);
+		return "redirect:/manager/user"; // 업데이트 후에는 역할 관리 페이지로 리다이렉트
+	}
+
+	@GetMapping("/board")
+	public String listBoards(Model model) {
+		List<BoardDTO> boards = boardService.findAllBoards();
+		model.addAttribute("boards", boards);
+		return "/manager/board-manager";
+	}
+
+	@GetMapping("/comment")
+	public String listComments(Model model) {
+		List<CommentDTO> comments = commentService.findAllComments();
+		model.addAttribute("comments", comments);
+		return "manager/comment-manager";
+	}
+	@DeleteMapping("/comment/delete/{id}")
+	public ResponseEntity<?> deleteComment(@PathVariable Long id) {
+		commentService.deleteComment(id);
+		return ResponseEntity.ok().build();
+	}
+	@GetMapping("/report")
+	public String showReportedContents(Model model) {
+		List<ReportedContentDTO> reportedInfo = reportService.findReportedContents();
+		model.addAttribute("reportedInfo", reportedInfo);
+		return "manager/report-manager";
+	}
+	@PostMapping("/blacklist/add/{userId}")
+	public ResponseEntity<String> addToBlacklist(@PathVariable Long userId) {
+		try {
+			blacklistService.addToBlacklist(userId);
+			return ResponseEntity.ok("유저를 블랙리스트에 추가하였습니다.");
+		} catch (Exception e) {
+			// 에러 처리
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("블랙리스트 추가에 실패하였습니다: " + e.getMessage());
+		}
+	}
+
+	@PostMapping("/blacklist/remove/{userId}")
+	public ResponseEntity<String> removeFromBlacklist(@PathVariable Long userId) {
+		try {
+			blacklistService.removeFromBlacklist(userId);
+			return ResponseEntity.ok("유저를 블랙리스트에서 해제하였습니다.");
+		} catch (Exception e) {
+			// 에러 처리
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("블랙리스트 해제에 실패하였습니다: " + e.getMessage());
+		}
 	}
 }

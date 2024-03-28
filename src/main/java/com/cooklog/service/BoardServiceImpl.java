@@ -16,6 +16,7 @@ import com.cooklog.repository.BoardRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -106,6 +107,16 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 boardId가 없습니다."));
         boardRepository.delete(board);
+    }
+    @Override
+    public List<BoardDTO> findAllBoards() {
+        List<Board> boards = boardRepository.findAll();
+        return boards.stream().map(board -> new BoardDTO(
+            board.getId(),
+            board.getContent(),
+            board.getUser().getNickname(), // User와의 연관관계를 통해 닉네임 접근
+            board.getCreatedAt() // LocalDateTime 타입 그대로 사용
+        )).collect(Collectors.toList());
     }
 }
 

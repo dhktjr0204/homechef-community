@@ -3,16 +3,21 @@ package com.cooklog.service;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.cooklog.dto.JoinDTO;
 import com.cooklog.dto.UserDTO;
+import com.cooklog.model.Board;
 import com.cooklog.model.Role;
 import com.cooklog.model.User;
 import com.cooklog.repository.UserRepository;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -24,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
 
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    // private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public void join(JoinDTO joinDTO){
@@ -37,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
         user.setNickname(joinDTO.getNickname());
         user.setEmail(joinDTO.getEmail());
-        user.setPassword(bCryptPasswordEncoder.encode(joinDTO.getPassword()));
+        // user.setPassword(bCryptPasswordEncoder.encode(joinDTO.getPassword()));
         user.setRole(Role.USER);
 
         userRepository.save(user);
@@ -127,6 +132,13 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll().stream()
             .map(user -> new UserDTO(user.getIdx(), user.getNickname(), user.getEmail(), user.getRole(), user.getReportCount(),user.isDeleted())
             ).collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateUserRole(Long userId, Role role) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("유저를 찾지 못함"));
+        user.setRole(role);
+        userRepository.save(user);
     }
 }
 
