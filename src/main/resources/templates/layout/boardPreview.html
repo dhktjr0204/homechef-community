@@ -1,0 +1,84 @@
+<article th:fragment="board-preview" class="board-container" th:if="${!boards.isEmpty()}"
+         th:each="board, boardIndex: ${boards}">
+    <hr>
+    <input class="board-id" type="hidden" th:value="${board.id}"/>
+    <header>
+        <div class="user-info">
+            <figure class="profile-picture" aria-label="프로필">
+                <img src="../../static/img/main/profile4.jpg" th:src="@{/img/main/profile4.jpg}" alt="프로필 사진">
+            </figure>
+            <span class="username" th:text="${board.userNickname}" th:value="${board.userId}"></span>
+        </div>
+        <button class="more-options">⋮</button>
+        <div class="options-menu">
+            <ul>
+                <li>
+                    <button class="report-button">신고</button>
+                </li>
+                <li>
+                    <button class="go-to-board-button" onclick="clickGoToBoard(this)">게시물로 이동</button>
+                </li>
+                <li>
+                    <button class="update-board-button" onclick="clickUpdateBoard(this)">수정</button>
+                </li>
+                <li>
+                    <button class="delete-board-button" onclick="clickDeleteBoard(this)">삭제</button>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <section class="image-container">
+        <th:block th:if="${board.imageUrls.size()}>1">
+            <button class="prev-btn" onclick="prevSlide(this)">&#10094;</button>
+        </th:block>
+        <div class="slider-container">
+            <ul class="image-list">
+                <li th:each="image: ${board.imageUrls}">
+                    <img class="image-item" src="../../static/img/main/food1.png"
+                         th:src="${image}" alt="user 요리 사진"/>
+                </li>
+            </ul>
+        </div>
+        <th:block th:if="${board.imageUrls.size()}>1">
+            <button class="next-btn" onclick="nextSlide(this)">&#10095;</button>
+        </th:block>
+    </section>
+
+    <pre class="content" th:text="${board.content}"></pre>
+
+    <article class="content-bottom-container">
+        <aside class="like-section">
+            <button>
+            </button>
+            <span class="like-count" th:text="${board.likeCount}"></span>
+        </aside>
+        <th:block th:if="${!board.tags.isEmpty()}">
+            <div class="hash-tag-container">
+                <div class="hash-tag-list">
+                    <button class="hash-tag-button" th:each="tag: ${board.tags}" th:text="${tag}"></button>
+                </div>
+            </div>
+        </th:block>
+    </article>
+    <article class="comment-container" th:if="${comments[__${boardIndex.index}__]!=null}">
+        <section class="user-comment">
+            <div>
+                <a class="comment-writer-name" th:text="${comments[__${boardIndex.index}__].userName}"
+                   th:value="${comments[__${boardIndex.index}__].userId}"></a>
+                <p class="comment-content" th:text="${comments[__${boardIndex.index}__].content}"></p>
+            </div>
+            <time class="comment-created-at" th:text="${#temporals.format(comments[__${boardIndex.index}__].createdAt,'yyyy-MM-dd')}"></time>
+        </section>
+        <nav>
+            <a th:href="@{'/board/' + ${board.id}}">
+                <button class="view-comments"
+                        th:text="'댓글 '+${comments[__${boardIndex.index}__].contentCount}+'개 모두 보기'"></button>
+            </a>
+        </nav>
+    </article>
+    <article class="comment-container" th:unless="${comments[__${boardIndex.index}__]!=null}">
+        <a th:href="@{'/board/' + ${board.id}}">
+            <button class="view-comments">댓글 쓰러 가기</button>
+        </a>
+    </article>
+</article>

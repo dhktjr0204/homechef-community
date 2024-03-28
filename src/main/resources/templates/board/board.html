@@ -9,14 +9,14 @@
 <body>
 <div th:replace="~{layout/header.html::main-header}"></div>
 <main>
-    <input class="board-id" type="hidden" th:value="${board.id}"/>
-    <article>
+    <article class="board-container">
+        <input class="board-id" type="hidden" th:value="${board.id}"/>
         <header>
             <div class="user-info">
                 <figure class="profile-picture" aria-label="프로필">
                     <img src="../../static/img/main/profile4.jpg" th:src="@{/img/main/profile4.jpg}" alt="프로필 사진">
                 </figure>
-                <span class="username" th:text="${board.userNickname}"></span>
+                <span class="username" th:text="${board.userNickname}" th:value="${board.userId}"></span>
             </div>
             <button class="more-options">⋮</button>
             <div class="options-menu">
@@ -25,10 +25,10 @@
                         <button class="report-button">신고</button>
                     </li>
                     <li>
-                        <button class="update-board-button" onclick="clickUpdateBoard()">수정</button>
+                        <button class="update-board-button" onclick="clickUpdateBoard(this)">수정</button>
                     </li>
                     <li>
-                        <button class="delete-board-button" onclick="clickDeleteBoard()">삭제</button>
+                        <button class="delete-board-button" onclick="clickDeleteBoard(this)">삭제</button>
                     </li>
                 </ul>
             </div>
@@ -38,16 +38,16 @@
             <p class="content-read-count" th:text="'조회수: '+${board.readCount}"></p>
         </section>
         <section class="image-container">
-            <button class="prev-btn" onclick="prevSlide()">&#10094;</button>
+            <button class="prev-btn" onclick="prevSlide(this)">&#10094;</button>
             <div class="slider-container">
                 <ul class="image-list">
-                    <li th:each="image: ${images}">
+                    <li th:each="image: ${board.imageUrls}">
                         <img class="image-item" src="../../static/img/main/food1.png"
                              th:src="${image}" alt="user 요리 사진"/>
                     </li>
                 </ul>
             </div>
-            <button class="next-btn" onclick="nextSlide()">&#10095;</button>
+            <button class="next-btn" onclick="nextSlide(this)">&#10095;</button>
         </section>
 
         <pre class="content" th:text="${board.content}"></pre>

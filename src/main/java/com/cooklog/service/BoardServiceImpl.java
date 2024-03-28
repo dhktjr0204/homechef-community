@@ -1,22 +1,26 @@
 package com.cooklog.service;
 
-import com.cooklog.dto.BoardDTOInterface;
 import com.cooklog.dto.BoardDTO;
 import com.cooklog.dto.BoardUpdateRequestDTO;
+import com.cooklog.dto.CommentDTO;
 import com.cooklog.model.Board;
 import com.cooklog.model.Image;
 import com.cooklog.model.Tag;
 import com.cooklog.model.User;
+import com.cooklog.repository.BoardRepository;
 import com.cooklog.repository.TagRepository;
 import com.cooklog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import com.cooklog.repository.BoardRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import java.util.Optional;
+
 import java.util.stream.Collectors;
 
 @Service
@@ -28,8 +32,45 @@ public class BoardServiceImpl implements BoardService {
     private final TagRepository tagRepository;
 
     @Override
+    public Page<BoardDTO> getAllBoard(Pageable pageable, Long userId, Long lastBoardId, String sortType) {
+        Page<Board> boardPage;
+
+        if (lastBoardId == 0) {
+            boardPage = boardRepository.findAll(pageable);
+        } else if (sortType.equals("readCount: DESC")) {
+            boardPage = boardRepository.findAllOrderByReadCount(lastBoardId, pageable);
+        } else {
+            boardPage = boardRepository.findAllOrderByCreatedAt(lastBoardId, pageable);
+        }
+
+        if (boardPage.isEmpty()) {
+            return Page.empty();
+        }
+
+        return boardPage.map(board -> convertBoardToDTO(board, userId));
+    }
+
+    @Override
     public BoardDTO getBoard(Long boardId, Long userId) {
+
         Board board = boardRepository.findById(boardId).orElseThrow();
+
+        return convertBoardToDTO(board, userId);
+    }
+
+    @Override
+    public Page<BoardDTO> getSearchByText(String keyword,Long userId, Pageable pageable) {
+        Page<Board> boardPage = boardRepository.findByContentContaining(keyword, pageable)
+                .orElse(Page.empty());
+
+        if(boardPage.isEmpty()){
+            return Page.empty();
+        }
+
+        return boardPage.map(board->convertBoardToDTO(board, userId));
+    }
+
+    private BoardDTO convertBoardToDTO(Board board, Long userId) {
 
         BoardDTO boardDTO = BoardDTO.builder()
                 .id(board.getId())
@@ -39,13 +80,12 @@ public class BoardServiceImpl implements BoardService {
                 .userId(board.getUser().getIdx())
                 .userNickname(board.getUser().getNickname())
                 .profileImage(board.getUser().getProfileImage())
-                .imageUrls(board.getImages().stream().map(Image::getName).collect(Collectors.toList()))
+                .imageNames(board.getImages().stream().map(Image::getName).collect(Collectors.toList()))
                 .tags(board.getTags().stream().map(Tag::getName).collect(Collectors.toList()))
                 .likeCount(board.getLikes().size())
                 .isLike(board.getLikes().stream().anyMatch(like -> like.getUser().getIdx().equals(userId))).build();
 
         return boardDTO;
-
     }
 
     @Override
@@ -61,15 +101,6 @@ public class BoardServiceImpl implements BoardService {
                 .readCount(0).build();
 
         return boardRepository.save(board);
-    }
-
-    @Override
-    public BoardDTOInterface findByBoardId(Long boardId, Long userId) {
-
-        BoardDTOInterface boardDTOInterface = boardRepository.findByBoardIdAndUserId(boardId, userId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 boardId가 없습니다."));
-
-        return boardDTOInterface;
     }
 
     @Transactional
@@ -91,6 +122,7 @@ public class BoardServiceImpl implements BoardService {
         }
 
         return board;
+
     }
 
     @Transactional

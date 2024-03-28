@@ -1,3 +1,4 @@
+
 // package com.cooklog.config;
 //
 // import org.springframework.context.annotation.Bean;
@@ -40,3 +41,4 @@
 // 	}
 //
 // }
+

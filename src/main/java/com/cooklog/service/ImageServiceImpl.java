@@ -2,11 +2,13 @@ package com.cooklog.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.cooklog.dto.BoardDTO;
 import com.cooklog.model.Board;
 import com.cooklog.model.Image;
 import com.cooklog.repository.ImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +17,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +28,17 @@ public class ImageServiceImpl implements ImageService {
 
     @Value("${cloud.aws.s3.bucketName}")
     private String bucket;
+
+    @Override
+    public Page<BoardDTO> getAllFileListLoad(Page<BoardDTO> boardDTOS) throws FileNotFoundException {
+
+        for(BoardDTO board: boardDTOS){
+            List<String> imageUrls = board.getImageNames();
+            board.setImageUrls(fileListLoad(imageUrls));
+        }
+
+        return boardDTOS;
+    }
 
     @Override
     public List<String> fileListWrite(List<MultipartFile> files, Board board) throws IOException {
@@ -46,8 +58,6 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public List<String> fileListLoad(List<String> fileNames) throws FileNotFoundException {
         List<String> urlList = new ArrayList<>();
-
-//        String[] imageNames = fileNames.split(",");
 
         for (String imageName : fileNames) {
 
@@ -101,13 +111,6 @@ public class ImageServiceImpl implements ImageService {
 
             }
         }
-    }
-
-    @Override
-    public List<String> getFileNameList(String images) {
-
-        return Arrays.asList(images.split(","));
-
     }
 
     //s3 저장 로직

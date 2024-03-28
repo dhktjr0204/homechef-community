@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>수정글 페이지</title>
+    <link rel="stylesheet" href="../../static/css/main/style.css" th:href="@{/css/main/style.css}"/>
     <link rel="stylesheet" href="../../static/css/board/boardForm.css" th:href="@{/css/board/boardForm.css}"/>
 </head>
 <body>
+<div th:replace="~{layout/header.html::main-header}"></div>
 <main>
     <input class="board-id" type="hidden" th:value="${board.id}"/>
     <form class="board-form" action="" onsubmit="return false" th:object="${board}">
@@ -25,9 +27,9 @@
                         <div class="image-upload-button" onclick="openFileUploader()">+</div>
                         <p class="image-rule-text">사진을 업로드 해주세요!<br>최대 10개까지 업로드 가능합니다.</p>
                     </li>
-                    <li class="image-preview" th:each="image, imageIndex:${images}">
+                    <li class="image-preview" th:each="image, imageIndex:${board.imageUrls}">
                         <button class="image-delete-button">x</button>
-                        <img class="image-item" th:src="${image}" th:value="${board.imageUrls[__${imageIndex.index}__]}" alt="첨부된 이미지">
+                        <img class="image-item" th:src="${image}" th:value="${board.getImageNames[__${imageIndex.index}__]}" alt="첨부된 이미지">
                         <span class="image-index" th:text="${imageIndex.index+1}"></span>
                     </li>
                 </ul>

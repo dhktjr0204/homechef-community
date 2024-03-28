@@ -2,7 +2,6 @@ package com.cooklog.controller;
 
 import com.cooklog.dto.BoardCreateRequestDTO;
 import com.cooklog.dto.BoardDTO;
-import com.cooklog.dto.BoardDTOInterface;
 import com.cooklog.dto.BoardUpdateRequestDTO;
 import com.cooklog.model.Board;
 import com.cooklog.model.Tag;
@@ -43,16 +42,12 @@ public class BoardController {
 		//조회수 업데이트
 		boardService.updateReadCnt(id);
 
-//		BoardDTOInterface boardDTO = boardService.findByBoardId(id, userId);
-//		List<String> tags=tagService.getTags(boardDTO.getTags());
-
 		BoardDTO board = boardService.getBoard(id, userId);
 		//fileURL
-		List<String> files = imageService.fileListLoad(board.getImageUrls());
+		List<String> fileUrls = imageService.fileListLoad(board.getImageNames());
+		board.setImageUrls(fileUrls);
 
 		model.addAttribute("board", board);
-		model.addAttribute("images", files);
-//		model.addAttribute("tags", tags);
 
 		return "board/board";
 	}
@@ -79,24 +74,13 @@ public class BoardController {
 
 		Long userId=1L;
 
-//		BoardDTOInterface boardDTO = boardService.findByBoardId(id, userId);
-
 		BoardDTO board = boardService.getBoard(id, userId);
 
-		//파일명
-//		List<String> fileNames=imageService.getFileNameList(boardDTO.getImageUrls());
-		//파일 url
-//		List<String> files = imageService.fileListLoad(boardDTO.getImageUrls());
-//		List<String> tags=tagService.getTags(boardDTO.getTags());
-
 		//file URL
-		List<String> files= imageService.fileListLoad(board.getImageUrls());
-
+		List<String> fileUrls= imageService.fileListLoad(board.getImageNames());
+		board.setImageUrls(fileUrls);
 
 		model.addAttribute("board", board);
-		model.addAttribute("images", files);
-//		model.addAttribute("imageNames", fileNames);
-//		model.addAttribute("tags", tags);
 
 		return "board/boardEditForm";
 	}
