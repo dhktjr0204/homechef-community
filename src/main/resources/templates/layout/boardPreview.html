@@ -1,5 +1,6 @@
 <article th:fragment="board-preview" class="board-container" th:if="${!boards.isEmpty()}"
          th:each="board, boardIndex: ${boards}">
+    <hr>
     <input class="board-id" type="hidden" th:value="${board.id}"/>
     <header>
         <div class="user-info">
@@ -27,18 +28,18 @@
         </div>
     </header>
     <section class="image-container">
-        <th:block th:if="${images[__${boardIndex.index}__].size()}>1">
+        <th:block th:if="${board.imageUrls.size()}>1">
             <button class="prev-btn" onclick="prevSlide(this)">&#10094;</button>
         </th:block>
         <div class="slider-container">
             <ul class="image-list">
-                <li th:each="image: ${images[__${boardIndex.index}__]}">
+                <li th:each="image: ${board.imageUrls}">
                     <img class="image-item" src="../../static/img/main/food1.png"
                          th:src="${image}" alt="user 요리 사진"/>
                 </li>
             </ul>
         </div>
-        <th:block th:if="${images[__${boardIndex.index}__].size()}>1">
+        <th:block th:if="${board.imageUrls.size()}>1">
             <button class="next-btn" onclick="nextSlide(this)">&#10095;</button>
         </th:block>
     </section>
@@ -59,25 +60,25 @@
             </div>
         </th:block>
     </article>
-    <article class="comment-container" th:if="${!board.comments.isEmpty()}">
+    <article class="comment-container" th:if="${comments[__${boardIndex.index}__]!=null}">
         <section class="user-comment">
-            <p th:text="${board.comments[0].content}">
-                <strong th:text="${board.comments[0].userName}" th:value="${board.comments[0].userId}"></strong> 너무 맛있어
-                보여요!
-            </p>
-            <time th:text="${#temporals.format(board.comments[0].createdAt,'yyyy-MM-dd')}"></time>
+            <div>
+                <a class="comment-writer-name" th:text="${comments[__${boardIndex.index}__].userName}"
+                   th:value="${comments[__${boardIndex.index}__].userId}"></a>
+                <p class="comment-content" th:text="${comments[__${boardIndex.index}__].content}"></p>
+            </div>
+            <time class="comment-created-at" th:text="${#temporals.format(comments[__${boardIndex.index}__].createdAt,'yyyy-MM-dd')}"></time>
         </section>
         <nav>
             <a th:href="@{'/board/' + ${board.id}}">
                 <button class="view-comments"
-                        th:text="'댓글 '+${board.comments.size()}+'개 모두 보기'"></button>
+                        th:text="'댓글 '+${comments[__${boardIndex.index}__].contentCount}+'개 모두 보기'"></button>
             </a>
         </nav>
     </article>
-    <article class="comment-container" th:unless="${!board.comments.isEmpty()}">
+    <article class="comment-container" th:unless="${comments[__${boardIndex.index}__]!=null}">
         <a th:href="@{'/board/' + ${board.id}}">
             <button class="view-comments">댓글 쓰러 가기</button>
         </a>
     </article>
-    <hr>
 </article>

@@ -44,10 +44,10 @@ public class BoardController {
 
 		BoardDTO board = boardService.getBoard(id, userId);
 		//fileURL
-		List<String> filesUrls = imageService.fileListLoad(board.getImageNames());
+		List<String> fileUrls = imageService.fileListLoad(board.getImageNames());
+		board.setImageUrls(fileUrls);
 
 		model.addAttribute("board", board);
-		model.addAttribute("images", filesUrls);
 
 		return "board/board";
 	}
@@ -77,10 +77,10 @@ public class BoardController {
 		BoardDTO board = boardService.getBoard(id, userId);
 
 		//file URL
-		List<String> files= imageService.fileListLoad(board.getImageNames());
+		List<String> fileUrls= imageService.fileListLoad(board.getImageNames());
+		board.setImageUrls(fileUrls);
 
 		model.addAttribute("board", board);
-		model.addAttribute("images", files);
 
 		return "board/boardEditForm";
 	}

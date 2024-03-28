@@ -30,16 +30,14 @@ public class ImageServiceImpl implements ImageService {
     private String bucket;
 
     @Override
-    public List<List<String>> getAllFileListLoad(Page<BoardDTO> boardDTOS) throws FileNotFoundException {
-
-        List<List<String>> images=new ArrayList<>();
+    public Page<BoardDTO> getAllFileListLoad(Page<BoardDTO> boardDTOS) throws FileNotFoundException {
 
         for(BoardDTO board: boardDTOS){
             List<String> imageUrls = board.getImageNames();
-            images.add(fileListLoad(imageUrls));
+            board.setImageUrls(fileListLoad(imageUrls));
         }
 
-        return images;
+        return boardDTOS;
     }
 
     @Override
@@ -60,8 +58,6 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public List<String> fileListLoad(List<String> fileNames) throws FileNotFoundException {
         List<String> urlList = new ArrayList<>();
-
-//        String[] imageNames = fileNames.split(",");
 
         for (String imageName : fileNames) {
 

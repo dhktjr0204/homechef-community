@@ -21,9 +21,8 @@ public class BoardDTO {
     private Long userId; // User의 식별자
     private String userNickname; // User의 닉네임
     private List<String> imageNames; // Image명 목록
-//    private List<String> imageUrls; // Image url 목록
+    private List<String> imageUrls; // Image url 목록
     private List<String> tags; // 태그 이름 목록
-    private List<CommentDTO> comments;
     private Integer likeCount; // '좋아요' 개수
     private boolean isLike;
 }

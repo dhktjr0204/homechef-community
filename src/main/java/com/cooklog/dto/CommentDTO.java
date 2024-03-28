@@ -20,5 +20,5 @@ public class CommentDTO {
 	private Long userId;
 	private String userName; // 사용자 이름 또는 닉네임을 표시하기 위함
 	private Long boardId; // 댓글이 속한 게시글 ID
-	private Long contentCount;// 댓글 개수
+	private int contentCount;// 댓글 개수
 }

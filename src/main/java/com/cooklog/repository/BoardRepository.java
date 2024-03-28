@@ -8,6 +8,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
@@ -19,7 +22,12 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Page<Board> findAll(Pageable pageable);
 
     //두번째 요청일 경우
-    @Query(value = "select b from Board b where b.id < :id order by b.createdAt DESC")
-    Page<Board> findAll(Long id, Pageable pageable);
+    @Query(value = "select b from Board b where b.id <= :id order by b.createdAt DESC")
+    Page<Board> findAllOrderByCreatedAt(Long id, Pageable pageable);
+
+    @Query(value = "select b from Board b where b.id <= :id order by b.readCount DESC")
+    Page<Board> findAllOrderByReadCount(Long id, Pageable pageable);
+
+    Optional<Page<Board>> findByContentContaining(String keyword, Pageable pageable);
 
 }

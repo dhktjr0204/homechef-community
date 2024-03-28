@@ -1,33 +1,18 @@
-<!doctype html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Cooklog</title>
     <link rel="stylesheet" href="../../static/css/main/style.css" th:href="@{/css/main/style.css}"/>
     <link rel="stylesheet" href="../../static/css/board/board.css" th:href="@{/css/board/board.css}"/>
 </head>
 <body>
 <div th:replace="~{layout/header.html::main-header}"></div>
-
-<!-- 포스트#1 -->
-<nav>
-    <ul class="menu">
-        <li class="menu-item">
-            <a class="write-button" th:href="@{/board/write}">+</a>
-        </li>
-        <div class="menu-item dropdown">
-            <select class="dropbtn" id="order-select">
-                <option value="latest">최신순</option>
-                <option value="popularity">인기순</option>
-                <option value="follow">팔로우만 조회</option>
-            </select>
-        </div>
-    </ul>
-</nav>
 <main>
+    <div class="search-info">
+        <strong class="search-keyword" th:text="${keyword}"></strong>
+        <p> (으)로 검색한 결과입니다.</p>
+    </div>
     <div th:replace="~{layout/boardPreview.html::board-preview}"></div>
 </main>
 <script th:inline="javascript">
