@@ -18,6 +18,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query(value = "update board set readcnt = readcnt+1 where id = :id", nativeQuery = true)
     void updateReadCnt(Long id);
 
+
+    List<Board> findByUserIdx(Long userId);
+
     //마지막 board id가 없을 경우(첫 요청일 경우)
     Page<Board> findAll(Pageable pageable);
 

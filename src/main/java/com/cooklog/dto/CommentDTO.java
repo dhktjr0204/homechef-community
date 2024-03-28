@@ -20,5 +20,18 @@ public class CommentDTO {
 	private Long userId;
 	private String userName; // 사용자 이름 또는 닉네임을 표시하기 위함
 	private Long boardId; // 댓글이 속한 게시글 ID
-	private int contentCount;// 댓글 개수
+  private int contentCount;// 댓글 개수
+
+	public CommentDTO(Long id, String content, LocalDateTime createdAt, LocalDateTime updatedAt, Long idx, String nickname, Long boardId) {
+		this.id = id;
+		this.content = content;
+		this.createdAt = createdAt;
+		this.updatedAt = updatedAt;
+		this.userId = idx;
+		this.userName = nickname;
+		this.boardId = boardId;
+	}
+
+	
+
 }

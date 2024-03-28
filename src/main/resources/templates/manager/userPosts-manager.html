@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CookLog 관리자 페이지 - 상세 보기</title>
+</head>
+<body>
+<h2>User Posts</h2>
+<div>
+    <h3>게시물</h3>
+    <div th:each="post : ${posts}">
+        <p th:text="${post.content}"></p>
+    </div>
+</div>
+<div>
+    <h3>댓글</h3>
+    <div th:each="comment : ${comments}">
+        <p th:text="${comment.content}"></p>
+    </div>
+</div>
+</body>
+</html>

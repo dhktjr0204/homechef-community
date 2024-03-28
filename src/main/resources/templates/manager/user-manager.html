@@ -38,13 +38,18 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="user : ${users}">
-                <td th:text="${userStat.index}"></td>
+            <tr th:each="user,userStat : ${users}">
+                <td th:text="${userStat.index+1}"></td>
                 <td th:text="${user.nickname}"></td>
                 <td th:text="${user.email}"></td>
                 <td>
-                    <span th:text="${user.role}"></span> <!-- Display the role -->
-                    <button><a th:href="@{/role-manager(userIdx=${user.idx})}" target="_blank" class="change-button">변경</a></button>
+                    <div th:switch="${user.role.name()}">
+                        <span th:case="'USER'">미식 초보</span>
+                        <span th:case="'USER2'">요리 연습생</span>
+                        <span th:case="'USER3'">요리 전문가</span>
+                        <span th:case="*">관리자</span>
+                    </div>
+                    <button class="update-btn" th:onclick="'openRoleManagerWindow(' + ${user.idx} + ')'">변경</button>
                 </td>
                 <td th:text="${user.reportCount}"></td>
                 <td th:text="${user.isDeleted ? '탈퇴회원' : '일반회원'}"></td>
@@ -54,4 +59,23 @@
     </div>
 </div>
 </body>
+<script>
+    function openRoleManagerWindow(userIdx) {
+        // 새 창의 위치를 화면 중앙으로 조정하기 위한 계산
+        const width = 485;
+        const height = 180;
+        const left = (window.screen.width / 2) - (width / 2);
+        const top = (window.screen.height / 2) - (height / 2);
+
+        // window.open을 사용하여 새 창 열기
+        const roleManagerWindow = window.open('/manager/role-manager/' +userIdx, 'Role Manager', `width=${width},height=${height},top=${top},left=${left}`);
+        // 팝업 창이 닫히는 것을 감지하고 새로고침
+        const checkClosed = setInterval(function() {
+            if (roleManagerWindow.closed) {
+                clearInterval(checkClosed);
+                window.location.reload(); // 현재 페이지 새로고침
+            }
+        }, 1000);
+    }
+</script>
 </html>
