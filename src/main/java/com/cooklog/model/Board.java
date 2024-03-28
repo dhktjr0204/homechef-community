@@ -52,10 +52,6 @@ public class Board {
 	private Integer readCount;
 
 	@OneToMany(mappedBy = "board")
-	@OrderBy("createdAt DESC ")
-	private List<Comment> comments = new ArrayList<>();
-
-	@OneToMany(mappedBy = "board")
 	@OrderBy("order ASC")
 	private List<Image> images = new ArrayList<>();
 

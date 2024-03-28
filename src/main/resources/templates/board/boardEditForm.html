@@ -27,7 +27,7 @@
                         <div class="image-upload-button" onclick="openFileUploader()">+</div>
                         <p class="image-rule-text">사진을 업로드 해주세요!<br>최대 10개까지 업로드 가능합니다.</p>
                     </li>
-                    <li class="image-preview" th:each="image, imageIndex:${images}">
+                    <li class="image-preview" th:each="image, imageIndex:${board.imageUrls}">
                         <button class="image-delete-button">x</button>
                         <img class="image-item" th:src="${image}" th:value="${board.getImageNames[__${imageIndex.index}__]}" alt="첨부된 이미지">
                         <span class="image-index" th:text="${imageIndex.index+1}"></span>

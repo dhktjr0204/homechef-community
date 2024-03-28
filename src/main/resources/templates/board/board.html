@@ -41,7 +41,7 @@
             <button class="prev-btn" onclick="prevSlide(this)">&#10094;</button>
             <div class="slider-container">
                 <ul class="image-list">
-                    <li th:each="image: ${images}">
+                    <li th:each="image: ${board.imageUrls}">
                         <img class="image-item" src="../../static/img/main/food1.png"
                              th:src="${image}" alt="user 요리 사진"/>
                     </li>

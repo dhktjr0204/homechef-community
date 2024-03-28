@@ -1,5 +1,11 @@
 package com.cooklog.service;
 
+import com.cooklog.dto.BoardDTO;
+import com.cooklog.dto.CommentDTO;
+import org.springframework.data.domain.Page;
+
+import java.util.List;
+
 public interface CommentService {
-	//impl에서 만들어야할 메소드 정의
+	List<CommentDTO> getCommentInfoByBoardId(Page<BoardDTO> allBoard);
 }

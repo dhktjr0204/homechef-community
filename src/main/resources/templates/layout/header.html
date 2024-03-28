@@ -3,8 +3,8 @@
         <img th:src="@{/img/main/CookLog.png}" alt="Log" class="logo-img">
     </a>
     <section>
-        <form th:action="@{/search}" method="get" class="search-form">
-            <input type="text" class="search-input" placeholder="해쉬태그로 검색하실려면 #을 추가해주세요" aria-label="검색바">
+        <form th:action="@{/search}" method="get" class="search-form" onsubmit="return submitForm()">
+            <input type="text" class="search-input" placeholder="해쉬태그로 검색하실려면 #을 추가해주세요" aria-label="검색바" name="keyword">
             <button type="submit" class="search-button" aria-label="검색">
                 <img th:src="@{/img/main/magnifier.png}" alt="검색">
             </button>
