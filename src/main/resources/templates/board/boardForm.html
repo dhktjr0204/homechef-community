@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>작성글 페이지</title>
+    <link rel="stylesheet" href="../../static/css/main/style.css" th:href="@{/css/main/style.css}"/>
     <link rel="stylesheet" href="../../static/css/board/boardForm.css" th:href="@{/css/board/boardForm.css}"/>
 </head>
 <body>
+<div th:replace="~{layout/header.html::main-header}"></div>
 <main>
     <form class="board-form" action="" onsubmit="return false" th:object="${board}">
         <section class="hash-tag-container">
