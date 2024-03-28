@@ -36,7 +36,6 @@ public class CommentServiceImpl implements CommentService {
 				comment.getId(),
 				comment.getContent(),
 				comment.getCreatedAt(),
-				comment.getUpdatedAt(),
 				comment.getUser().getIdx(),
 				comment.getUser().getNickname(),
 				comment.getBoard().getId()
@@ -75,10 +74,10 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 
-	// @Override
-	// public List<CommentDTO> findCommentsByUserId(Long userId) {
-	// 	return commentRepository.findByUserId(userId).stream()
-	// 		.map(comment -> new CommentDTO(comment.getId(), comment.getContent(), comment.getUser().getNickname()))
-	// 		.collect(Collectors.toList());
-	// }
+	@Override
+	public List<CommentDTO> findCommentsByUserId(Long userId) {
+		return commentRepository.findByUserIdx(userId).stream()
+			.map(comment -> new CommentDTO(comment.getId(), comment.getContent(), comment.getCreatedAt()))
+			.collect(Collectors.toList());
+	}
 }

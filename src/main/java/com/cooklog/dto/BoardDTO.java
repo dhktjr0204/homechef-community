@@ -26,10 +26,9 @@ public class BoardDTO {
     private Integer likeCount; // '좋아요' 개수
     private boolean isLike;
 
-    public BoardDTO(Long id, String content, String nickname, LocalDateTime createdAt) {
+    public BoardDTO(Long id, String content, LocalDateTime createdAt) {
         this.id = id;
         this.content = content;
-        this.userNickname = nickname;
         this.createdAt = createdAt;
     }
 }

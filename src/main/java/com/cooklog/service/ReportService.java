@@ -37,17 +37,6 @@ public class ReportService {
 			));
 		}
 
-		// 댓글 정보 조회 및 추가 (수정)
-		// for (User user : reportedUsers) {
-		// 	List<Comment> comments = commentRepository.findByUserIdx(user.getIdx());
-		// 	comments.forEach(comment -> reportedContents.add(new ReportedContentDTO(
-		// 		user.getNickname(),
-		// 		"댓글: " + comment.getContent(),
-		// 		user.getReportCount(),
-		// 		user.getIdx()
-		// 	)));
-		// }
-
 		return reportedContents;
 	}
 }

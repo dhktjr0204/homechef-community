@@ -3,8 +3,6 @@ package com.cooklog.service;
 
 import java.util.List;
 
-import com.cooklog.dto.BoardDTOInterface;
-
 
 import com.cooklog.dto.BoardDTO;
 import com.cooklog.dto.BoardUpdateRequestDTO;
@@ -24,4 +22,5 @@ public interface BoardService {
 
 	Page<BoardDTO> getSearchByText(String keyword, Long userId, Pageable pageable);
 
+	List<BoardDTO> findBoardsByUserId(Long userId);
 }

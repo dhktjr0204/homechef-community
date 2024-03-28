@@ -18,10 +18,12 @@ import com.cooklog.dto.BoardDTO;
 import com.cooklog.dto.CommentDTO;
 import com.cooklog.dto.ReportedContentDTO;
 import com.cooklog.dto.UserDTO;
+import com.cooklog.dto.UserPostDTO;
 import com.cooklog.model.Role;
 import com.cooklog.service.BlacklistService;
 import com.cooklog.service.BoardService;
 import com.cooklog.service.CommentService;
+import com.cooklog.service.PostCombinationService;
 import com.cooklog.service.ReportService;
 import com.cooklog.service.UserService;
 
@@ -37,6 +39,8 @@ public class ManagerController {
 	private final CommentService commentService;
 	private final ReportService reportService;
 	private final BlacklistService blacklistService;
+	private final PostCombinationService postCombinationService;
+
 
 	@GetMapping("/main")
 	public String userProfile(Model model) {
@@ -119,5 +123,12 @@ public class ManagerController {
 			// 에러 처리
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("블랙리스트 해제에 실패하였습니다: " + e.getMessage());
 		}
+	}
+	@GetMapping("/userPosts/{userId}")
+	public String showUserPosts(@PathVariable Long userId, Model model) {
+		// boards와 comments를 결합하여 UserPostDTO의 리스트를 생성하는 로직 구현
+		List<UserPostDTO> posts = postCombinationService.combineBoardsAndComments(userId);
+		model.addAttribute("posts", posts);
+		return "manager/userPosts-manager";
 	}
 }

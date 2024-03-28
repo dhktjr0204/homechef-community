@@ -5,9 +5,7 @@ import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Data
 @Builder
@@ -22,16 +20,18 @@ public class CommentDTO {
 	private Long boardId; // 댓글이 속한 게시글 ID
   private int contentCount;// 댓글 개수
 
-	public CommentDTO(Long id, String content, LocalDateTime createdAt, LocalDateTime updatedAt, Long idx, String nickname, Long boardId) {
+	public CommentDTO(Long id, String content, LocalDateTime createdAt, Long idx, String nickname, Long boardId) {
 		this.id = id;
 		this.content = content;
 		this.createdAt = createdAt;
-		this.updatedAt = updatedAt;
 		this.userId = idx;
 		this.userName = nickname;
 		this.boardId = boardId;
 	}
 
-	
-
+	public CommentDTO(Long id, String content, LocalDateTime createdAt) {
+		this.id = id;
+		this.content = content;
+		this.createdAt = createdAt;
+	}
 }
