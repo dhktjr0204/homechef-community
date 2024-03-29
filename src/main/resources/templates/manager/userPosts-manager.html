@@ -1,24 +1,43 @@
 <!doctype html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>CookLog 관리자 페이지 - 상세 보기</title>
+    <link rel="stylesheet" th:href="@{/css/manager/board.css}"/>
 </head>
 <body>
-<h2>User Posts</h2>
-<div>
-    <h3>게시물</h3>
-    <div th:each="post : ${posts}">
-        <p th:text="${post.content}"></p>
+<div class="container">
+    <div class="header">
+        <a th:href="@{/manager/main}">
+            <img th:src="@{/img/main/CookLog.png}" alt="Log" class="logo-img">
+        </a>
+        <h2>사용자 게시글 및 댓글 상세 조회</h2>
     </div>
-</div>
-<div>
-    <h3>댓글</h3>
-    <div th:each="comment : ${comments}">
-        <p th:text="${comment.content}"></p>
+    <div class="search-container">
+        <div class="selectBox">
+            <input type="search" class="search-box" placeholder="조회할 닉네임을 입력하세요.">
+        </div>
+        <table class="content-table">
+            <thead>
+            <tr>
+                <th>게시물 내용</th>
+                <th>작성 시간</th>
+                <th>댓글 내용</th>
+                <th>작성 시간</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="post : ${posts}">
+                <td th:text="${post.boardContent}"></td>
+                <td th:text="${#temporals.format(post.boardCreatedAt, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${post.commentContent}"></td>
+                <td th:text="${#temporals.format(post.commentCreatedAt, 'yyyy-MM-dd HH:mm')}"></td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
 </body>

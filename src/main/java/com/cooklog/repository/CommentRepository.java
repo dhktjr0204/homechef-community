@@ -34,5 +34,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "ORDER BY c.created_at DESC " +
             "LIMIT 1", nativeQuery = true)
     Optional<LatestCommentWithTotalCountDTO> findLatestCommentByBoardId(@Param("boardId") Long boardId, @Param("parentCommentId") Long parentCommentId);
-
 }

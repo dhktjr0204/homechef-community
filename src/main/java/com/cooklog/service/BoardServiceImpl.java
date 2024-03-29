@@ -2,7 +2,6 @@ package com.cooklog.service;
 
 import com.cooklog.dto.BoardDTO;
 import com.cooklog.dto.BoardUpdateRequestDTO;
-import com.cooklog.dto.CommentDTO;
 import com.cooklog.model.Board;
 import com.cooklog.model.Image;
 import com.cooklog.model.Tag;
@@ -18,8 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import java.util.Optional;
 
 import java.util.stream.Collectors;
 
@@ -146,9 +143,14 @@ public class BoardServiceImpl implements BoardService {
         return boards.stream().map(board -> new BoardDTO(
             board.getId(),
             board.getContent(),
-            board.getUser().getNickname(), // User와의 연관관계를 통해 닉네임 접근
-            board.getCreatedAt() // LocalDateTime 타입 그대로 사용
+            board.getCreatedAt()
         )).collect(Collectors.toList());
+    }
+    @Override
+    public List<BoardDTO> findBoardsByUserId(Long userId) {
+        return boardRepository.findByUserIdx(userId).stream()
+            .map(board -> new BoardDTO(board.getId(), board.getContent(), board.getCreatedAt()))
+            .collect(Collectors.toList());
     }
 }
 

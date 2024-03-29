@@ -17,7 +17,6 @@ import com.cooklog.repository.UserRepository;
 @Service
 @RequiredArgsConstructor
 public class BlacklistServiceImpl implements BlacklistService {
-	private static final Logger logger = LoggerFactory.getLogger(BlacklistServiceImpl.class);
 	private final BlacklistRepository blacklistRepository;
 	private final UserRepository userRepository;
 
