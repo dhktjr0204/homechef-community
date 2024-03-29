@@ -159,9 +159,9 @@ img {
 .options-menu {
     display: none;
     position: absolute;
-    width: 100px;
+    width: 110px;
     right: 0;
-    margin-right: 15%;
+    margin-right: 14%;
     margin-top: 6%;
     background: #fff;
     border: 1px solid #ccc;
@@ -210,6 +210,27 @@ main img{
     max-width: 600px; /* 최대 너비 설정 */
     margin: auto; /* 중앙 정렬 */
 }
+
+/*콘텐츠가 없을때 보여주는 스타일*/
+.no-content-container{
+    margin:50px 0;
+}
+.no-content-text{
+    color: #c4c4c4;
+    text-align: center;
+}
+
+/*서치 스타일*/
+.search-info{
+    font-size: 20px;
+    display: flex;
+    gap: 10px;
+    margin: 40px 0;
+}
+.search-info p{
+    margin: 0;
+}
+
 /* 부모 컨테이너에 대한 스타일 */
 .comment-container {
     display: flex;

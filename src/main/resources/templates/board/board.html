@@ -60,12 +60,13 @@
             </aside>
             <div class="hash-tag-container">
                 <div class="hash-tag-list">
-                    <button class="hash-tag-button" th:each="tag: ${board.tags}" th:text="${tag}"></button>
+                    <a th:href="'/hashtag_search?keyword='+${tag}" class="hash-tag-button" th:each="tag: ${board.tags}" th:text="${tag}"></a>
                 </div>
             </div>
         </article>
     </article>
 </main>
 <script src="../../static/js/board/board.js" th:src="@{/js/board/board.js}"></script>
+<script src="../../static/js/main/search.js" th:src="@{/js/main/search.js}"></script>
 </body>
 </html>
