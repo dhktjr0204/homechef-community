@@ -54,7 +54,8 @@
 
         <article class="content-bottom-container">
             <aside class="like-section">
-                <button>
+                <input class="hidden" th:value="${board.id}"/>
+                <button th:class="${board.isLike()} ? 'redheart' : 'emptyheart'" onclick="clickLikeBtn(this)" th:value = "${board.id}">
                 </button>
                 <span class="like-count" th:text="${board.likeCount}"></span>
             </aside>
@@ -67,5 +68,6 @@
     </article>
 </main>
 <script src="../../static/js/board/board.js" th:src="@{/js/board/board.js}"></script>
+<script src="../../static/js/board/like.js" th:src="@{/js/board/like.js}"></script>
 </body>
 </html>
