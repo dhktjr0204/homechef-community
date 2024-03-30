@@ -31,6 +31,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query(value = "select b from Board b where b.id <= :id order by b.readCount DESC")
     Page<Board> findAllOrderByReadCount(Long id, Pageable pageable);
 
+    @Query(value = "select b from Board b order by b.likesCount DESC , b.createdAt DESC")
+    Page<Board> findAllOrderByLikesCount(Long id, Pageable pageable);
+
     Optional<Page<Board>> findByContentContaining(String keyword, Pageable pageable);
 
 }

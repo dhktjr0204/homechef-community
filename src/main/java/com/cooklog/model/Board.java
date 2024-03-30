@@ -23,6 +23,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
 
 @Data
 @Builder
@@ -50,6 +51,9 @@ public class Board {
 
 	@Column(name = "readcnt")
 	private Integer readCount;
+
+	@Formula("(select count(*) from likes where likes.board_id = id)")
+	private int likesCount;
 
 	@OneToMany(mappedBy = "board")
 	@OrderBy("order ASC")
