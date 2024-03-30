@@ -252,10 +252,6 @@ main img{
     background: no-repeat center / cover url(../../img/main/emptyheart.png);
 }
 
-.hidden {
-    display: none;
-}
-
 .like-count{
     font-size: 18px;
     font-weight: 500;
