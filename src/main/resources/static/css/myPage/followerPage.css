@@ -1,0 +1,43 @@
+ul, ol{
+    padding: 0;
+    list-style: none;
+}
+.follower-info{
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #c4c4c4;
+}
+.user-name{
+    font-size: 20px;
+    font-weight: 900;
+    flex-grow: 1;
+}
+
+.follow-button, .un-follow-button, .delete-follower-button{
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background-color: #FFAA06;
+    border: 1px solid rgba(0, 0, 0, 0.26);
+    border-radius: 10px;
+    padding: 10px 30px;
+}
+.un-follow-button, .delete-follower-button{
+    color: black;
+    background-color: white;
+    border: 1px solid black;
+}
+/*페이지 표시*/
+.page{
+    margin:50px 0;
+}
+.page-list{
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+
+}
+.page-link a{
+    color: black;
+    text-decoration: none;
+}
