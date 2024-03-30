@@ -3,13 +3,17 @@ package com.cooklog.controller;
 import com.cooklog.dto.BoardCreateRequestDTO;
 import com.cooklog.dto.BoardDTO;
 import com.cooklog.dto.BoardUpdateRequestDTO;
+import com.cooklog.dto.CustomUserDetails;
 import com.cooklog.model.Board;
 import com.cooklog.model.Tag;
 import com.cooklog.service.BoardService;
 import com.cooklog.service.ImageService;
 import com.cooklog.service.TagService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -60,7 +64,12 @@ public class BoardController {
 
 	@PostMapping("/write")
 	public ResponseEntity<?> save(BoardCreateRequestDTO boardCreateRequestDTO, @RequestPart("images")List<MultipartFile> images) throws IOException {
-		long userId=1;
+//		long userId=1;
+
+		// 현재 인증된(로그인한) 사용자의 idx 가져옴
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+		long userId = userDetails.getIdx();
 
 		Board board = boardService.save(userId, boardCreateRequestDTO.getContent());
 		List<Tag> tags = tagService.save(boardCreateRequestDTO.getTags(), board);

@@ -1,7 +1,7 @@
 package com.cooklog.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -48,12 +48,13 @@ public class User {
 	private boolean isDeleted;
 
 	@OneToMany(mappedBy = "user")
-	private Set<Board> boards = new HashSet<>();
+	private List<Board> boards = new ArrayList<>();
 
 	@Builder
-	public User (String nickname, String email, String password){
+	public User (String nickname, String email, String password, Role role){
 		this.nickname = nickname;
 		this.email = email;
 		this.password = password;
+		this.role = role;
 	}
 }
