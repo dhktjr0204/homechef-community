@@ -25,6 +25,12 @@ public class CustomIUserDetailsService implements UserDetailsService {
         if(userData == null) {
             throw new UsernameNotFoundException(email);
         }
+
+        if (userData.isDeleted()) {
+            throw new UsernameNotFoundException("탈퇴한 회원: " + userData.getNickname());
+        }
+
+        // 시큐리티 세션에 유저 정보 저장
         return new CustomUserDetails(userData);
     }
 }
