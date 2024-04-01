@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>프로필 수정</title>
+    <link rel="stylesheet" href="../../static/css/main/style.css" th:href="@{/css/main/style.css}"/>
+    <link rel="stylesheet" href="../../static/css/myPage/profileEditForm.css" th:href="@{/css/myPage/profileEditForm.css}"/>
+</head>
+<body>
+<div th:replace="~{layout/header.html::main-header}"></div>
+<main>
+    <form class="profile-edit-form" onsubmit="return false">
+        <div class="user-profile-container">
+            <figure class="profile-image" aria-label="프로필">
+                <img src="../../static/img/main/food1.png" th:src="@{/img/main/profile4.jpg}" alt="프로필 사진">
+                <button class="profile-image-edit-button">수정</button>
+            </figure>
+            <span>ID: </span>
+            <!--띄어쓰기 안되게 막아야합니다.-->
+            <textarea class="user-name-input" placeholder="id를 입력해주세요"
+                      onchange="nameWordCount(this);"
+                      oninput="nameWordCount(this);">example_user</textarea>
+            <div class="name-text-count">0/50</div>
+        </div>
+        <textarea class="profile-introduction-input" placeholder="인삿말을 입력해주세요!"
+                  onchange="introductionWordCount(this);"
+                  oninput="introductionWordCount(this);">반갑습니다. 오늘도 즐거운 하루입니다.
+        </textarea>
+        <div class="introduction-text-count">0/300</div>
+        <section class="button-container">
+            <button class="cancel-button">취소</button>
+            <button class="submit-button">등록</button>
+        </section>
+    </form>
+</main>
+<script src="../../static/js/board/wordCount.js" th:src="@{/js/board/wordCount.js}"></script>
+<script src="../../static/js/myPage/wordCount.js" th:src="@{/js/myPage/wordCount.js}"></script>
+</body>
+</html>

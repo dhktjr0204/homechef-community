@@ -43,7 +43,8 @@ public class BoardController {
 		boardService.updateReadCnt(id);
 
 		BoardDTO board = boardService.getBoard(id, userId);
-		//fileURL
+
+		//s3에서 가져온 file URL boardDTO에 넣기
 		List<String> fileUrls = imageService.fileListLoad(board.getImageNames());
 		board.setImageUrls(fileUrls);
 
@@ -76,7 +77,7 @@ public class BoardController {
 
 		BoardDTO board = boardService.getBoard(id, userId);
 
-		//file URL
+		//s3에서 가져온 file URL boardDTO에 넣기
 		List<String> fileUrls= imageService.fileListLoad(board.getImageNames());
 		board.setImageUrls(fileUrls);
 

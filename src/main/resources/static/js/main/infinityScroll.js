@@ -14,7 +14,7 @@ async function fetchImages(pageNum) {
         selectedType=orderSelect.value;
     }
 
-    const searchKeyword=document.querySelector(".search-keyword");
+    const isExistSearchKeyword=document.querySelector(".search-keyword");
 
     try {
         if (pageNum >= totalPage) {
@@ -24,8 +24,8 @@ async function fetchImages(pageNum) {
         let response;
         if (selectedType === "latest") {
             //검색한 경우
-            if(searchKeyword){
-                const keyword=searchKeyword.textContent;
+            if(isExistSearchKeyword){
+                const keyword=isExistSearchKeyword.textContent;
                 response = await fetch(`?page=${pageNum}&id=${lastBoardId}&keyword=${keyword}`, {
                     method: "GET",
                 });

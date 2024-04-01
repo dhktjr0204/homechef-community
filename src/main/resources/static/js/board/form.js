@@ -11,6 +11,7 @@ function wordCount(textarea) {
     const textCount = document.querySelector('.text-count');
     countBytes(textarea, textCount, limit);
 }
+// 글자 수 세기 끝
 
 const submitButton = document.querySelector('.submit-button');
 if (submitButton) {
