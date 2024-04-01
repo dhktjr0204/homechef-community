@@ -9,7 +9,6 @@ import com.cooklog.model.Tag;
 import com.cooklog.service.BoardService;
 import com.cooklog.service.ImageService;
 import com.cooklog.service.TagService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -66,7 +65,7 @@ public class BoardController {
 	public ResponseEntity<?> save(BoardCreateRequestDTO boardCreateRequestDTO, @RequestPart("images")List<MultipartFile> images) throws IOException {
 //		long userId=1;
 
-		// 현재 인증된(로그인한) 사용자의 idx 가져옴
+		// 현재 인증된(로그인한) 사용자의 idx 가져와서 userId에 할당
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 		long userId = userDetails.getIdx();
@@ -81,7 +80,10 @@ public class BoardController {
 	@GetMapping("/edit/{id}")
 	public String getEditForm(@PathVariable Long id, Model model) throws FileNotFoundException {
 
-		Long userId=1L;
+//		Long userId=1L;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+		long userId = userDetails.getIdx();
 
 		BoardDTO board = boardService.getBoard(id, userId);
 

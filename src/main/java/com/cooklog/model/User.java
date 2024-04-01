@@ -51,10 +51,17 @@ public class User {
 	private List<Board> boards = new ArrayList<>();
 
 	@Builder
-	public User (String nickname, String email, String password, Role role){
+	public User (String nickname, String email, String password, Role role, String introduction, String profileImage){
 		this.nickname = nickname;
 		this.email = email;
 		this.password = password;
 		this.role = role;
+		this.introduction = introduction;
+		this.profileImage = profileImage;
+	}
+
+	public void update(String nickname, String introduction) {
+		this.nickname = nickname;
+		this.introduction = introduction;
 	}
 }

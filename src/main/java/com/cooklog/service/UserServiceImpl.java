@@ -1,8 +1,14 @@
 package com.cooklog.service;
 
 
+import com.cooklog.dto.CustomUserDetails;
+import com.cooklog.dto.UserUpdateRequestDTO;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -28,6 +34,7 @@ import javax.validation.Valid;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
     private final BCryptPasswordEncoder encoder;
 
     // JoinDTO 객체를 받아 사용자 정보를 추가(저장)하는 메서드
@@ -111,12 +118,11 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-
     // 모든 유저의 정보를 UserDTO 리스트로 변환하여 반환
     @Override
     public List<UserDTO> findAllUsers() {
         return userRepository.findAll().stream()
-            .map(user -> new UserDTO(user.getIdx(), user.getNickname(), user.getEmail(), user.getRole(), user.getReportCount(),user.isDeleted())
+            .map(user -> new UserDTO(user.getIdx(), user.getNickname(), user.getEmail(), user.getIntroduction(), user.getRole(), user.getReportCount(),user.isDeleted())
             ).collect(Collectors.toList());
     }
 
@@ -126,5 +132,17 @@ public class UserServiceImpl implements UserService {
         user.setRole(role);
         userRepository.save(user);
     }
+
+    @Transactional
+    @Override
+    public User updateUserProfile(Long userIdx, UserUpdateRequestDTO userDTO) {
+        User user = userRepository.findById(userIdx)
+                .orElseThrow(() -> new IllegalArgumentException("해당 userId가 없습니다."));
+
+        user.update(userDTO.getNickname(), userDTO.getIntroduction());
+
+        return user;
+    }
+
 }
 
