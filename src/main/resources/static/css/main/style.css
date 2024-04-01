@@ -257,11 +257,22 @@ main img{
     color: #c4c4c4;
 }
 /* 좋아요 아이콘 스타일 */
-.like-section button {
+.like-and-bookmark-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.like-and-bookmark-section button {
     width: 40px;
     height: 40px;
     border: none;
     margin-right: 10px;
+}
+
+.like-container {
+    display: flex;
+    align-items: center;
 }
 
 .redheart {
@@ -276,6 +287,15 @@ main img{
     font-size: 18px;
     font-weight: 500;
 }
+
+.yellowbookmark {
+    background: no-repeat center / cover url(../../img/main/yellowbookmark.png);
+}
+
+.emptybookmark {
+    background: no-repeat center / cover url(../../img/main/emptybookmark.png);
+}
+
 /* 유저명, 댓글, 날짜를 담는 섹션 */
 .user-comment {
     flex-grow: 1;

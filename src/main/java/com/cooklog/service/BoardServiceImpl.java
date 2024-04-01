@@ -102,7 +102,10 @@ public class BoardServiceImpl implements BoardService {
                 .imageNames(board.getImages().stream().map(Image::getName).collect(Collectors.toList()))
                 .tags(board.getTags().stream().map(Tag::getName).collect(Collectors.toList()))
                 .likeCount(board.getLikes().size())
-                .isLike(board.getLikes().stream().anyMatch(like -> like.getUser().getIdx().equals(userId))).build();
+                .isLike(board.getLikes().stream().anyMatch(like -> like.getUser().getIdx().equals(userId)))
+                .isMarked(board.getBookmarks().stream().anyMatch(marks -> marks.getUser().getIdx().equals(userId)))
+                .build();
+
 
         return boardDTO;
     }

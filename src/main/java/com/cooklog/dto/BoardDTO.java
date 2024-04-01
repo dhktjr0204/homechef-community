@@ -25,6 +25,7 @@ public class BoardDTO {
     private List<String> tags; // 태그 이름 목록
     private Integer likeCount; // '좋아요' 개수
     private boolean isLike;
+    private boolean isMarked;
 
     public BoardDTO(Long id, String content, LocalDateTime createdAt) {
         this.id = id;
