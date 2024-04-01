@@ -1,8 +1,12 @@
 package com.cooklog.repository;
 
 
+import java.util.Collection;
 import java.util.List;
 import com.cooklog.dto.LatestCommentWithTotalCountDTO;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.cooklog.model.Board;
@@ -34,4 +38,10 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             "ORDER BY c.created_at DESC " +
             "LIMIT 1", nativeQuery = true)
     Optional<LatestCommentWithTotalCountDTO> findLatestCommentByBoardId(@Param("boardId") Long boardId, @Param("parentCommentId") Long parentCommentId);
+
+	List<Comment> findByBoardId(Long boardId);
+	Page<Comment> findByBoardId(Long boardId, Pageable pageable);
+
+	Page<Comment> findByParentCommentId(Long parentId, Pageable pageable);
+
 }
