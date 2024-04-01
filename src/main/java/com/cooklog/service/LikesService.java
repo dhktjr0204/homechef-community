@@ -1,5 +1,12 @@
 package com.cooklog.service;
 
 public interface LikesService {
-	//impl에서 만들어야할 메소드 정의
+
+    Long getNumberOfLikesByBoardId(Long boardId);
+
+    boolean existsByUserIdAndBoardId(Long userIdx,Long boardId);
+
+    void addLike(Long userIdx,Long boardId);
+
+    void cancelLike(Long userIdx,Long boardId);
 }
