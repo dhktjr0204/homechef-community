@@ -21,6 +21,7 @@ public interface BoardService {
 	List<BoardDTO> findAllBoards();
 
 	Page<BoardDTO> getSearchByText(String keyword, Long userId, Pageable pageable);
+	Page<BoardDTO> findBoardsByTags(String tags,Long userId, Pageable pageable);
 
 	List<BoardDTO> findBoardsByUserId(Long userId);
 }
