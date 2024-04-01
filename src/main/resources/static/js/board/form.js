@@ -67,6 +67,8 @@ function handleSubmit(url, method) {
                 }else if(response.status===400){
                     alert(msg);
                     throw new Error(msg);
+                }else if(response.status===404){
+                    alert("예상치 못한 에러가 발생하였습니다.");
                 }
             });
         } else {

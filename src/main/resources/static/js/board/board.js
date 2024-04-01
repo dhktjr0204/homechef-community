@@ -50,6 +50,9 @@ function clickDeleteBoard(button) {
                 return response.text().then(msg => {
                     if (response.status === 401) {
                         alert(msg);
+                    }else if(response.status===404){
+                        alert("해당 게시물을 찾을 수 없습니다.");
+                        throw new Error("해당 게시물을 찾을 수 없습니다.");
                     }
                 });
             } else {

@@ -3,6 +3,8 @@ package com.cooklog.service;
 import com.cooklog.dto.BoardCreateRequestDTO;
 import com.cooklog.dto.BoardDTO;
 import com.cooklog.dto.BoardUpdateRequestDTO;
+import com.cooklog.exception.board.BoardNotFoundException;
+import com.cooklog.exception.user.NotValidateUserException;
 import com.cooklog.model.Board;
 import com.cooklog.model.Image;
 import com.cooklog.model.Tag;
@@ -19,10 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import java.util.stream.Collectors;
 
 @Service
@@ -60,17 +61,22 @@ public class BoardServiceImpl implements BoardService {
             try {
                 return convertBoardToDTO(board, userId);
             } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
+                return convertBoardToDTOExcludingFileUrl(board, userId);
             }
         });
     }
 
     @Override
-    public BoardDTO getBoard(Long boardId, Long userId) throws FileNotFoundException {
+    public BoardDTO getBoard(Long boardId, Long userId) {
 
-        Board board = boardRepository.findById(boardId).orElseThrow();
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(BoardNotFoundException::new);
 
-        return convertBoardToDTO(board, userId);
+        try {
+            return convertBoardToDTO(board, userId);
+        } catch (FileNotFoundException e) {
+            return convertBoardToDTOExcludingFileUrl(board, userId);
+        }
     }
 
     @Override
@@ -86,7 +92,7 @@ public class BoardServiceImpl implements BoardService {
             try {
                 return convertBoardToDTO(board, userId);
             } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
+                return convertBoardToDTOExcludingFileUrl(board, userId);
             }
         });
     }
@@ -112,7 +118,7 @@ public class BoardServiceImpl implements BoardService {
             try {
                 return convertBoardToDTO(board, userId);
             } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
+                return convertBoardToDTOExcludingFileUrl(board, userId);
             }
         });
     }
@@ -145,11 +151,30 @@ public class BoardServiceImpl implements BoardService {
         return boardDTO;
     }
 
+    private BoardDTO convertBoardToDTOExcludingFileUrl(Board board, Long userId){
+        BoardDTO boardDTO = BoardDTO.builder()
+                .id(board.getId())
+                .content(board.getContent())
+                .createdAt(board.getCreatedAt())
+                .readCount(board.getReadCount())
+                .userId(board.getUser().getIdx())
+                .userNickname(board.getUser().getNickname())
+                .profileImageName(board.getUser().getProfileImage())
+                .profileImageUrl("")
+                .imageNames(board.getImages().stream().map(Image::getName).collect(Collectors.toList()))
+                .imageUrls(new ArrayList<>())
+                .tags(board.getTags().stream().map(Tag::getName).collect(Collectors.toList()))
+                .likeCount(board.getLikes().size())
+                .isLike(board.getLikes().stream().anyMatch(like -> like.getUser().getIdx().equals(userId))).build();
+
+        return boardDTO;
+    }
+
     @Transactional
     @Override
     public Board save(Long userId, BoardCreateRequestDTO requestDTO, List<MultipartFile> images) throws IOException {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("유저아이디가 존재하지 않습니다."));
+                .orElseThrow(NotValidateUserException::new);
 
         Board boardBuilder = Board.builder()
                 .user(user)
@@ -169,7 +194,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Board updateBoard(Long boardId, BoardUpdateRequestDTO boardDTO,List<String> originalFiles, List<MultipartFile> newFiles) throws IOException {
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 boardId가 없습니다."));
+                .orElseThrow(BoardNotFoundException::new);
 
         board.update(boardDTO.getContent());
 
@@ -202,7 +227,7 @@ public class BoardServiceImpl implements BoardService {
     public void deleteBoard(Long boardId) {
 
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 boardId가 없습니다."));
+                .orElseThrow(BoardNotFoundException::new);
 
         boardRepository.delete(board);
 

@@ -2,7 +2,7 @@ package com.cooklog.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.cooklog.dto.BoardDTO;
+import com.cooklog.exception.board.BoardNotFoundException;
 import com.cooklog.exception.user.NotValidateUserException;
 import com.cooklog.model.Board;
 import com.cooklog.model.Image;
@@ -11,9 +11,7 @@ import com.cooklog.repository.ImageRepository;
 import com.cooklog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
@@ -33,21 +31,6 @@ public class ImageServiceImpl implements ImageService {
     @Value("${cloud.aws.s3.bucketName}")
     private String bucket;
 
-    @Override
-    public Page<BoardDTO> getAllFileListLoad(Page<BoardDTO> boardDTOS) throws FileNotFoundException {
-
-        for(BoardDTO board: boardDTOS){
-            //유저 프로필 불러오기
-            String profileImageUrl=board.getProfileImageName();
-            board.setProfileImageUrl(fileLoad(profileImageUrl));
-
-            //게시글에 저장된 사진들 불러오기
-            List<String> imageUrls = board.getImageNames();
-            board.setImageUrls(fileListLoad(imageUrls));
-        }
-
-        return boardDTOS;
-    }
 
     @Override
     public List<String> fileListWrite(List<MultipartFile> files, Board board) throws IOException {
@@ -95,7 +78,7 @@ public class ImageServiceImpl implements ImageService {
     public void updateFileList(Board board, List<String> originalFiles, List<MultipartFile> newFiles) throws IOException {
 
         List<Image> images = imageRepository.findAllByBoard_IdOrderByOrder(board.getId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 board id가 없습니다."));
+                .orElseThrow(BoardNotFoundException::new);
 
         //새로 전송된 사진들이 시작할 순서
         int orderIndex = 0;
