@@ -41,6 +41,18 @@ public class CustomUserDetails implements UserDetails {
         return user.getEmail();
     }
 
+    public String getNickname() {
+        return user.getNickname();
+    }
+
+    public String getIntroduction() {
+        return user.getIntroduction();
+    }
+
+    public String getProfileImageUrl() {
+        return user.getProfileImage();
+    }
+
     public Long getIdx() {
         // 사용자 아이디(pk) 반환
         return user.getIdx();
@@ -65,4 +77,5 @@ public class CustomUserDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
 }

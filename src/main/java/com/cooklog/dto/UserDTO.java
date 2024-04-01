@@ -7,6 +7,8 @@ import javax.validation.constraints.NotBlank;
 
 import com.cooklog.model.Role;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class UserDTO {
@@ -23,11 +25,13 @@ public class UserDTO {
 	private String profileImage;
 	private int reportCount;
 	private boolean isDeleted;
+//	private List<BoardDTO> myPageList;
 
-	public UserDTO(Long idx, String nickname, String email, Role role, int reportCount, boolean isDeleted) {
+	public UserDTO(Long idx, String nickname, String email, String introduction, Role role, int reportCount, boolean isDeleted) {
 		this.idx = idx;
 		this.nickname = nickname;
 		this.email = email;
+		this.introduction = introduction;
 		this.role = role;
 		this.reportCount = reportCount;
 		this.isDeleted = isDeleted;

@@ -1,13 +1,13 @@
 package com.cooklog.controller;
 
-import com.cooklog.dto.JoinDTO;
+import com.cooklog.dto.*;
 import lombok.RequiredArgsConstructor;
-
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import com.cooklog.dto.UserDTO;
 import com.cooklog.service.UserService;
 
 @Controller
@@ -42,8 +42,52 @@ public class UserController {
     //회원가입 폼 처리 시 호출됨
     @PostMapping("/joinProc")
     public String joinProc(@ModelAttribute JoinDTO joinDTO) {
-        userService.joinSave(joinDTO);
-        return "redirect:/login";
+            userService.joinSave(joinDTO);
+            return "redirect:/login";
     }
+
+    // 마이페이지
+    @GetMapping("/myPage")
+    public String getMyPage(Model model){
+
+        // 현재 인증된 사용자의 정보를 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        // 현 사용자의 idx 값으로 이외 정보들 가져오기
+        UserDTO userDTO = userService.findUserById(userDetails.getIdx());
+        String nickname = userDTO.getNickname();
+        String introduction = userDTO.getIntroduction();
+        String profileImage = userDTO.getProfileImage();
+
+        // 모델에 사용자 정보 추가
+        model.addAttribute("nickname", nickname);
+        model.addAttribute("introduction", introduction);
+        model.addAttribute("profileImageUrl", profileImage);
+
+        return "myPage/myPage";
+    }
+
+    // 팔로워 페이지
+    @GetMapping("/myPage/follower")
+    public String getFollower(){
+        return "myPage/followerPage";
+    }
+
+    // 회원 정보 수정 페이지
+    @GetMapping("/myPage/edit")
+    public String getProfileEditForm(){
+        return "myPage/profileEditForm";
+    }
+
+//    // 회원 정보 수정 폼
+//    @PutMapping("/myPage/edit")
+//    public ResponseEntity<String> edit(@RequestParam("userIdx") Long userIdx,
+//                                       @ResponseBody UserUpdateRequestDTO userUpdateRequestDTO) {
+//
+//        userService.updateUserProfile(userIdx, userUpdateRequestDTO);
+//        return ResponseEntity.ok("/myPage/edit");
+//    }
+
 
 }
