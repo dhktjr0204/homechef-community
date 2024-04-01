@@ -2,6 +2,7 @@ package com.cooklog.controller;
 
 import com.cooklog.dto.BoardDTO;
 import com.cooklog.dto.CommentDTO;
+import com.cooklog.model.Board;
 import com.cooklog.service.BoardService;
 import com.cooklog.service.CommentService;
 import com.cooklog.service.ImageService;
@@ -11,12 +12,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -52,14 +55,13 @@ public class MainController {
     }
 
     @GetMapping("/search")
-    public String search(@RequestParam(value = "keyword") String keyword,
+    public String searchByText(@RequestParam(value = "keyword") String keyword,
                          @PageableDefault(page = 0, size = 3, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                          @RequestParam(value = "id", defaultValue = "0") Long lastBoardId,
                          Model model) throws FileNotFoundException {
         long userId = 1;
 
         Page<BoardDTO> searchByText = boardService.getSearchByText(keyword, userId, pageable);
-        //allBoard에 이미지 링크 추가
         Page<BoardDTO> allBoardContainsImageUrls = imageService.getAllFileListLoad(searchByText);
 
         List<CommentDTO> comments = commentService.getCommentInfoByBoardId(searchByText);
@@ -75,4 +77,26 @@ public class MainController {
         }
     }
 
+    @GetMapping("/hashtag_search")
+    public String searchByhashTag(@RequestParam(value = "keyword") String tags,
+                                          @PageableDefault(page = 0, size = 3, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+                                          @RequestParam(value = "id", defaultValue = "0") Long lastBoardId,
+                                          Model model) throws FileNotFoundException {
+        long userId = 1;
+
+        Page<BoardDTO> searchByTags = boardService.findBoardsByTags(tags, userId, pageable);
+        Page<BoardDTO> allBoardContainsImageUrls = imageService.getAllFileListLoad(searchByTags);
+
+        List<CommentDTO> comments = commentService.getCommentInfoByBoardId(searchByTags);
+
+        model.addAttribute("keyword", tags);
+        model.addAttribute("boards", allBoardContainsImageUrls);
+        model.addAttribute("comments", comments);
+
+        if (lastBoardId == 0) {
+            return "main/searchPage";
+        }else{
+            return "layout/boardPreview";
+        }
+    }
 }

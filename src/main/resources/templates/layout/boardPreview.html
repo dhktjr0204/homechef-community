@@ -1,4 +1,4 @@
-<article th:fragment="board-preview" class="board-container" th:if="${!boards.isEmpty()}"
+<article th:fragment="board-preview" class="board-container" th:unless="${boards.isEmpty()}"
          th:each="board, boardIndex: ${boards}">
     <hr>
     <input class="board-id" type="hidden" th:value="${board.id}" />
@@ -28,9 +28,7 @@
         </div>
     </header>
     <section class="image-container">
-        <th:block th:if="${board.imageUrls.size()}>1">
-            <button class="prev-btn" onclick="prevSlide(this)">&#10094;</button>
-        </th:block>
+        <button th:if="${board.imageUrls.size()}>1" class="prev-btn" onclick="prevSlide(this)">&#10094;</button>
         <div class="slider-container">
             <ul class="image-list">
                 <li th:each="image: ${board.imageUrls}">
@@ -39,9 +37,7 @@
                 </li>
             </ul>
         </div>
-        <th:block th:if="${board.imageUrls.size()}>1">
-            <button class="next-btn" onclick="nextSlide(this)">&#10095;</button>
-        </th:block>
+        <button th:if="${board.imageUrls.size()}>1" class="next-btn" onclick="nextSlide(this)">&#10095;</button>
     </section>
 
     <pre class="content" th:text="${board.content}"></pre>
@@ -56,7 +52,7 @@
         <th:block th:if="${!board.tags.isEmpty()}">
             <div class="hash-tag-container">
                 <div class="hash-tag-list">
-                    <button class="hash-tag-button" th:each="tag: ${board.tags}" th:text="${tag}"></button>
+                    <a th:href="'/hashtag_search?keyword='+${tag}" class="hash-tag-button" th:each="tag: ${board.tags}" th:text="${tag}"></a>
                 </div>
             </div>
         </th:block>
@@ -68,7 +64,8 @@
                    th:value="${comments[__${boardIndex.index}__].userId}"></a>
                 <p class="comment-content" th:text="${comments[__${boardIndex.index}__].content}"></p>
             </div>
-            <time class="comment-created-at" th:text="${#temporals.format(comments[__${boardIndex.index}__].createdAt,'yyyy-MM-dd')}"></time>
+            <time class="comment-created-at"
+                  th:text="${#temporals.format(comments[__${boardIndex.index}__].createdAt,'yyyy-MM-dd')}"></time>
         </section>
         <nav>
             <a th:href="@{'/board/' + ${board.id}}">

@@ -33,4 +33,11 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     Optional<Page<Board>> findByContentContaining(String keyword, Pageable pageable);
 
+    //해당 태그가 하나라도 포함된 게시물 return
+    @Query("SELECT t.board " +
+            "FROM Board b INNER JOIN Tag t ON t.board.id=b.id " +
+            "WHERE t.name IN :tagNames " +
+            "GROUP BY b.id")
+    Optional<Page<Board>> findBoardsByTagNames(List<String> tagNames, Pageable pageable);
+
 }
