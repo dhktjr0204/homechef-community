@@ -1,0 +1,225 @@
+/* 댓글 입력란 스타일 */
+#commentInput {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+}
+.main-comment{
+    display: flex;
+    align-items: center;
+}
+/* 댓글 목록 스타일 */
+.comments-display {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.comment {
+    display: grid;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+/* 프로필 이미지 스타일 */
+.comment-profile img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+/* 댓글 사용자 이름 스타일 */
+.comment-username {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+/* 댓글 내용 스타일 */
+.comment-content {
+    padding: 0px;
+    margin: 0 0 3px 0;
+}
+
+/* 댓글 추가 버튼 */
+#commentForm button[type="submit"] {
+    padding: 5px 15px;
+    border-radius: 15px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+/* 마우스 호버 시 댓글 옵션 보이기 */
+.comment-options {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s linear;
+}
+
+.comment:hover .comment-options {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* 답글 및 댓글 옵션 스타일 */
+.comment-reply, .comment-more-options {
+    margin-left: auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+
+
+
+/* 댓글 옵션 버튼 스타일 */
+.more-options {
+    position: absolute;
+    right: 21%;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* 옵션 메뉴 스타일 */
+.options-menu {
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    text-align-last: center;
+    border-radius: 20px;
+    margin-top: 4%;
+}
+
+.options-menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+.options-menu li button {
+    display: block;
+    padding: 10px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+/* 답글 버튼 스타일 */
+
+.reply-button {
+    background-color: #ffffff;
+    padding: 9px 0 0 50px;
+    border: #fff;
+    cursor: pointer;
+    color: #888;
+}
+
+/* 댓글 생성 날짜 스타일 */
+.comment-date {
+    display: block;
+    color: #888;
+    font-size: 0.8em;
+    margin-top: 5px;
+    text-align: right;
+    padding-right: 3%;
+}
+
+/* 답글 버튼을 위한 여백 추가 */
+.comment-actions {
+    margin-top: 10px;
+}
+.comment-metadata{
+    display: flex;
+    align-items: baseline;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    gap: 50%;
+}
+
+.edit-comment-form {
+    display: none; /* 기본 상태는 숨김 */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 20px;
+    z-index: 1000; /* 다른 요소들 위에 표시 */
+}
+
+.edit-comment-textarea {
+    width: 100%;
+    height: 100px;
+}
+
+.edit-comment-buttons {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.save-edit-button, .cancel-edit-button {
+    outline: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s;
+    cursor: pointer;
+    padding: 7px 17px;
+    border: none;
+    border-radius: 20px;
+    font-family: 'Arial', sans-serif;
+    position: absolute;
+    right: -7px;
+    top: 2px;
+    color: #fff;
+    background-color: gray;
+}
+
+.save-edit-button:hover, .cancel-edit-button:hover {
+    background-color: #ffd700; /* 호버 시 배경색 변경 */
+}
+.save-edit-button {
+    background-color: #FFA500;
+    right: 63px;
+}
+
+#commentForm {
+    position: relative;
+}
+#pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+#pagination button {
+    border: none;
+    padding: 8px 16px;
+    margin: 0 4px;
+    border-radius: 20px; /* 동그란 버튼 */
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    background-color: #007bff;
+    color: white;
+}
+
+#pagination button:hover:not([disabled]),
+#pagination button:active:not([disabled]) {
+    background-color: #005bff; /* 버튼 호버 시 색상 */
+    color: white;
+}
+
+#pagination button[disabled] {
+    cursor: default;
+    opacity: 0.7;
+}

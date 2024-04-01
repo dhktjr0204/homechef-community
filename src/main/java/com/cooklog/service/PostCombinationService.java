@@ -21,14 +21,19 @@ public class PostCombinationService {
 		List<UserPostDTO> posts = new ArrayList<>();
 
 		List<BoardDTO> boards = boardService.findBoardsByUserId(userId);
-		List<CommentDTO> comments = commentService.findCommentsByUserId(userId);
 
-		for (int i = 0; i < boards.size(); i++) {
-			BoardDTO board = boards.get(i);
-			CommentDTO comment = comments.size() > i ? comments.get(i) : null; // 댓글이 없을 수도 있으므로 체크
+		for (BoardDTO board : boards) {
+			List<CommentDTO> comments = commentService.findCommentsByBoardId(board.getId());
 
-			UserPostDTO post = new UserPostDTO(board, comment);
-			posts.add(post);
+			for (CommentDTO comment : comments) {
+				UserPostDTO post = new UserPostDTO(board, comment);
+				posts.add(post);
+			}
+
+			// 게시글에 댓글이 없는 경우를 처리
+			if (comments.isEmpty()) {
+				posts.add(new UserPostDTO(board, null));
+			}
 		}
 
 		return posts;

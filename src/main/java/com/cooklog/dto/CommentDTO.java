@@ -18,7 +18,9 @@ public class CommentDTO {
 	private Long userId;
 	private String userName; // 사용자 이름 또는 닉네임을 표시하기 위함
 	private Long boardId; // 댓글이 속한 게시글 ID
-  private int contentCount;// 댓글 개수
+  	private int contentCount;// 댓글 개수
+	private String profileImage;
+	private Long parentCommentId;
 
 	public CommentDTO(Long id, String content, LocalDateTime createdAt, Long idx, String nickname, Long boardId) {
 		this.id = id;
@@ -33,5 +35,24 @@ public class CommentDTO {
 		this.id = id;
 		this.content = content;
 		this.createdAt = createdAt;
+	}
+
+	public CommentDTO(Long id, String content, LocalDateTime createdAt, Long idx, String nickname, Long boardId, String profileImage) {
+		this.id = id;
+		this.content = content;
+		this.createdAt = createdAt;
+		this.userId = idx;
+		this.userName = nickname;
+		this.boardId = boardId;
+		this.profileImage = profileImage;
+	}
+
+	public CommentDTO(Long id, String content, LocalDateTime createdAt, Long id1, Long idx, String nickname) {
+		this.id = id;
+		this.content = content;
+		this.createdAt = createdAt;
+		this.parentCommentId = id1;
+		this.userId = idx;
+		this.userName = nickname;
 	}
 }

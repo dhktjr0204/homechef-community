@@ -1,5 +1,5 @@
 <header th:fragment="main-header" class="main-header">
-    <a th:href="@{/static}">
+    <a th:href="@{/}">
         <img th:src="@{/img/main/CookLog.png}" alt="Log" class="logo-img">
     </a>
     <section>
@@ -13,7 +13,7 @@
     <!--    로그인 전 = 로그인 / 로그인 후 = 프로필 + 아이디 필요.-->
     <div class="user-info">
         <figure class="profile-picture" aria-label="프로필">
-            <img  src="../../static/img/main/profile4.jpg" alt="프로필 사진">
+            <img  th:src="@{/img/main/profile4.jpg}" alt="프로필 사진">
         </figure>
         <span class="username">dhktjr0204</span>
     </div>
