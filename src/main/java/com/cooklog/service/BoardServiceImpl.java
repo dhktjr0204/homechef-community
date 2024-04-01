@@ -36,9 +36,14 @@ public class BoardServiceImpl implements BoardService {
         if (lastBoardId == 0) {
             boardPage = boardRepository.findAll(pageable);
         } else if (sortType.equals("readCount: DESC")) {
+            System.out.println("-----------------read--------------------");
             boardPage = boardRepository.findAllOrderByReadCount(lastBoardId, pageable);
-        } else {
+        } else if (sortType.equals("createdAt: DESC")){
+            System.out.println("-----------------create------------------");
             boardPage = boardRepository.findAllOrderByCreatedAt(lastBoardId, pageable);
+        } else {
+            System.out.println("-----------------like------------------");
+            boardPage = boardRepository.findAllOrderByLikesCount(lastBoardId, pageable);
         }
 
         if (boardPage.isEmpty()) {

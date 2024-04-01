@@ -36,7 +36,11 @@ async function fetchImages(pageNum) {
                 });
             }
         } else if (selectedType === "popularity") {
-            response = await fetch(`?page=${pageNum}&sort=readCount&id=${lastBoardId}`, {
+            response = await fetch(`?page=${pageNum}&sort=readCount,DESC&id=${lastBoardId}`, {
+                method: "GET",
+            });
+        } else if (selectedType === "famous") {
+            response = await fetch(`?page=${pageNum}&sort=likesCount,DESC&id=${lastBoardId}`, {
                 method: "GET",
             });
         }

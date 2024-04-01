@@ -6,6 +6,9 @@ document.querySelector("#order-select").addEventListener("change", function() {
     }else if(selectedValue==="popularity"){
         pageNum = 1;
         getBoardList("readCount");
+    }else if(selectedValue==="famous"){
+        pageNum = 1;
+        getBoardList("likesCount");
     }
 });
 
