@@ -25,12 +25,22 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Page<Board> findAll(Pageable pageable);
 
     //두번째 요청일 경우
-    @Query(value = "select b from Board b where b.id <= :id order by b.createdAt DESC")
+    @Query(value = "select b from Board b where b.id <= :id")
     Page<Board> findAllOrderByCreatedAt(Long id, Pageable pageable);
 
-    @Query(value = "select b from Board b where b.id <= :id order by b.readCount DESC")
+    @Query(value = "select b from Board b where b.id <= :id ")
     Page<Board> findAllOrderByReadCount(Long id, Pageable pageable);
 
+    @Query(value = "select b from Board b order by b.likesCount desc , b.createdAt desc")
+    Page<Board> findAllOrderByLikesCount(Long id, Pageable pageable);
+
     Optional<Page<Board>> findByContentContaining(String keyword, Pageable pageable);
+
+    //해당 태그가 하나라도 포함된 게시물 return
+    @Query("SELECT t.board " +
+            "FROM Board b INNER JOIN Tag t ON t.board.id=b.id " +
+            "WHERE t.name IN :tagNames " +
+            "GROUP BY b.id")
+    Optional<Page<Board>> findBoardsByTagNames(List<String> tagNames, Pageable pageable);
 
 }

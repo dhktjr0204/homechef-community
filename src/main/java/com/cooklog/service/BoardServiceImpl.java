@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 import java.util.stream.Collectors;
@@ -35,9 +36,14 @@ public class BoardServiceImpl implements BoardService {
         if (lastBoardId == 0) {
             boardPage = boardRepository.findAll(pageable);
         } else if (sortType.equals("readCount: DESC")) {
+            System.out.println("-----------------read--------------------");
             boardPage = boardRepository.findAllOrderByReadCount(lastBoardId, pageable);
-        } else {
+        } else if (sortType.equals("createdAt: DESC")){
+            System.out.println("-----------------create------------------");
             boardPage = boardRepository.findAllOrderByCreatedAt(lastBoardId, pageable);
+        } else {
+            System.out.println("-----------------like------------------");
+            boardPage = boardRepository.findAllOrderByLikesCount(lastBoardId, pageable);
         }
 
         if (boardPage.isEmpty()) {
@@ -58,6 +64,25 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public Page<BoardDTO> getSearchByText(String keyword,Long userId, Pageable pageable) {
         Page<Board> boardPage = boardRepository.findByContentContaining(keyword, pageable)
+                .orElse(Page.empty());
+
+        if(boardPage.isEmpty()){
+            return Page.empty();
+        }
+
+        return boardPage.map(board->convertBoardToDTO(board, userId));
+    }
+
+    @Override
+    public Page<BoardDTO> findBoardsByTags(String tags, Long userId, Pageable pageable) {
+        //받은 태그가 하나도 없을때
+        if(tags.isEmpty()){
+            return Page.empty();
+        }
+
+        List<String> tagList= Arrays.asList(tags.split(","));
+
+        Page<Board> boardPage = boardRepository.findBoardsByTagNames(tagList, pageable)
                 .orElse(Page.empty());
 
         if(boardPage.isEmpty()){
@@ -133,18 +158,24 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     @Override
     public void deleteBoard(Long boardId) {
+
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 boardId가 없습니다."));
+
         boardRepository.delete(board);
+
     }
     @Override
     public List<BoardDTO> findAllBoards() {
+
         List<Board> boards = boardRepository.findAll();
+
         return boards.stream().map(board -> new BoardDTO(
             board.getId(),
             board.getContent(),
             board.getCreatedAt()
         )).collect(Collectors.toList());
+
     }
     @Override
     public List<BoardDTO> findBoardsByUserId(Long userId) {

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>팔로워</title>
+    <link rel="stylesheet" href="../../static/css/main/style.css" th:href="@{/css/main/style.css}"/>
+    <link rel="stylesheet" href="../../static/css/myPage/followerPage.css" th:href="@{/css/myPage/followerPage.css}"/>
+</head>
+<div th:replace="~{layout/header.html::main-header}"></div>
+<body>
+<main>
+    <ul class="follower-list">
+        <li class="follower-info" th:each="item: ${#numbers.sequence(1,10)}">
+            <figure class="profile-picture" aria-label="프로필">
+                <img src="../../static/img/main/food1.png" th:src="@{/img/main/profile4.jpg}" alt="프로필 사진">
+            </figure>
+            <p class="user-name">example_user</p>
+            <!--일단 모두 필요하기 때문에 다 만들어놓겠습니다 나중에 th:if로 처리해주세요-->
+            <!--만약 자기 마이페이지가 아닐 시 팔로우된 사람이면 팔로잉으로 표시, 팔로우 안된 사람이면 팔로우로 표시-->
+            <!--인스타그램 참고-->
+            <button class="delete-follower-button">삭제</button>
+            <button class="follow-button">팔로우</button>
+            <button class="un-follow-button">팔로잉</button>
+        </li>
+    </ul>
+    <nav class="page">
+        <ul class="page-list">
+            <li class="page-link">
+                <a th:href="@{/}"><</a>
+            </li>
+            <li class="page-link" th:each="item: ${#numbers.sequence(1,5)}">
+                <a th:href="@{/}" th:text="${item}"></a>
+            </li>
+            <li class="page-link">
+                <a th:href="@{/}">></a>
+            </li>
+        </ul>
+    </nav>
+</main>
+</body>
+</html>

@@ -6,10 +6,9 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "likes")
+@Table(name = "likes",uniqueConstraints = {@UniqueConstraint(name = "user_board_unique",columnNames = {"user_idx,board_id"})})
 public class Likes {
 
 	@Id
@@ -24,4 +23,8 @@ public class Likes {
 	@JoinColumn(name = "board_id")
 	private Board board;
 
+	public Likes(User user,Board board) {
+		this.user = user;
+		this.board = board;
+	}
 }

@@ -22,6 +22,7 @@
             <select class="dropbtn" id="order-select">
                 <option value="latest">최신순</option>
                 <option value="popularity">인기순</option>
+                <option value="famous">좋아요순</option>
                 <option value="follow">팔로우만 조회</option>
             </select>
         </div>
@@ -29,14 +30,24 @@
 </nav>
 <main>
     <div th:replace="~{layout/boardPreview.html::board-preview}"></div>
+
+    <div th:if="${boards.isEmpty()}" class="no-content-container">
+        <p class="no-content-text">콘텐츠가 없습니다.</p>
+    </div>
 </main>
-<script th:inline="javascript">
-    let totalPage=[[${boards.totalPages}]];
-    let lastBoardId=[[${boards.content[0].id}]];
+
+<script th:unless="${boards.isEmpty()}" th:inline="javascript">
+    let totalPage = [[${boards.totalPages}]];
+    let lastBoardId = [[${boards.content[0].id}]];
+</script>
+<script th:if="${boards.isEmpty()}" th:inline="javascript">
+    let totalPage = 0;
+    let lastBoardId = 0;
 </script>
 <script src="../../static/js/board/board.js" th:src="@{/js/board/board.js}"></script>
 <script src="../../static/js/main/infinityScroll.js" th:src="@{/js/main/infinityScroll.js}"></script>
 <script src="../../static/js/main/sortByType.js" th:src="@{/js/main/sortByType.js}"></script>
 <script src="../../static/js/main/search.js" th:src="@{/js/main/search.js}"></script>
+<script src="../../static/js/board/like.js" th:src="@{/js/board/like.js}"></script>
 </body>
 </html>

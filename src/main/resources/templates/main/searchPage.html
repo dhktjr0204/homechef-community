@@ -14,14 +14,24 @@
         <p> (으)로 검색한 결과입니다.</p>
     </div>
     <div th:replace="~{layout/boardPreview.html::board-preview}"></div>
+
+    <div th:if="${boards.isEmpty()}" class="no-content-container">
+        <p class="no-content-text">콘텐츠가 없습니다.</p>
+    </div>
 </main>
-<script th:inline="javascript">
-    let totalPage=[[${boards.totalPages}]];
-    let lastBoardId=[[${boards.content[0].id}]];
+
+<script th:unless="${boards.isEmpty()}" th:inline="javascript">
+    let totalPage = [[${boards.totalPages}]];
+    let lastBoardId = [[${boards.content[0].id}]];
 </script>
+<script th:if="${boards.isEmpty()}" th:inline="javascript">
+    let totalPage = 0;
+    let lastBoardId = 0;
+</script>
+
 <script src="../../static/js/board/board.js" th:src="@{/js/board/board.js}"></script>
 <script src="../../static/js/main/infinityScroll.js" th:src="@{/js/main/infinityScroll.js}"></script>
-<script src="../../static/js/main/sortByType.js" th:src="@{/js/main/sortByType.js}"></script>
 <script src="../../static/js/main/search.js" th:src="@{/js/main/search.js}"></script>
+<script src="../../static/js/board/like.js" th:src="@{/js/board/like.js}"></script>
 </body>
 </html>

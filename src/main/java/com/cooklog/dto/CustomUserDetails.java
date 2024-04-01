@@ -12,6 +12,7 @@ public class CustomUserDetails implements UserDetails {
     public CustomUserDetails(User user){
         this.user = user;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
 
@@ -23,19 +24,26 @@ public class CustomUserDetails implements UserDetails {
                 return user.getRole().name();
             }
         });
-
+        // 사용자 권한 정보 반환
         return collection;
     }
 
 
     @Override
     public String getPassword() {
+        // 사용자 비밀번호 반환
         return user.getPassword();
     }
 
     @Override
     public String getUsername() {
+        // 사용자 아이디 반환
         return user.getEmail();
+    }
+
+    public Long getIdx() {
+        // 사용자 아이디(pk) 반환
+        return user.getIdx();
     }
 
     @Override

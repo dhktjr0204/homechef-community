@@ -61,13 +61,8 @@ public class ImageServiceImpl implements ImageService {
 
         for (String imageName : fileNames) {
 
-            if (isNotExist(imageName)) {
-                throw new FileNotFoundException();
-            }
+            String urlText = loadS3(imageName);
 
-            URL url = amazonS3.getUrl(bucket, imageName);
-
-            String urlText = "" + url;
             urlList.add(urlText);
         }
 
@@ -111,6 +106,20 @@ public class ImageServiceImpl implements ImageService {
 
             }
         }
+    }
+
+    //s3 사진 로드 로직
+    private String loadS3(String fileName) throws FileNotFoundException {
+
+        if (isNotExist(fileName)) {
+            throw new FileNotFoundException();
+        }
+
+        URL url = amazonS3.getUrl(bucket, fileName);
+
+        String urlText = "" + url;
+
+        return urlText;
     }
 
     //s3 저장 로직
