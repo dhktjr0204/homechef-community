@@ -31,7 +31,7 @@ public class MainController {
     private final ImageService imageService;
     private final CommentService commentService;
 
-    @GetMapping("")
+    @GetMapping("/")
     public String index(@PageableDefault(page = 0, size = 3, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                         @RequestParam(value = "id", defaultValue = "0") Long lastBoardId, Model model) throws FileNotFoundException {
         long userId = 1;

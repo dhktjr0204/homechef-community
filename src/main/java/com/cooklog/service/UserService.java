@@ -6,25 +6,25 @@ import com.cooklog.dto.JoinDTO;
 import com.cooklog.dto.UserDTO;
 import com.cooklog.model.Role;
 
-import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-@Service
+import javax.validation.Valid;
+
 @Validated
 public interface UserService {
 
-	//회원 가입
+	//회원 가입 정보 저장
+	void joinSave(JoinDTO joinDTO);
 
-	public void join(JoinDTO joinDTO);
-	
-	//
-	// //이메일 중복 검색
-	// boolean emailExists(String email);
+//	void join(@Valid UserDTO userDTO);
+
+//	//이메일 중복 검색
+//	boolean emailExists(String email);
 
 	UserDTO findUserById(Long id);
 
-	// //비밀번호 유효성 검사
-	// boolean isValidPassword(String password);
+//	//비밀번호 유효성 검사
+//	boolean isValidPassword(String password);
 
 	// 모든 유저의 정보를 가져오는 메소드
 	List<UserDTO> findAllUsers();

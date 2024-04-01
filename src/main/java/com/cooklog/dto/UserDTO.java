@@ -36,10 +36,4 @@ public class UserDTO {
 	public UserDTO() {
 
 	}
-
-	//	private String introduction; //마이페이지
-//	private String role; //마이페이지
-//	private String profileImage; //마이페이지
-//	private Boolean isDeleted; //마이페이지
-
 }

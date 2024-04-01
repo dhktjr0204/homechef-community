@@ -14,9 +14,7 @@ import com.cooklog.service.UserService;
 @RequiredArgsConstructor
 public class UserController {
 
-
     private final UserService userService;
-
 
     @GetMapping("/user/profile")
     public String userProfile(Model model) {
@@ -29,27 +27,23 @@ public class UserController {
         return "main/index";
     }
 
-    //로그인
+    //로그인 뷰
     @GetMapping("/login")
-    public String loginP() {
+    public String login() {
         return "user/login";
     }
 
-    //회원가입
+    //회원가입 뷰
     @GetMapping("/join")
-    public String joinP() {
+    public String join() {
         return "user/join";
     }
+
+    //회원가입 폼 처리 시 호출됨
     @PostMapping("/joinProc")
-    public String joinProcess(JoinDTO joinDTO) {
-        userService.join(joinDTO);
+    public String joinProc(@ModelAttribute JoinDTO joinDTO) {
+        userService.joinSave(joinDTO);
         return "redirect:/login";
     }
-
-    // @GetMapping("/")
-    // public String mainP() {
-    //     return "user/main";
-    // }
-
 
 }
