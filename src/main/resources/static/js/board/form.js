@@ -11,6 +11,7 @@ function wordCount(textarea) {
     const textCount = document.querySelector('.text-count');
     countBytes(textarea, textCount, limit);
 }
+
 // 글자 수 세기 끝
 
 const submitButton = document.querySelector('.submit-button');
@@ -35,13 +36,13 @@ function handleSubmit(url, method) {
     const formData = new FormData(document.querySelector('.board-form'));
 
     const tags = document.querySelectorAll('.hash-tag-list .hash-tag-button');
-    tags.forEach(tag=>{
-        formData.append('tags',tag.textContent);
+    tags.forEach(tag => {
+        formData.append('tags', tag.textContent);
     });
 
     const imageList = document.querySelectorAll('.image-item');
 
-    if(imageList.length<=1){
+    if (imageList.length <= 1) {
         alert("한 장 이상의 사진을 첨부해주세요.");
         return;
     }
@@ -50,8 +51,8 @@ function handleSubmit(url, method) {
         const file = imageList[i].file;
         if (file) {
             formData.append('images', file);
-        }else{
-            formData.append('imageUrls',imageList[i].getAttribute("value"));
+        } else {
+            formData.append('imageUrls', imageList[i].getAttribute("value"));
         }
     }
 
@@ -60,12 +61,23 @@ function handleSubmit(url, method) {
         body: formData,
     }).then(response => {
         if (!response.ok) {
-            console.log("실패");
+            return response.text().then(msg => {
+                if (response.status === 401) {
+                    alert(msg);
+                }else if(response.status===400){
+                    alert(msg);
+                    throw new Error(msg);
+                }
+            });
         } else {
             return response.text();
         }
     }).then(url => {
-        window.location.replace(url);
+        if (url) {
+            window.location.replace(url);
+        }else{
+            window.location.replace("/");
+        }
     }).catch(error => {
         console.error(error);
     });

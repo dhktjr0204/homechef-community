@@ -17,7 +17,8 @@ public class BoardDTO {
     private String content;
     private LocalDateTime createdAt;
     private Integer readCount;
-    private String profileImage;
+    private String profileImageName;
+    private String profileImageUrl;
     private Long userId; // User의 식별자
     private String userNickname; // User의 닉네임
     private List<String> imageNames; // Image명 목록

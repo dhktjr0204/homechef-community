@@ -3,9 +3,12 @@ package com.cooklog.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.cooklog.dto.BoardDTO;
+import com.cooklog.exception.user.NotValidateUserException;
 import com.cooklog.model.Board;
 import com.cooklog.model.Image;
+import com.cooklog.model.User;
 import com.cooklog.repository.ImageRepository;
+import com.cooklog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -24,6 +27,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
     private final ImageRepository imageRepository;
+    private final UserRepository userRepository;
     private final AmazonS3 amazonS3;
 
     @Value("${cloud.aws.s3.bucketName}")
@@ -33,6 +37,11 @@ public class ImageServiceImpl implements ImageService {
     public Page<BoardDTO> getAllFileListLoad(Page<BoardDTO> boardDTOS) throws FileNotFoundException {
 
         for(BoardDTO board: boardDTOS){
+            //유저 프로필 불러오기
+            String profileImageUrl=board.getProfileImageName();
+            board.setProfileImageUrl(fileLoad(profileImageUrl));
+
+            //게시글에 저장된 사진들 불러오기
             List<String> imageUrls = board.getImageNames();
             board.setImageUrls(fileListLoad(imageUrls));
         }
@@ -69,7 +78,19 @@ public class ImageServiceImpl implements ImageService {
         return urlList;
     }
 
-    @Transactional
+    @Override
+    public String fileWrite(MultipartFile file, Long userId) throws IOException {
+        String fileName=saveS3(file);
+        User user = userRepository.findById(userId).orElseThrow(NotValidateUserException::new);
+        user.update(fileName);
+        return fileName;
+    }
+
+    @Override
+    public String fileLoad(String fileName) throws FileNotFoundException {
+        return loadS3(fileName);
+    }
+
     @Override
     public void updateFileList(Board board, List<String> originalFiles, List<MultipartFile> newFiles) throws IOException {
 

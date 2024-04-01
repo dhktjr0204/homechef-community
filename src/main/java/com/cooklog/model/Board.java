@@ -8,6 +8,7 @@ import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -24,12 +25,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Formula;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "board")
 public class Board {
 
@@ -43,9 +48,11 @@ public class Board {
 
 	private String content;
 
+	@CreatedDate
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
+	@LastModifiedDate
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
 
@@ -66,8 +73,7 @@ public class Board {
 	@OrderBy("id ASC")
 	private List<Tag> tags=new ArrayList<>();
 
-	public void update(String content, LocalDateTime updatedAt){
+	public void update(String content){
 		this.content=content;
-		this.updatedAt=updatedAt;
 	}
 }

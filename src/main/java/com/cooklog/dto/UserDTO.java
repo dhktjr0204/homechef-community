@@ -1,13 +1,12 @@
 package com.cooklog.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import com.cooklog.model.Role;
-
-import java.util.List;
 
 @Getter
 @Setter
@@ -22,7 +21,8 @@ public class UserDTO {
 	private String password;
 	private String introduction;
 	private Role role;
-	private String profileImage;
+	private String profileImageName;
+	private String profileImageUrl;
 	private int reportCount;
 	private boolean isDeleted;
 //	private List<BoardDTO> myPageList;
@@ -34,6 +34,16 @@ public class UserDTO {
 		this.introduction = introduction;
 		this.role = role;
 		this.reportCount = reportCount;
+		this.isDeleted = isDeleted;
+	}
+
+	@Builder
+	public UserDTO(Long idx, String nickname, String introduction, String profileImageName, String profileImageUrl, boolean isDeleted) {
+		this.idx = idx;
+		this.nickname = nickname;
+		this.introduction = introduction;
+		this.profileImageName = profileImageName;
+		this.profileImageUrl=profileImageUrl;
 		this.isDeleted = isDeleted;
 	}
 
