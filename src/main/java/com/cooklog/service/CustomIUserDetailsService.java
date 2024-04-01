@@ -50,6 +50,7 @@ public class CustomIUserDetailsService implements UserDetailsService {
                 .introduction(user.getIntroduction())
                 .profileImageName(user.getProfileImage())
                 .profileImageUrl(profileUrl)
+                .role(user.getRole())
                 .isDeleted(user.isDeleted()).build();
     }
 }

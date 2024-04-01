@@ -38,12 +38,13 @@ public class UserDTO {
 	}
 
 	@Builder
-	public UserDTO(Long idx, String nickname, String introduction, String profileImageName, String profileImageUrl, boolean isDeleted) {
+	public UserDTO(Long idx, String nickname, String introduction, String profileImageName, String profileImageUrl, Role role, boolean isDeleted) {
 		this.idx = idx;
 		this.nickname = nickname;
 		this.introduction = introduction;
 		this.profileImageName = profileImageName;
 		this.profileImageUrl=profileImageUrl;
+		this.role = role;
 		this.isDeleted = isDeleted;
 	}
 

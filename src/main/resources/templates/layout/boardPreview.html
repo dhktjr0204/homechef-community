@@ -7,7 +7,8 @@
             <figure class="profile-picture" aria-label="프로필">
                 <img th:src="${board.profileImageUrl}" alt="프로필 사진">
             </figure>
-            <span class="username" th:text="${board.userNickname}" th:value="${board.userId}"></span>
+            <span th:if="${board.userIsDelete}" class="username" th:value="${board.userId}">탈퇴한 사용자입니다.</span>
+            <span th:unless="${board.userIsDelete}" class="username" th:text="${board.userNickname}" th:value="${board.userId}"></span>
         </div>
         <button class="more-options">⋮</button>
         <div class="options-menu">
