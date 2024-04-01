@@ -36,4 +36,10 @@ public interface UserService {
 
 	// 사용자의 역할을 업데이트하는 메소드 추가
 	void updateUserRole(Long userId, Role role);
+
+	// 사용자 탈퇴유무 업데이트 메소드
+	void updateUserDeleted(Long userId);
+
+	// 사용자가 올린 게시물 갯수 가져오는 메소드
+	Long getNumberOfBoardByUserId(Long userIdx);
 }
