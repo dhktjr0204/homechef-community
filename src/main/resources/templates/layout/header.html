@@ -15,6 +15,6 @@
         <figure class="profile-picture" aria-label="프로필">
             <img  th:src="${currentLoginUser.profileImageUrl}" alt="프로필 사진">
         </figure>
-        <span class="username" th:text="${currentLoginUser.nickname}">dhktjr0204</span>
+        <a class="username" th:href="'/myPage/main/' + ${currentLoginUser.idx}" th:text="${currentLoginUser.nickname}">dhktjr0204</a>
     </div>
 </header>

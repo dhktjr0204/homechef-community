@@ -1,12 +1,9 @@
 package com.cooklog.service;
 
-import com.cooklog.dto.BoardDTO;
+import com.cooklog.dto.*;
 import com.cooklog.model.Bookmark;
 import java.util.List;
 
-import com.cooklog.dto.JoinDTO;
-import com.cooklog.dto.UserDTO;
-import com.cooklog.dto.UserUpdateRequestDTO;
 import com.cooklog.model.Role;
 
 import com.cooklog.model.User;
@@ -39,7 +36,6 @@ public interface UserService {
 	// 사용자의 역할을 업데이트하는 메소드 추가
 	void updateUserRole(Long userId, Role role);
 
-
 	// 사용자 탈퇴유무 업데이트 메소드
 	void updateUserDeleted(Long userId);
 
@@ -49,4 +45,12 @@ public interface UserService {
 	// 사용자의 북마크 리스트를 가져오는 메소드
 	List<BoardDTO> getBookmarkBoards(Long userIdx);
 
+	// 사용자가 작성한 게시물 리스트를 가져오는 메소드
+	List<MyPageDTO> getBoardByUserId(Long userIdx);
+
+	// 사용자 프로필 이미지 URL 생성 메소드
+	UserDTO getUserDTO(Long userIdx);
+
+	// 로그인 한 사용자의 팔로우 팔로워 수 가져오는 메소드
+	MyPageFollowCountDTO getFollowCountDTO(Long userIdx, Long loginUserId);
 }

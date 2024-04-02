@@ -12,53 +12,63 @@
     <section class="user-profile-container">
         <div class="user-info-container">
             <figure class="profile-image" aria-label="프로필">
-                <img src="../../static/img/main/profile4.jpg" th:src="${profileImage}" alt="프로필 사진">
+                <img th:src="${user.profileImageUrl}" alt="프로필 사진">
             </figure>
             <div class="user-info-wrapper">
-                <p class="user-name" th:text="${nickname}">example_user</p>
+                <p class="user-name" th:value="${user.idx}" th:text="${user.nickname}">example_user</p>
                 <div class="profile-stats">
                     <div class="board-count-container">
                         <span class="count-name">게시물</span>
-                        <span th:text="${boardCnt}"></span>
+                        <span th:text="${boards.size()}"></span>
                     </div>
                     <div class="follower-count">
                         <a class="count-name">팔로워</a>
-                        <span>10</span>
+                        <span th:text="${followCount.getFollowerCount()}">10</span>
                     </div>
                     <div class="following-count">
                         <a class="count-name">팔로잉</a>
-                        <span>10</span>
+                        <span th:text="${followCount.getFollowingCount()}">10</span>
                     </div>
                 </div>
                 <div class="follow-button-container">
-                    <!--일단 모두 필요하기 때문에 다 만들어놓겠습니다 나중에 th:if로 처리해주세요-->
                     <!--만약 팔로우된 사람이면 언팔로우로 표시, 팔로우 안된 사람이면 팔로우로 표시-->
-                    <button class="follow-button">팔로우</button>
-                    <button class="un-follow-button">언팔로우</button>
+                    <th:block th:unless="${currentLoginUser.idx}==${user.idx}">
+                        <button class="follow-button" th:unless="${followCount.isFollow} == 1">팔로우</button>
+                        <button class="un-follow-button" th:if="${followCount.isFollow} == 1">언팔로우</button>
+                    </th:block>
                 </div>
             </div>
             <button class="more-options">⋮</button>
             <div class="options-menu">
                 <ul>
-                    <!--만약 자기 마이페이지라면 프로필수정만 보이게, 다른 사람 마이페이지라면 신고만 보이게 하셔야 합니다.-->
-                    <li>
+                    <!--만약 자기 마이페이지라면 프로필수정-로그아웃-회원탈퇴가 보이게, 다른 사람 마이페이지라면 신고만 보인다-->
+                    <li th:if="${currentLoginUser.idx}==${user.idx}">
                         <button class="update-board-button" onclick="clickEditProfileButton()">프로필 수정</button>
                     </li>
-                    <li>
+                    <li th:unless="${currentLoginUser.idx}==${user.idx}">
                         <button class="report-button">신고</button>
+                    </li>
+                    <li th:if="${currentLoginUser.idx}==${user.idx}">
+                        <button class="logout-button" onclick="clickLogoutButton()">로그아웃</button>
+                    </li>
+                    <li th:if="${currentLoginUser.idx}==${user.idx}">
+                        <button class="user-quit-button" onclick="clickUserQuitButton()">회원 탈퇴</button>
                     </li>
                 </ul>
             </div>
         </div>
-        <pre class="profile-introduction" th:text="${introduction}">반갑습니다. 오늘도 즐거운 하루입니다.</pre>
+        <pre class="profile-introduction" th:text="${user.introduction}">반갑습니다. 오늘도 즐거운 하루입니다.</pre>
     </section>
 
     <section class="board-list-container">
         <ul class="board-list">
-            <li th:each="item: ${#numbers.sequence(1,10)}">
-                <img src="../../static/img/main/food1.png" th:src="@{/img/main/food1.png}" href="'게시물 미리보기 이미지" class="image-item">
+            <li th:each="board: ${boards}">
+                    <img th:value="${board.id}" th:src="${board.imageUrl}" href="게시물 미리보기 이미지" class="image-item">
             </li>
         </ul>
+        <div th:if="${boards.isEmpty()}" class="no-content-container">
+            <p class="no-content-text">콘텐츠가 없습니다.</p>
+        </div>
     </section>
 </main>
 <script src="../../static/js/myPage/myPage.js" th:src="@{/js/myPage/myPage.js}"></script>
