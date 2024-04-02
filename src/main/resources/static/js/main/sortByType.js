@@ -9,7 +9,7 @@ document.querySelector("#order-select").addEventListener("change", function() {
     }else if(selectedValue==="famous"){
         pageNum = 1;
         getBoardList("likesCount");
-    }else if(selectedValue="follow"){
+    }else if(selectedValue==="follow"){
         pageNum = 1;
         getBoardListWithFollow();
     }
