@@ -68,6 +68,12 @@ public class User {
 		this.introduction = introduction;
 	}
 
+
+	public void deleted(Long idx) {
+		this.idx = idx;
+		this.isDeleted = true; // tinyint 라서 true=1
+  }
+  
 	public void update(String profileImage){
 		this.profileImage=profileImage;
 	}

@@ -43,4 +43,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
             "GROUP BY b.id")
     Optional<Page<Board>> findBoardsByTagNames(List<String> tagNames, Pageable pageable);
 
+    //select count(*) from board where user_idx = userIdx
+    Long countBoardByUserIdx(Long userIdx);
 }

@@ -12,21 +12,21 @@
     <section class="user-profile-container">
         <div class="user-info-container">
             <figure class="profile-image" aria-label="프로필">
-                <img src="../../static/img/main/profile4.jpg" th:src="@{/img/main/profile4.jpg}" alt="프로필 사진">
+                <img src="../../static/img/main/profile4.jpg" th:src="${profileImage}" alt="프로필 사진">
             </figure>
             <div class="user-info-wrapper">
-                <p class="user-name">example_user</p>
+                <p class="user-name" th:text="${nickname}">example_user</p>
                 <div class="profile-stats">
                     <div class="board-count-container">
                         <span class="count-name">게시물</span>
-                        <span>10</span>
+                        <span th:text="${boardCnt}"></span>
                     </div>
                     <div class="follower-count">
-                        <a th:href="@{/static}" class="count-name">팔로워</a>
+                        <a class="count-name">팔로워</a>
                         <span>10</span>
                     </div>
                     <div class="following-count">
-                        <a th:href="@{/static}" class="count-name">팔로잉</a>
+                        <a class="count-name">팔로잉</a>
                         <span>10</span>
                     </div>
                 </div>
@@ -50,7 +50,7 @@
                 </ul>
             </div>
         </div>
-        <pre class="profile-introduction">반갑습니다. 오늘도 즐거운 하루입니다.</pre>
+        <pre class="profile-introduction" th:text="${introduction}">반갑습니다. 오늘도 즐거운 하루입니다.</pre>
     </section>
 
     <section class="board-list-container">

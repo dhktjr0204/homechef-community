@@ -37,7 +37,10 @@
 					.defaultSuccessUrl("/")
  				.usernameParameter("email")
  				.permitAll()
- 			);
+ 			)
+			.logout(auth -> auth.logoutSuccessUrl("/") // 로그아웃 설정
+					.invalidateHttpSession(true))
+			.csrf(auth -> auth.disable());
 
  		http
  			.csrf((auth) -> auth.disable());
