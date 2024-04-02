@@ -3,6 +3,8 @@ package com.cooklog.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.DynamicInsert;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -21,6 +23,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
+@DynamicInsert
 @Table(name = "user")
 public class User {
 
@@ -32,6 +35,7 @@ public class User {
 	private String email;
 	private String password;
 	private String introduction;
+
 
 	@Column(name = "role")
 	@Enumerated(EnumType.STRING)

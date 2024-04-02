@@ -48,8 +48,10 @@ public class CustomIUserDetailsService implements UserDetailsService {
         long userId = userDetails.getIdx();
 
         User user = userRepository.findById(userId).orElseThrow(NotValidateUserException::new);
+        System.out.println(user.getProfileImage());
         String profileUrl = imageService.fileLoad(user.getProfileImage());
 
+        ;
         return UserDTO.builder()
                 .idx(user.getIdx())
                 .nickname(user.getNickname())
