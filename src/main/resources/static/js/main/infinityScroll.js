@@ -35,7 +35,7 @@ async function fetchImages(pageNum) {
                     method: "GET",
                 });
             }
-        } else if (selectedType === "popularity") {
+        } else if (selectedType === "views") {
             response = await fetch(`?page=${pageNum}&sort=readCount,DESC&id=${lastBoardId}`, {
                 method: "GET",
             });
