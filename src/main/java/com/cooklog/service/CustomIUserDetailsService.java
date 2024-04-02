@@ -41,6 +41,16 @@ public class CustomIUserDetailsService implements UserDetailsService {
         return new CustomUserDetails(userData);
     }
 
+    //현재 로그인한 유저의 idx를 가져오는 메서드 , 아해 getCurrentUserDTO와 중복되는 코드가 있어서 리팩토링 필요
+    public Long getUserIdx() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        userRepository.findById(userDetails.getIdx()).orElseThrow(NotValidateUserException::new);
+
+        return userDetails.getIdx();
+    }
+
     public UserDTO getCurrentUserDTO() throws FileNotFoundException {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
