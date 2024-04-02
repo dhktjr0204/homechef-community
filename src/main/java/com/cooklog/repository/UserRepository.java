@@ -20,5 +20,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     User findByEmail(String email);
 
+    //신고횟수 n회 이상인 유저 조회
     List<User> findByReportCountGreaterThan(int count);
 }

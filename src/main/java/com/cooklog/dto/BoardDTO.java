@@ -44,7 +44,7 @@ public class BoardDTO {
         this.content = board.getContent();
         this.createdAt = board.getCreatedAt();
         this.readCount = board.getReadCount();
-        this.profileImage = board.getUser().getProfileImage();
+        this.profileImageName = board.getUser().getProfileImage();
         this.userId = board.getUser().getIdx();
         this.userNickname = board.getUser().getNickname();
         this.imageNames = board.getImages().stream().map(Image::getName).collect(Collectors.toList());
