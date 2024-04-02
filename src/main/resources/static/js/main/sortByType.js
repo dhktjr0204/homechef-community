@@ -1,19 +1,36 @@
 document.querySelector("#order-select").addEventListener("change", function() {
     let selectedValue = this.options[this.selectedIndex].value;
     if(selectedValue==="latest"){
+        //index 초기화
         pageNum = 1;
+        //boardSlideIndex 초기화 (board.js에서 사용하는 화면 넘기기 기능)
+        deleteBoardSlideIndex();
+
         getBoardList("createdAt");
     }else if(selectedValue==="views"){
         pageNum = 1;
+        deleteBoardSlideIndex();
+
         getBoardList("readCount");
     }else if(selectedValue==="famous"){
         pageNum = 1;
+        deleteBoardSlideIndex();
+
         getBoardList("likesCount");
     }else if(selectedValue==="follow"){
         pageNum = 1;
+        deleteBoardSlideIndex();
+
         getBoardListWithFollow();
     }
 });
+
+function deleteBoardSlideIndex(){
+    // boardSlideIndex 객체의 모든 속성 삭제
+    for (let key in boardSlideIndex) {
+        delete boardSlideIndex[key];
+    }
+}
 
 async function getBoardList(type) {
     try {
