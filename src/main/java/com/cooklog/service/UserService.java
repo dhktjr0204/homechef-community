@@ -1,5 +1,7 @@
 package com.cooklog.service;
 
+import com.cooklog.dto.BoardDTO;
+import com.cooklog.model.Bookmark;
 import java.util.List;
 
 import com.cooklog.dto.JoinDTO;
@@ -36,4 +38,7 @@ public interface UserService {
 
 	// 사용자의 역할을 업데이트하는 메소드 추가
 	void updateUserRole(Long userId, Role role);
+
+	// 사용자의 북마크 리스트를 가져오는 메소드
+	List<BoardDTO> getBookmarkBoards(Long userIdx);
 }

@@ -50,6 +50,9 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private List<Board> boards = new ArrayList<>();
 
+//	@OneToMany(mappedBy = "user") 양방향
+//	private List<Bookmark> bookmarks = new ArrayList<>();
+
 	@Builder
 	public User (String nickname, String email, String password, Role role, String introduction, String profileImage){
 		this.nickname = nickname;

@@ -73,6 +73,11 @@ public class Board {
 	@OrderBy("id ASC")
 	private List<Tag> tags=new ArrayList<>();
 
+
+	@OneToMany(mappedBy = "board")
+	@OrderBy("id DESC") //최근에 등록된 게시물부터 보여주기 위함
+	private List<Bookmark> bookmarks = new ArrayList<>();
+
 	public void update(String content){
 		this.content=content;
 	}
