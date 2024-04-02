@@ -88,6 +88,7 @@ document.getElementById('commentForm').addEventListener('submit', function (even
 
     // 입력 내용이 비어있는 경우 전송하지 않음
     if (!commentContent) {
+        alert("댓글 내용을 입력해주세요.");
         return;
     }
 
@@ -103,18 +104,32 @@ document.getElementById('commentForm').addEventListener('submit', function (even
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(commentData)
     })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('서버 처리 중 오류 발생');
+            }
+            return response.json();
+        })
         .then(data => {
-            console.log('Comment or reply submitted:', data);
+            console.log('댓글 및 답글이 성공적으로 처리되었습니다.\:', data);
+            resetReplyBox(); // 답글 입력창을 초기 상태로 복원하고 관련 상태를 초기화
             fetchComments(0); // 댓글 목록 새로고침
         })
-        .catch(error => console.error('Error:', error))
-        .finally(() => {
-            commentInput.value = ''; // 입력창 초기화
-            commentInput.placeholder = '댓글을 입력하세요...'; // 플레이스홀더 초기화
-            // activeReplyBox = null; // 답글 대상 초기화
+        .catch(error => {
+            console.error('Error:', error);
+            alert('댓글 추가 중 오류가 발생했습니다.');
         });
 });
+
+
+function addCommentOrReplyToPage(commentData, parentCommentId = null) {
+    const commentsContainer = document.querySelector('.comments-display');
+    let newCommentHtml = '';
+
+    // 공통 프로필 이미지 경로
+    const profileImageSrc = commentData.profileImage ? `/img/main/${commentData.profileImage}` : '/img/main/profile.jpg';
+}
+
 
 // 답글을 전송하는 함수
 function submitReply(content, parentCommentId) {
@@ -155,15 +170,29 @@ function addReplyToPage(reply, parentCommentId) {
         parentComment.insertAdjacentElement('afterend', repliesContainer);
     }
 
-    // 대댓글 HTML 마크업 생성
-    const replyHtml = `
-        <div class="comment reply" data-comment-id="${reply.id}">
-            <div class="reply-icon">ㄴ</div>
-            <div class="comment-profile"><img src="/img/main/profile.jpg" alt="Profile Image"></div>
-            <div class="comment-username">${reply.userName}</div>
-            <div class="comment-content">${reply.content}</div>
-            <div class="comment-metadata">
-                <span class="comment-date">${new Date(reply.createdAt).toLocaleDateString('ko-KR')}</span>
+    // 공통 댓글 날짜
+    const commentDate = new Date(commentData.createdAt).toLocaleDateString('ko-KR', {
+        year: 'numeric', month: '2-digit', day: '2-digit'
+    });
+
+    // 부모 댓글 ID가 있으면 'reply' 클래스와 "ㄴ" 표시를 추가하여 답글 스타일을 적용
+    if (parentCommentId) {
+        const parentComment = document.querySelector(`.comment[data-comment-id="${parentCommentId}"]`);
+        let repliesContainer = parentComment.querySelector('.replies-container');
+
+        if (!repliesContainer) {
+            // repliesContainer가 없으면 새로 생성하는 로직
+            repliesContainer = createRepliesContainer(parentComment);
+        }
+
+        newCommentHtml += `
+            <div class="comment reply" data-comment-id="${commentData.id}">
+            <div class="main-comment">
+                <div class="reply-icon">ㄴ</div>
+                <div class="comment-profile"><img src="${profileImageSrc}" alt="Profile Image"></div>
+                <div class="comment-username">${commentData.userName}</div>
+                <div class="comment-content">${commentData.content}</div>
+                <div class="comment-metadata"><span class="comment-date">${commentDate}</span></div>
                 <button class="more-options">⋮</button>
                     <div class="options-menu" style="display:none;">
                         <ul>
@@ -172,17 +201,41 @@ function addReplyToPage(reply, parentCommentId) {
                             <li><button class="delete-comment-button">삭제</button></li>
                         </ul>
                     </div>
-                </div>
             </div>
-        </div>
-    `;
+            </div>
+        `;
 
-    // 대댓글을 repliesContainer에 추가합니다.
-    // 여기서 repliesContainer는 parentComment 아래의 대댓글들을 담는 컨테이너입니다.
-    // 이 컨테이너가 이미 있다면 그 안에, 없다면 새로 생성하여 추가합니다.
-    parentComment.insertAdjacentHTML('afterend', replyHtml);
+        repliesContainer.insertAdjacentHTML('beforeend', newCommentHtml);
+    } else {
+        newCommentHtml += `
+            <div class="comment" data-comment-id="${commentData.id}">
+            <div class="main-comment">
+                <div class="comment-profile"><img src="${profileImageSrc}" alt="Profile Image"></div>
+                <div class="comment-username">${commentData.userName}</div>
+                <div class="comment-content">${commentData.content}</div>
+                    <button class="more-options">⋮</button>
+                    <div class="options-menu" style="display:none;">
+                        <ul>
+                            <li><button class="report-button">신고</button></li>
+                            <li><button class="edit-comment-button">수정</button></li>
+                            <li><button class="delete-comment-button">삭제</button></li>
+                        </ul>
+                    </div>
+                     </div>
+                    <div class="comment-metadata">
+                        <span class="comment-date">${commentDate}</span>
+                        <div class="comment-actions">
+                            <button class="reply-button">답글 달기</button>
+                        </div>
+                    </div>
+            </div>
+        `;
+
+        commentsContainer.insertAdjacentHTML('afterbegin', newCommentHtml);
+    }
+
+    bindCommentOptions(); // 이 함수는 새로운 댓글 요소에 이벤트 리스너를 바인딩합니다.
 }
-
 // 대댓글이 들어갈 컨테이너를 생성하는 함수입니다.
 function createRepliesContainer(parentComment) {
     const container = document.createElement('div');
@@ -240,55 +293,16 @@ function submitComment(content) {
 }
 
 // 답글 입력창을 원래 위치로 돌려놓고 상태를 초기화하는 함수
+
 function resetReplyBox() {
-    const originalLocation = document.querySelector('.comments-container'); // 원래 댓글 입력창이 위치해야 할 곳
-    originalLocation.appendChild(document.getElementById('commentForm'));
+    // 입력창 초기화 및 placeholder 설정
+    const commentInput = document.getElementById('commentInput');
+    commentInput.value = ''; // 입력창 내용 초기화
+    commentInput.placeholder = '댓글을 입력하세요...'; // Placeholder 초기화
 
-    // 입력창의 플레이스홀더를 원래대로 돌립니다.
-    document.getElementById('commentInput').placeholder = '댓글을 입력하세요...';
-
-    // 전역 변수 activeReplyBox를 초기화합니다.
-    activeReplyBox = null;
-}
-
-function addCommentToPage(comment) {
-    const commentsContainer = document.querySelector('.comments-display');
-    const profileImageSrc = comment.profileImage ? `/img/main/${comment.profileImage}` : '/img/main/profile.jpg';
-
-    // 댓글 날짜 포맷 변경 (예: '2024.03.22')
-    const commentDate = new Date(comment.createdAt).toLocaleDateString('ko-KR', {
-        year: 'numeric', month: '2-digit', day: '2-digit'
-    });
-
-    // 댓글 HTML 마크업에 신고, 수정, 삭제 버튼과 답글 버튼, 생성 날짜 추가
-    const newCommentHtml = `
-        <div class="comment" data-comment-id="${comment.id}">
-            <div class="main-comment">
-            <div class="comment-profile"><img src="${profileImageSrc}" alt="Profile Image"></div>
-            <div class="comment-username">${comment.userName}</div>
-            <div class="comment-content">${comment.content}</div>
-            <button class="more-options">⋮</button>
-                    <div class="options-menu" style="display:none;">
-                        <ul>
-                            <li><button class="report-button">신고</button></li>
-                            <li><button class="edit-comment-button">수정</button></li>
-                            <li><button class="delete-comment-button">삭제</button></li>
-                        </ul>
-                    </div>
-            </div>
-            <div class="comment-metadata">
-                <span class="comment-date">${commentDate}</span>
-                <div class="comment-actions">
-                    <button class="reply-button">답글 달기</button>
-                </div>
-            </div>
-        </div>
-    `;
-// 새 댓글을 commentsContainer의 시작 부분에 추가합니다.
-    commentsContainer.insertAdjacentHTML('afterbegin', newCommentHtml);
-
-    // 새로 추가된 댓글의 옵션 버튼 이벤트 리스너를 바인딩합니다.
-    bindCommentOptions();
+    // 전역 변수를 이용한 상태 관리 초기화
+    activeReplyBox = null; // 답글 대상 초기화
+    isEditing = false; // 수정 모드 해제
 }
 
 function bindCommentOptions() {
@@ -361,18 +375,9 @@ function bindCommentOptions() {
     document.querySelectorAll('.reply-button').forEach(button => {
         button.addEventListener('click', function () {
             const commentId = this.closest('.comment').dataset.commentId;
-            // 답글 입력창 위치 조정 로직 개선
-            if (activeReplyBox !== commentId) {
-                // 다른 댓글에 답글을 달고 있지 않은 경우, 또는 다른 댓글에 답글을 달고 있는 경우 위치 이동
-                const replyBox = document.getElementById('commentForm');
-                this.closest('.comment').after(replyBox); // 댓글 바로 아래가 아닌 댓글 바로 뒤에 위치하도록 수정
                 activeReplyBox = commentId;
-                document.getElementById('commentInput').placeholder = '답글을 입력하세요...';
-                document.getElementById('commentInput').focus();
-            } else {
-                // 같은 댓글에 이미 답글 입력창이 있는 경우
-                resetReplyBox(); // 답글 입력창을 원래 위치로 이동
-            }
+                commentInput.placeholder = '답글을 입력하세요...'; // 플레이스홀더 변경
+                commentInput.focus(); // 입력창에 포커스를 맞춥니다.
         });
     });
 }
@@ -395,6 +400,10 @@ const commentsPerPage = 5; // 한 페이지당 보여줄 댓글의 수
 // 페이지 로드 시 실행되는 초기화 함수에 bindCommentOptions 호출을 추가
 document.addEventListener('DOMContentLoaded', function () {
     bindCommentOptions(); // 초기화 시 댓글 옵션 버튼에 이벤트 리스너를 설정
+
+    bindDeleteEvent(); // 댓글 삭제 이벤트 리스너 설정
+    resetReplyBox();
+
     const commentsDisplayContainer = document.querySelector('.comments-display');
     // 이벤트 위임을 사용하여 댓글 삭제 버튼 클릭 이벤트 처리
     commentsDisplayContainer.addEventListener('click', function (event) {
@@ -407,6 +416,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
+
 
     //댓글 수정 상태라면 엔터키 입력시 수정한 댓글로 변경 가능.
     document.getElementById('commentInput').addEventListener('keypress', function (e) {
@@ -425,6 +435,28 @@ document.addEventListener('DOMContentLoaded', function () {
     fetchComments(currentPage);
 });
 
+// 댓글 삭제 기능을 위한 이벤트 리스너를 설정하는 함수
+function bindDeleteEvent() {
+    const commentsDisplayContainer = document.querySelector('.comments-display');
+    commentsDisplayContainer.addEventListener('click', function(event) {
+        if (event.target.classList.contains('delete-comment-button')) {
+            const isConfirmed = confirm('댓글을 삭제하시겠습니까?');
+            if (isConfirmed) {
+                const commentElement = event.target.closest('.comment');
+                const commentId = commentElement.dataset.commentId;
+                fetch(`/board/comments/${commentId}`, { method: 'DELETE' })
+                    .then(response => {
+                        if (!response.ok) throw new Error('Failed to delete comment');
+                        console.log('Comment deleted');
+                        commentElement.remove();
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        }
+    });
+}
+
+
 // 서버로부터 댓글 데이터를 가져오는 함수
 function fetchComments(page) {
     const boardId = document.getElementById('boardId').value;
@@ -439,9 +471,9 @@ function fetchComments(page) {
                 // 예를 들면, comment.parentCommentId를 체크하여 대댓글인 경우
                 // 해당하는 부모 댓글 아래에 추가하는 로직을 구현할 수 있습니다.
                 if (comment.parentCommentId) {
-                    addReplyToPage(comment, comment.parentCommentId);
+                    addCommentOrReplyToPage(comment, comment.parentCommentId);
                 } else {
-                    addCommentToPage(comment);
+                    addCommentOrReplyToPage(comment);
                 }
             });
 
@@ -479,12 +511,12 @@ function setupPagination(totalPages, currentPage, windowSize = 1) {
 // 페이지네이션 버튼 생성 함수
 function createPaginationButton(text, clickHandler, isActive = false) {
     const button = document.createElement('button');
-    console.log(`Creating button: ${text}, Active: ${isActive}`); // 버튼 생성 로깅
     button.textContent = text;
     button.disabled = isActive; // 현재 페이지에 해당하는 버튼은 비활성화
     button.addEventListener('click', clickHandler);
     return button;
 }
+
 
 
 // 댓글 삭제 로직
@@ -515,7 +547,6 @@ function removeCommentElement(commentId) {
 
 
 //수정 요소 시작
-
 // 수정된 내용을 서버로 전송하고 페이지에서 댓글을 업데이트하는 함수
 function updateComment(commentId, updatedContent) {
     // 서버로 수정된 댓글 내용을 전송하는 코드

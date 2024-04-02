@@ -126,7 +126,8 @@ public class CommentServiceImpl implements CommentService {
 			savedComment.getUser().getIdx(),
 			savedComment.getUser().getNickname(),
 			savedComment.getBoard().getId(),
-			savedComment.getUser().getProfileImage()
+			savedComment.getUser().getProfileImage(),
+			savedComment.getParentCommentId()
 		);
 	}
 	@Override
