@@ -34,6 +34,11 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query(value = "select b from Board b order by b.likesCount desc , b.createdAt desc")
     Page<Board> findAllOrderByLikesCount(Long id, Pageable pageable);
 
+    //팔로우된 유저들의 게시물만 보기
+    @Query(value="select b from Board b inner join Follow f on b.user.idx=f.following.idx " +
+            "where f.follower.idx= :userId and b.id <=:boardId")
+    Page<Board> findAllBoardWithFollow(Long userId, Long boardId, Pageable pageable);
+
     Optional<Page<Board>> findByContentContaining(String keyword, Pageable pageable);
 
     //해당 태그가 하나라도 포함된 게시물 return

@@ -43,6 +43,10 @@ async function fetchImages(pageNum) {
             response = await fetch(`?page=${pageNum}&sort=likesCount,DESC&id=${lastBoardId}`, {
                 method: "GET",
             });
+        }else if(selectedType === "follow"){
+            response = await fetch(`/follow?page=${pageNum}&id=${lastBoardId}`, {
+                method: "GET",
+            });
         }
 
         if (!response.ok) {

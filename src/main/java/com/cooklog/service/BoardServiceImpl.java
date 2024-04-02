@@ -58,6 +58,17 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public Page<BoardDTO> getAllBoardWithFollow(Pageable pageable, Long userId, Long lastBoardId) {
+        Page<Board> boardPage=boardRepository.findAllBoardWithFollow(userId, lastBoardId, pageable);
+
+        if (boardPage.isEmpty()) {
+            return Page.empty();
+        }
+
+        return boardPage.map(board->convertBoardToDTO(board, userId));
+    }
+
+    @Override
     public BoardDTO getBoard(Long boardId, Long userId) {
 
         Board board = boardRepository.findById(boardId)
