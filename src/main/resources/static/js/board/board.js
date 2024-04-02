@@ -93,7 +93,7 @@ document.getElementById('commentForm').addEventListener('submit', function (even
     }
 
     const commentData = {
-        userId: 1, // 실제 애플리케이션에서는 인증된 사용자의 ID 사용
+        userId: 8, // 실제 애플리케이션에서는 인증된 사용자의 ID 사용
         content: commentContent,
         parentCommentId: activeReplyBox || null, // 답글인 경우 부모 댓글의 ID를 함께 전송
     };
@@ -137,7 +137,7 @@ function submitReply(content, parentCommentId) {
     // 답글 데이터 구조를 서버가 요구하는 형식에 맞춰서 작성합니다.
     const replyData = {
         boardId: boardId,
-        userId: 1,
+        userId: 8,
         content: content,
         parentCommentId: parentCommentId
     };
@@ -271,7 +271,7 @@ function submitComment(content) {
     // 댓글 데이터 구조를 서버가 요구하는 형식에 맞춰서 작성합니다.
     const commentData = {
         boardId: boardId,
-        userId: 1,
+        userId: 8,
         content: content
     };
 
