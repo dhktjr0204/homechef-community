@@ -1,8 +1,11 @@
 package com.cooklog.service;
 
 
+import com.cooklog.dto.BoardDTO;
 import com.cooklog.dto.CustomUserDetails;
 import com.cooklog.dto.UserUpdateRequestDTO;
+import com.cooklog.model.Bookmark;
+import com.cooklog.repository.BookmarkRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -34,6 +37,7 @@ import javax.validation.Valid;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     private final BCryptPasswordEncoder encoder;
 
@@ -142,6 +146,17 @@ public class UserServiceImpl implements UserService {
         user.update(userDTO.getNickname(), userDTO.getIntroduction());
 
         return user;
+    }
+
+    @Override
+    public List<BoardDTO> getBookmarkBoards(Long userIdx) {
+        User user = userRepository.findById(userIdx)
+            .orElseThrow(() -> new IllegalArgumentException("해당 userId가 없습니다."));
+
+        List<Bookmark> bookmarkList = bookmarkRepository.findAllByUserIdx(userIdx);
+        List<BoardDTO> boardList = bookmarkList.stream().map(bookmark -> new BoardDTO(bookmark.getBoard(),userIdx)).collect(Collectors.toList());
+
+        return boardList;
     }
 
 }
