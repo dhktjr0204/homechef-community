@@ -44,7 +44,7 @@ public class BoardServiceImpl implements BoardService {
             boardPage = boardRepository.findAll(pageable);
         } else if (sortType.equals("readCount: DESC")) {
             boardPage = boardRepository.findAllOrderByReadCount(lastBoardId, pageable);
-        } else if (sortType.equals("createdAt: DESC")){
+        } else if (sortType.equals("createdAt: DESC")) {
             boardPage = boardRepository.findAllOrderByCreatedAt(lastBoardId, pageable);
         } else {
             boardPage = boardRepository.findAllOrderByLikesCount(lastBoardId, pageable);
@@ -54,13 +54,7 @@ public class BoardServiceImpl implements BoardService {
             return Page.empty();
         }
 
-        return boardPage.map(board -> {
-            try {
-                return convertBoardToDTO(board, userId);
-            } catch (FileNotFoundException e) {
-                return convertBoardToDTOExcludingFileUrl(board, userId);
-            }
-        });
+        return boardPage.map(board -> convertBoardToDTO(board, userId));
     }
 
     @Override
@@ -69,66 +63,60 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(BoardNotFoundException::new);
 
-        try {
-            return convertBoardToDTO(board, userId);
-        } catch (FileNotFoundException e) {
-            return convertBoardToDTOExcludingFileUrl(board, userId);
-        }
+        return convertBoardToDTO(board, userId);
     }
 
     @Override
-    public Page<BoardDTO> getSearchByText(String keyword,Long userId, Pageable pageable) {
+    public Page<BoardDTO> getSearchByText(String keyword, Long userId, Pageable pageable) {
         Page<Board> boardPage = boardRepository.findByContentContaining(keyword, pageable)
                 .orElse(Page.empty());
 
-        if(boardPage.isEmpty()){
+        if (boardPage.isEmpty()) {
             return Page.empty();
         }
 
-        return boardPage.map(board-> {
-            try {
-                return convertBoardToDTO(board, userId);
-            } catch (FileNotFoundException e) {
-                return convertBoardToDTOExcludingFileUrl(board, userId);
-            }
-        });
+        return boardPage.map(board -> convertBoardToDTO(board, userId));
     }
 
     @Override
     public Page<BoardDTO> findBoardsByTags(String tags, Long userId, Pageable pageable) {
         //받은 태그가 하나도 없을때 빈 페이지 리턴
-        if(tags.isEmpty()){
+        if (tags.isEmpty()) {
             return Page.empty();
         }
 
-        List<String> tagList= Arrays.asList(tags.split(","));
+        List<String> tagList = Arrays.asList(tags.split(","));
 
         Page<Board> boardPage = boardRepository.findBoardsByTagNames(tagList, pageable)
                 .orElse(Page.empty());
 
         //검색한 결과가 하나도 없다면 빈 페이지 리턴
-        if(boardPage.isEmpty()){
+        if (boardPage.isEmpty()) {
             return Page.empty();
         }
 
-        return boardPage.map(board-> {
-            try {
-                return convertBoardToDTO(board, userId);
-            } catch (FileNotFoundException e) {
-                return convertBoardToDTOExcludingFileUrl(board, userId);
-            }
-        });
+        return boardPage.map(board -> convertBoardToDTO(board, userId));
     }
 
-    private BoardDTO convertBoardToDTO(Board board, Long userId) throws FileNotFoundException {
+    private BoardDTO convertBoardToDTO(Board board, Long userId) {
 
         //게시글에 연결된 사진들 가져오기
-        List<String> fileUrls = imageService.fileListLoad(board.getImages().stream()
-                .map(Image::getName)
-                .collect(Collectors.toList()));
+        List<String> fileUrls = null;
+        try {
+            fileUrls = imageService.fileListLoad(board.getImages().stream()
+                    .map(Image::getName)
+                    .collect(Collectors.toList()));
+        } catch (FileNotFoundException e) {
+            fileUrls = new ArrayList<>();
+        }
 
         //유저 프로필 사진 가져오기
-        String profileUrl=imageService.fileLoad(board.getUser().getProfileImage());
+        String profileUrl = null;
+        try {
+            profileUrl = imageService.fileLoad(board.getUser().getProfileImage());
+        } catch (FileNotFoundException e) {
+            profileUrl = "";
+        }
 
         BoardDTO boardDTO = BoardDTO.builder()
                 .id(board.getId())
@@ -152,25 +140,6 @@ public class BoardServiceImpl implements BoardService {
         return boardDTO;
     }
 
-    private BoardDTO convertBoardToDTOExcludingFileUrl(Board board, Long userId){
-        BoardDTO boardDTO = BoardDTO.builder()
-                .id(board.getId())
-                .content(board.getContent())
-                .createdAt(board.getCreatedAt())
-                .readCount(board.getReadCount())
-                .userId(board.getUser().getIdx())
-                .userNickname(board.getUser().getNickname())
-                .profileImageName(board.getUser().getProfileImage())
-                .profileImageUrl("")
-                .userIsDelete(board.getUser().isDeleted())
-                .imageNames(board.getImages().stream().map(Image::getName).collect(Collectors.toList()))
-                .imageUrls(new ArrayList<>())
-                .tags(board.getTags().stream().map(Tag::getName).collect(Collectors.toList()))
-                .likeCount(board.getLikes().size())
-                .isLike(board.getLikes().stream().anyMatch(like -> like.getUser().getIdx().equals(userId))).build();
-
-        return boardDTO;
-    }
 
     @Transactional
     @Override
@@ -187,14 +156,14 @@ public class BoardServiceImpl implements BoardService {
 
         tagService.save(requestDTO.getTags(), board);
 
-        imageService.fileListWrite(images,board);
+        imageService.fileListWrite(images, board);
 
         return board;
     }
 
     @Transactional
     @Override
-    public Board updateBoard(Long boardId, BoardUpdateRequestDTO boardDTO,List<String> originalFiles, List<MultipartFile> newFiles) throws IOException {
+    public Board updateBoard(Long boardId, BoardUpdateRequestDTO boardDTO, List<String> originalFiles, List<MultipartFile> newFiles) throws IOException {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(BoardNotFoundException::new);
 
@@ -234,23 +203,25 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.delete(board);
 
     }
+
     @Override
     public List<BoardDTO> findAllBoards() {
 
         List<Board> boards = boardRepository.findAll();
 
         return boards.stream().map(board -> new BoardDTO(
-            board.getId(),
-            board.getContent(),
-            board.getCreatedAt()
+                board.getId(),
+                board.getContent(),
+                board.getCreatedAt()
         )).collect(Collectors.toList());
 
     }
+
     @Override
     public List<BoardDTO> findBoardsByUserId(Long userId) {
         return boardRepository.findByUserIdx(userId).stream()
-            .map(board -> new BoardDTO(board.getId(), board.getContent(), board.getCreatedAt()))
-            .collect(Collectors.toList());
+                .map(board -> new BoardDTO(board.getId(), board.getContent(), board.getCreatedAt()))
+                .collect(Collectors.toList());
     }
 }
 

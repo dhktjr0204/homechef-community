@@ -29,7 +29,7 @@ public class MainController {
 
     @GetMapping("/")
     public String index(@PageableDefault(page = 0, size = 3, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-                        @RequestParam(value = "id", defaultValue = "0") Long lastBoardId, Model model) throws FileNotFoundException {
+                        @RequestParam(value = "id", defaultValue = "0") Long lastBoardId, Model model) {
 
         //현재 로그인 된 유저 정보 가져오기
         UserDTO userDTO = userDetailsService.getCurrentUserDTO();
@@ -54,7 +54,7 @@ public class MainController {
     public String searchByText(@RequestParam(value = "keyword") String keyword,
                          @PageableDefault(page = 0, size = 3, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                          @RequestParam(value = "id", defaultValue = "0") Long lastBoardId,
-                         Model model) throws FileNotFoundException {
+                         Model model) {
         //현재 로그인 된 유저 정보 가져오기
         UserDTO userDTO = userDetailsService.getCurrentUserDTO();
 
@@ -78,7 +78,7 @@ public class MainController {
     public String searchByhashTag(@RequestParam(value = "keyword") String tags,
                                           @PageableDefault(page = 0, size = 3, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                                           @RequestParam(value = "id", defaultValue = "0") Long lastBoardId,
-                                          Model model) throws FileNotFoundException {
+                                          Model model){
         //현재 로그인 된 유저 정보 가져오기
         UserDTO userDTO = userDetailsService.getCurrentUserDTO();
 

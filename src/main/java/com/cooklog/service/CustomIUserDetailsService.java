@@ -41,21 +41,26 @@ public class CustomIUserDetailsService implements UserDetailsService {
         return new CustomUserDetails(userData);
     }
 
-    public UserDTO getCurrentUserDTO() throws FileNotFoundException {
+    public UserDTO getCurrentUserDTO() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
         long userId = userDetails.getIdx();
 
         User user = userRepository.findById(userId).orElseThrow(NotValidateUserException::new);
-        System.out.println(user.getProfileImage());
-        String profileUrl = imageService.fileLoad(user.getProfileImage());
+
+        String profileUrl = null;
+        try {
+            profileUrl = imageService.fileLoad(user.getProfileImage());
+        } catch (FileNotFoundException e) {
+            profileUrl="";
+        }
 
         ;
         return UserDTO.builder()
                 .idx(user.getIdx())
                 .nickname(user.getNickname())
-                .introduction(user.getIntroduction())
+                .introduction(user.getIntroduction()==null ? "": user.getIntroduction())
                 .profileImageName(user.getProfileImage())
                 .profileImageUrl(profileUrl)
                 .role(user.getRole())

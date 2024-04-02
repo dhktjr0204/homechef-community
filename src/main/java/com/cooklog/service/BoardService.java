@@ -25,7 +25,7 @@ public interface BoardService {
 
     void deleteBoard(Long boardId);
 
-    BoardDTO getBoard(Long boardId, Long userId) throws FileNotFoundException;
+    BoardDTO getBoard(Long boardId, Long userId);
 
     List<BoardDTO> findAllBoards();
 
