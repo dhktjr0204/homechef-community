@@ -13,8 +13,8 @@
     <!--    로그인 전 = 로그인 / 로그인 후 = 프로필 + 아이디 필요.-->
     <div class="user-info">
         <figure class="profile-picture" aria-label="프로필">
-            <img  th:src="@{/img/main/profile4.jpg}" alt="프로필 사진">
+            <img  th:src="${currentLoginUser.profileImageUrl}" alt="프로필 사진">
         </figure>
-        <span class="username">dhktjr0204</span>
+        <span class="username" th:text="${currentLoginUser.nickname}">dhktjr0204</span>
     </div>
 </header>

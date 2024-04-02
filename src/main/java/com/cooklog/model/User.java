@@ -50,6 +50,9 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private List<Board> boards = new ArrayList<>();
 
+//	@OneToMany(mappedBy = "user") 양방향
+//	private List<Bookmark> bookmarks = new ArrayList<>();
+
 	@Builder
 	public User (String nickname, String email, String password, Role role, String introduction, String profileImage){
 		this.nickname = nickname;
@@ -63,5 +66,15 @@ public class User {
 	public void update(String nickname, String introduction) {
 		this.nickname = nickname;
 		this.introduction = introduction;
+	}
+
+
+	public void deleted(Long idx) {
+		this.idx = idx;
+		this.isDeleted = true; // tinyint 라서 true=1
+  }
+  
+	public void update(String profileImage){
+		this.profileImage=profileImage;
 	}
 }

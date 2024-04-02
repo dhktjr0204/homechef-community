@@ -41,17 +41,29 @@ function clickDeleteBoard(button) {
     const boardArticle = button.closest('.board-container');
 
     const boardId = boardArticle.querySelector('.board-id').value;
+    const userId= boardArticle.querySelector('.username').getAttribute("value");
     if (confirmation) {
-        fetch("/board/delete/" + boardId, {
+        fetch("/board/delete/" + boardId + "?userId="+userId, {
             method: "DELETE",
         }).then(response => {
             if (!response.ok) {
-                console.log("실패");
+                return response.text().then(msg => {
+                    if (response.status === 401) {
+                        alert(msg);
+                    }else if(response.status===404){
+                        alert("해당 게시물을 찾을 수 없습니다.");
+                        throw new Error("해당 게시물을 찾을 수 없습니다.");
+                    }
+                });
             } else {
                 return response.text();
             }
         }).then(url => {
-            window.location.replace(url);
+            if (url) {
+                window.location.replace(url);
+            }else{
+                window.location.replace("/");
+            }
         }).catch(error => {
             console.error(error);
         });
@@ -109,12 +121,54 @@ document.getElementById('commentForm').addEventListener('submit', function (even
         });
 });
 
+
 function addCommentOrReplyToPage(commentData, parentCommentId = null) {
     const commentsContainer = document.querySelector('.comments-display');
     let newCommentHtml = '';
 
     // 공통 프로필 이미지 경로
     const profileImageSrc = commentData.profileImage ? `/img/main/${commentData.profileImage}` : '/img/main/profile.jpg';
+}
+
+
+// 답글을 전송하는 함수
+function submitReply(content, parentCommentId) {
+    const boardId = document.getElementById('boardId').value; // 현재 게시판의 ID
+    // 답글 데이터 구조를 서버가 요구하는 형식에 맞춰서 작성합니다.
+    const replyData = {
+        boardId: boardId,
+        userId: 1,
+        content: content,
+        parentCommentId: parentCommentId
+    };
+
+    // 서버에 답글을 전송하는 POST 요청을 보냅니다.
+    fetch(`/board/${boardId}/comments`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(replyData)
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Reply submitted:', data);
+            // 답글을 페이지에 추가하는 함수를 호출하거나 페이지를 새로고침합니다.
+            addReplyToPage(data, parentCommentId); // 'data.reply'는 수정된 답글 데이터를 포함해야 합니다.
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// 이 함수는 대댓글을 페이지에 추가할 때 호출됩니다.
+function addReplyToPage(reply, parentCommentId) {
+    // 부모 댓글 찾기
+    const parentComment = document.querySelector(`.comment[data-comment-id="${parentCommentId}"]`);
+    // 부모 댓글 바로 아래에 대댓글 컨테이너가 있는지 확인하고, 없으면 생성.
+    let repliesContainer = parentComment.querySelector('.replies-container');
+    if (!repliesContainer) {
+        repliesContainer = createRepliesContainer(parentComment);
+        parentComment.insertAdjacentElement('afterend', repliesContainer);
+    }
 
     // 공통 댓글 날짜
     const commentDate = new Date(commentData.createdAt).toLocaleDateString('ko-KR', {
@@ -192,7 +246,7 @@ function createRepliesContainer(parentComment) {
 
 // '답글 달기' 버튼 이벤트 리스너
 document.querySelectorAll('.reply-button').forEach(button => {
-    button.addEventListener('click', function() {
+    button.addEventListener('click', function () {
         const parentCommentId = this.closest('.comment').dataset.commentId;
 
         // 현재 답글 대상의 댓글 ID를 설정합니다.
@@ -210,6 +264,36 @@ document.querySelectorAll('.reply-button').forEach(button => {
         }
     });
 });
+
+// 댓글을 전송하는 함수
+function submitComment(content) {
+    const boardId = document.getElementById('boardId').value; // 현재 게시판의 ID
+    // 댓글 데이터 구조를 서버가 요구하는 형식에 맞춰서 작성합니다.
+    const commentData = {
+        boardId: boardId,
+        userId: 1,
+        content: content
+    };
+
+    // 서버에 댓글을 전송하는 POST 요청을 보냅니다.
+    fetch(`/board/${boardId}/comments`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(commentData)
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Comment submitted:', data);
+            // 댓글을 페이지에 추가하는 함수를 호출하거나 페이지를 새로고침합니다.
+            // addCommentToPage(data);
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// 답글 입력창을 원래 위치로 돌려놓고 상태를 초기화하는 함수
+
 function resetReplyBox() {
     // 입력창 초기화 및 placeholder 설정
     const commentInput = document.getElementById('commentInput');
@@ -260,12 +344,12 @@ function bindCommentOptions() {
             cancelButton.type = 'button';
 
             // 버튼에 이벤트 리스너를 설정합니다.
-            saveButton.addEventListener('click', function() {
+            saveButton.addEventListener('click', function () {
                 updateComment(commentId, commentInput.value);
                 isEditing = false; // 수정 모드 비활성화
             });
 
-            cancelButton.addEventListener('click', function() {
+            cancelButton.addEventListener('click', function () {
                 resetEditState(commentInput, saveButton, cancelButton, originalContent);
                 isEditing = false; // 수정 모드 비활성화
             });
@@ -279,17 +363,17 @@ function bindCommentOptions() {
             commentForm.dataset.editingCommentId = commentId;
 
             // 입력란에 엔터키 이벤트를 설정합니다.
-            commentInput.addEventListener('keypress', function(e) {
+            commentInput.addEventListener('keypress', function (e) {
                 if (e.key === 'Enter' && commentForm.dataset.isEditing === 'true') {
                     e.preventDefault(); // 기본 이벤트를 취소합니다.
                     saveButton.click(); // '수정' 버튼의 클릭 이벤트를 강제로 실행합니다.
                 }
-            }, { once: true }); // 이벤트는 한 번만 실행되고 제거됩니다.
+            }, {once: true}); // 이벤트는 한 번만 실행되고 제거됩니다.
         });
     });
     // '답글 달기' 버튼 이벤트 리스너
     document.querySelectorAll('.reply-button').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const commentId = this.closest('.comment').dataset.commentId;
                 activeReplyBox = commentId;
                 commentInput.placeholder = '답글을 입력하세요...'; // 플레이스홀더 변경
@@ -297,6 +381,7 @@ function bindCommentOptions() {
         });
     });
 }
+
 // 옵션 메뉴를 토글하는 함수
 function toggleOptionsMenu(event) {
     const optionsMenu = this.nextElementSibling;
@@ -308,16 +393,33 @@ function toggleOptionsMenu(event) {
         }
     });
 }
+
 let currentPage = 0;
 const commentsPerPage = 5; // 한 페이지당 보여줄 댓글의 수
 
 // 페이지 로드 시 실행되는 초기화 함수에 bindCommentOptions 호출을 추가
 document.addEventListener('DOMContentLoaded', function () {
     bindCommentOptions(); // 초기화 시 댓글 옵션 버튼에 이벤트 리스너를 설정
+
     bindDeleteEvent(); // 댓글 삭제 이벤트 리스너 설정
     resetReplyBox();
+
+    const commentsDisplayContainer = document.querySelector('.comments-display');
+    // 이벤트 위임을 사용하여 댓글 삭제 버튼 클릭 이벤트 처리
+    commentsDisplayContainer.addEventListener('click', function (event) {
+        if (event.target.classList.contains('delete-comment-button')) {
+            const isConfirmed = confirm('댓글을 삭제하시겠습니까?');
+            if (isConfirmed) {
+                // 삭제 로직 실행
+                const commentId = event.target.closest('.comment').dataset.commentId;
+                deleteComment(commentId);
+            }
+        }
+    });
+
+
     //댓글 수정 상태라면 엔터키 입력시 수정한 댓글로 변경 가능.
-    document.getElementById('commentInput').addEventListener('keypress', function(e) {
+    document.getElementById('commentInput').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             e.preventDefault(); // 기본 이벤트를 취소합니다.
             const commentForm = document.getElementById('commentForm');
@@ -332,6 +434,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // 첫 페이지의 댓글을 로드.
     fetchComments(currentPage);
 });
+
 // 댓글 삭제 기능을 위한 이벤트 리스너를 설정하는 함수
 function bindDeleteEvent() {
     const commentsDisplayContainer = document.querySelector('.comments-display');
@@ -352,6 +455,8 @@ function bindDeleteEvent() {
         }
     });
 }
+
+
 // 서버로부터 댓글 데이터를 가져오는 함수
 function fetchComments(page) {
     const boardId = document.getElementById('boardId').value;
@@ -377,6 +482,7 @@ function fetchComments(page) {
         })
         .catch(error => console.error('Error:', error));
 }
+
 
 // 페이지네이션 설정 함수
 function setupPagination(totalPages, currentPage, windowSize = 1) {
@@ -411,6 +517,36 @@ function createPaginationButton(text, clickHandler, isActive = false) {
     return button;
 }
 
+
+
+// 댓글 삭제 로직
+function deleteComment(commentId) {
+    fetch(`/board/comments/${commentId}`, {
+        method: 'DELETE',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to delete comment');
+            }
+            console.log('Comment deleted');
+            // 페이지에서 댓글 요소를 제거
+            removeCommentElement(commentId);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+// 댓글 요소를 DOM에서 제거하는 함수
+function removeCommentElement(commentId) {
+    const commentElement = document.querySelector(`.comment[data-comment-id="${commentId}"]`);
+    if (commentElement) {
+        commentElement.remove();
+    }
+}
+
+
+//수정 요소 시작
 // 수정된 내용을 서버로 전송하고 페이지에서 댓글을 업데이트하는 함수
 function updateComment(commentId, updatedContent) {
     // 서버로 수정된 댓글 내용을 전송하는 코드
@@ -419,7 +555,7 @@ function updateComment(commentId, updatedContent) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ content: updatedContent })
+        body: JSON.stringify({content: updatedContent})
     })
         .then(response => {
             if (!response.ok) {
@@ -451,6 +587,7 @@ function resetEditState(commentInput, saveButton, cancelButton, originalContent)
     delete commentForm.dataset.isEditing;
     delete commentForm.dataset.editingCommentId;
 }
+
 // 페이지에서 댓글 내용을 업데이트하는 함수
 function updateCommentElement(commentId, updatedContent) {
     const commentElement = document.querySelector(`.comment[data-comment-id="${commentId}"] .comment-content`);

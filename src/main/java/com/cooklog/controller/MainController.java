@@ -2,48 +2,44 @@ package com.cooklog.controller;
 
 import com.cooklog.dto.BoardDTO;
 import com.cooklog.dto.CommentDTO;
-import com.cooklog.model.Board;
+import com.cooklog.dto.UserDTO;
 import com.cooklog.service.BoardService;
 import com.cooklog.service.CommentService;
-import com.cooklog.service.ImageService;
-import com.cooklog.service.UserService;
+import com.cooklog.service.CustomIUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class MainController {
 
-    private final UserService userService;
     private final BoardService boardService;
-    private final ImageService imageService;
     private final CommentService commentService;
+    private final CustomIUserDetailsService userDetailsService;
 
     @GetMapping("/")
     public String index(@PageableDefault(page = 0, size = 3, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                         @RequestParam(value = "id", defaultValue = "0") Long lastBoardId, Model model) throws FileNotFoundException {
-        long userId = 1;
 
-        Page<BoardDTO> allBoard = boardService.getAllBoard(pageable, userId, lastBoardId, pageable.getSort().toString());
+        //현재 로그인 된 유저 정보 가져오기
+        UserDTO userDTO = userDetailsService.getCurrentUserDTO();
 
-        //allBoard에 이미지 링크 추가
-        Page<BoardDTO> allBoardContainsImageUrls = imageService.getAllFileListLoad(allBoard);
+        Page<BoardDTO> allBoard = boardService.getAllBoard(pageable, userDTO.getIdx(), lastBoardId, pageable.getSort().toString());
 
         List<CommentDTO> comments = commentService.getCommentInfoByBoardId(allBoard);
 
-        model.addAttribute("boards", allBoardContainsImageUrls);
+        model.addAttribute("currentLoginUser", userDTO);
+        model.addAttribute("boards", allBoard);
         model.addAttribute("comments", comments);
 
         //만약 첫 요청이면 main/index를 리턴
@@ -59,15 +55,16 @@ public class MainController {
                          @PageableDefault(page = 0, size = 3, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                          @RequestParam(value = "id", defaultValue = "0") Long lastBoardId,
                          Model model) throws FileNotFoundException {
-        long userId = 1;
+        //현재 로그인 된 유저 정보 가져오기
+        UserDTO userDTO = userDetailsService.getCurrentUserDTO();
 
-        Page<BoardDTO> searchByText = boardService.getSearchByText(keyword, userId, pageable);
-        Page<BoardDTO> allBoardContainsImageUrls = imageService.getAllFileListLoad(searchByText);
+        Page<BoardDTO> searchByText = boardService.getSearchByText(keyword, userDTO.getIdx(), pageable);
 
         List<CommentDTO> comments = commentService.getCommentInfoByBoardId(searchByText);
 
+        model.addAttribute("currentLoginUser", userDTO);
         model.addAttribute("keyword", keyword);
-        model.addAttribute("boards", allBoardContainsImageUrls);
+        model.addAttribute("boards", searchByText);
         model.addAttribute("comments", comments);
 
         if (lastBoardId == 0) {
@@ -82,15 +79,16 @@ public class MainController {
                                           @PageableDefault(page = 0, size = 3, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                                           @RequestParam(value = "id", defaultValue = "0") Long lastBoardId,
                                           Model model) throws FileNotFoundException {
-        long userId = 1;
+        //현재 로그인 된 유저 정보 가져오기
+        UserDTO userDTO = userDetailsService.getCurrentUserDTO();
 
-        Page<BoardDTO> searchByTags = boardService.findBoardsByTags(tags, userId, pageable);
-        Page<BoardDTO> allBoardContainsImageUrls = imageService.getAllFileListLoad(searchByTags);
+        Page<BoardDTO> searchByTags = boardService.findBoardsByTags(tags, userDTO.getIdx(), pageable);
 
         List<CommentDTO> comments = commentService.getCommentInfoByBoardId(searchByTags);
 
+        model.addAttribute("currentLoginUser", userDTO);
         model.addAttribute("keyword", tags);
-        model.addAttribute("boards", allBoardContainsImageUrls);
+        model.addAttribute("boards", searchByTags);
         model.addAttribute("comments", comments);
 
         if (lastBoardId == 0) {

@@ -7,6 +7,5 @@ import java.util.List;
 
 public interface TagService {
 	List<Tag> save(List<String> tags, Board board);
-	List<String> getTags(String tags);
 }
 

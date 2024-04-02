@@ -1,8 +1,15 @@
 package com.cooklog.service;
 
 
+import com.cooklog.dto.BoardDTO;
 import com.cooklog.dto.CustomUserDetails;
 import com.cooklog.dto.UserUpdateRequestDTO;
+
+import com.cooklog.repository.BoardRepository;
+
+import com.cooklog.model.Bookmark;
+import com.cooklog.repository.BookmarkRepository;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
@@ -34,6 +41,11 @@ import javax.validation.Valid;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+
+    private final BoardRepository boardRepository;
+
+    private final BookmarkRepository bookmarkRepository;
+
 
     private final BCryptPasswordEncoder encoder;
 
@@ -142,6 +154,36 @@ public class UserServiceImpl implements UserService {
         user.update(userDTO.getNickname(), userDTO.getIntroduction());
 
         return user;
+    }
+
+    // 사용자 탈퇴 유무 업데이트 후 저장
+    @Override
+    public void updateUserDeleted(Long userIdx) {
+        User user = userRepository.findById(userIdx)
+                .orElseThrow(() -> new IllegalArgumentException("해당 userId가 없습니다."));
+        user.deleted(userIdx);
+
+        userRepository.save(user);
+    }
+
+    // 사용자가 올린 글 갯수 반환
+    @Override
+    public Long getNumberOfBoardByUserId(Long userIdx) {
+
+        User user = userRepository.findById(userIdx).orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않는 게시글입니다."));
+
+        return boardRepository.countBoardByUserIdx(userIdx);
+    }
+
+    @Override
+    public List<BoardDTO> getBookmarkBoards(Long userIdx) {
+        User user = userRepository.findById(userIdx)
+            .orElseThrow(() -> new IllegalArgumentException("해당 userId가 없습니다."));
+
+        List<Bookmark> bookmarkList = bookmarkRepository.findAllByUserIdx(userIdx);
+        List<BoardDTO> boardList = bookmarkList.stream().map(bookmark -> new BoardDTO(bookmark.getBoard(),userIdx)).collect(Collectors.toList());
+
+        return boardList;
     }
 
 }
