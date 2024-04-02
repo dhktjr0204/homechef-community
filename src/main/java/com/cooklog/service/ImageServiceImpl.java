@@ -2,15 +2,16 @@ package com.cooklog.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.cooklog.dto.BoardDTO;
+import com.cooklog.exception.board.BoardNotFoundException;
+import com.cooklog.exception.user.NotValidateUserException;
 import com.cooklog.model.Board;
 import com.cooklog.model.Image;
+import com.cooklog.model.User;
 import com.cooklog.repository.ImageRepository;
+import com.cooklog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
@@ -24,21 +25,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ImageServiceImpl implements ImageService {
     private final ImageRepository imageRepository;
+    private final UserRepository userRepository;
     private final AmazonS3 amazonS3;
 
     @Value("${cloud.aws.s3.bucketName}")
     private String bucket;
 
-    @Override
-    public Page<BoardDTO> getAllFileListLoad(Page<BoardDTO> boardDTOS) throws FileNotFoundException {
-
-        for(BoardDTO board: boardDTOS){
-            List<String> imageUrls = board.getImageNames();
-            board.setImageUrls(fileListLoad(imageUrls));
-        }
-
-        return boardDTOS;
-    }
 
     @Override
     public List<String> fileListWrite(List<MultipartFile> files, Board board) throws IOException {
@@ -69,12 +61,24 @@ public class ImageServiceImpl implements ImageService {
         return urlList;
     }
 
-    @Transactional
+    @Override
+    public String fileWrite(MultipartFile file, Long userId) throws IOException {
+        String fileName=saveS3(file);
+        User user = userRepository.findById(userId).orElseThrow(NotValidateUserException::new);
+        user.update(fileName);
+        return fileName;
+    }
+
+    @Override
+    public String fileLoad(String fileName) throws FileNotFoundException {
+        return loadS3(fileName);
+    }
+
     @Override
     public void updateFileList(Board board, List<String> originalFiles, List<MultipartFile> newFiles) throws IOException {
 
         List<Image> images = imageRepository.findAllByBoard_IdOrderByOrder(board.getId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 board id가 없습니다."));
+                .orElseThrow(BoardNotFoundException::new);
 
         //새로 전송된 사진들이 시작할 순서
         int orderIndex = 0;

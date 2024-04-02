@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BoardUpdateRequestDTO {
+    private Long userId;
     private String content;
     private List<String> tags;
     //기존에 있는 이미지들
