@@ -11,6 +11,8 @@
 <main>
     <input class="board-id" type="hidden" th:value="${board.id}"/>
     <form class="board-form" action="" onsubmit="return false" th:object="${board}">
+        <input class="user-id" type="hidden" th:field="*{userId}"/>
+
         <section class="hash-tag-container">
             <textarea class="hash-tag-input" rows="1" placeholder="해쉬태그를 입력해주세요! 최대 10개까지 가능합니다."></textarea>
             <div class="hash-tag-list">

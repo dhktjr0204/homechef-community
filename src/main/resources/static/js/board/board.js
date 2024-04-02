@@ -41,17 +41,29 @@ function clickDeleteBoard(button) {
     const boardArticle = button.closest('.board-container');
 
     const boardId = boardArticle.querySelector('.board-id').value;
+    const userId= boardArticle.querySelector('.username').getAttribute("value");
     if (confirmation) {
-        fetch("/board/delete/" + boardId, {
+        fetch("/board/delete/" + boardId + "?userId="+userId, {
             method: "DELETE",
         }).then(response => {
             if (!response.ok) {
-                console.log("실패");
+                return response.text().then(msg => {
+                    if (response.status === 401) {
+                        alert(msg);
+                    }else if(response.status===404){
+                        alert("해당 게시물을 찾을 수 없습니다.");
+                        throw new Error("해당 게시물을 찾을 수 없습니다.");
+                    }
+                });
             } else {
                 return response.text();
             }
         }).then(url => {
-            window.location.replace(url);
+            if (url) {
+                window.location.replace(url);
+            }else{
+                window.location.replace("/");
+            }
         }).catch(error => {
             console.error(error);
         });
@@ -103,6 +115,7 @@ document.getElementById('commentForm').addEventListener('submit', function (even
             // activeReplyBox = null; // 답글 대상 초기화
         });
 });
+
 // 답글을 전송하는 함수
 function submitReply(content, parentCommentId) {
     const boardId = document.getElementById('boardId').value; // 현재 게시판의 ID
@@ -130,6 +143,7 @@ function submitReply(content, parentCommentId) {
         })
         .catch(error => console.error('Error:', error));
 }
+
 // 이 함수는 대댓글을 페이지에 추가할 때 호출됩니다.
 function addReplyToPage(reply, parentCommentId) {
     // 부모 댓글 찾기
@@ -179,7 +193,7 @@ function createRepliesContainer(parentComment) {
 
 // '답글 달기' 버튼 이벤트 리스너
 document.querySelectorAll('.reply-button').forEach(button => {
-    button.addEventListener('click', function() {
+    button.addEventListener('click', function () {
         const parentCommentId = this.closest('.comment').dataset.commentId;
 
         // 현재 답글 대상의 댓글 ID를 설정합니다.
@@ -197,6 +211,7 @@ document.querySelectorAll('.reply-button').forEach(button => {
         }
     });
 });
+
 // 댓글을 전송하는 함수
 function submitComment(content) {
     const boardId = document.getElementById('boardId').value; // 현재 게시판의 ID
@@ -315,12 +330,12 @@ function bindCommentOptions() {
             cancelButton.type = 'button';
 
             // 버튼에 이벤트 리스너를 설정합니다.
-            saveButton.addEventListener('click', function() {
+            saveButton.addEventListener('click', function () {
                 updateComment(commentId, commentInput.value);
                 isEditing = false; // 수정 모드 비활성화
             });
 
-            cancelButton.addEventListener('click', function() {
+            cancelButton.addEventListener('click', function () {
                 resetEditState(commentInput, saveButton, cancelButton, originalContent);
                 isEditing = false; // 수정 모드 비활성화
             });
@@ -334,17 +349,17 @@ function bindCommentOptions() {
             commentForm.dataset.editingCommentId = commentId;
 
             // 입력란에 엔터키 이벤트를 설정합니다.
-            commentInput.addEventListener('keypress', function(e) {
+            commentInput.addEventListener('keypress', function (e) {
                 if (e.key === 'Enter' && commentForm.dataset.isEditing === 'true') {
                     e.preventDefault(); // 기본 이벤트를 취소합니다.
                     saveButton.click(); // '수정' 버튼의 클릭 이벤트를 강제로 실행합니다.
                 }
-            }, { once: true }); // 이벤트는 한 번만 실행되고 제거됩니다.
+            }, {once: true}); // 이벤트는 한 번만 실행되고 제거됩니다.
         });
     });
     // '답글 달기' 버튼 이벤트 리스너
     document.querySelectorAll('.reply-button').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const commentId = this.closest('.comment').dataset.commentId;
             // 답글 입력창 위치 조정 로직 개선
             if (activeReplyBox !== commentId) {
@@ -361,6 +376,7 @@ function bindCommentOptions() {
         });
     });
 }
+
 // 옵션 메뉴를 토글하는 함수
 function toggleOptionsMenu(event) {
     const optionsMenu = this.nextElementSibling;
@@ -372,6 +388,7 @@ function toggleOptionsMenu(event) {
         }
     });
 }
+
 let currentPage = 0;
 const commentsPerPage = 5; // 한 페이지당 보여줄 댓글의 수
 
@@ -380,7 +397,7 @@ document.addEventListener('DOMContentLoaded', function () {
     bindCommentOptions(); // 초기화 시 댓글 옵션 버튼에 이벤트 리스너를 설정
     const commentsDisplayContainer = document.querySelector('.comments-display');
     // 이벤트 위임을 사용하여 댓글 삭제 버튼 클릭 이벤트 처리
-    commentsDisplayContainer.addEventListener('click', function(event) {
+    commentsDisplayContainer.addEventListener('click', function (event) {
         if (event.target.classList.contains('delete-comment-button')) {
             const isConfirmed = confirm('댓글을 삭제하시겠습니까?');
             if (isConfirmed) {
@@ -392,7 +409,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     //댓글 수정 상태라면 엔터키 입력시 수정한 댓글로 변경 가능.
-    document.getElementById('commentInput').addEventListener('keypress', function(e) {
+    document.getElementById('commentInput').addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             e.preventDefault(); // 기본 이벤트를 취소합니다.
             const commentForm = document.getElementById('commentForm');
@@ -407,6 +424,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // 첫 페이지의 댓글을 로드.
     fetchComments(currentPage);
 });
+
 // 서버로부터 댓글 데이터를 가져오는 함수
 function fetchComments(page) {
     const boardId = document.getElementById('boardId').value;
@@ -432,8 +450,6 @@ function fetchComments(page) {
         })
         .catch(error => console.error('Error:', error));
 }
-
-
 
 
 // 페이지네이션 설정 함수
@@ -488,6 +504,7 @@ function deleteComment(commentId) {
             console.error('Error:', error);
         });
 }
+
 // 댓글 요소를 DOM에서 제거하는 함수
 function removeCommentElement(commentId) {
     const commentElement = document.querySelector(`.comment[data-comment-id="${commentId}"]`);
@@ -507,7 +524,7 @@ function updateComment(commentId, updatedContent) {
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ content: updatedContent })
+        body: JSON.stringify({content: updatedContent})
     })
         .then(response => {
             if (!response.ok) {
@@ -539,6 +556,7 @@ function resetEditState(commentInput, saveButton, cancelButton, originalContent)
     delete commentForm.dataset.isEditing;
     delete commentForm.dataset.editingCommentId;
 }
+
 // 페이지에서 댓글 내용을 업데이트하는 함수
 function updateCommentElement(commentId, updatedContent) {
     const commentElement = document.querySelector(`.comment[data-comment-id="${commentId}"] .comment-content`);

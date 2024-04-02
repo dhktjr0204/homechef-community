@@ -2,10 +2,13 @@ package com.cooklog.controller;
 
 import com.cooklog.dto.BoardDTO;
 import com.cooklog.dto.CustomUserDetails;
+
 import com.cooklog.dto.UserDTO;
 import com.cooklog.service.BoardService;
+
 import com.cooklog.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -66,6 +69,7 @@ public class MyPageController {
         return "myPage/profileEditForm";
     }
 
+
 //    // 회원 정보 수정 폼
 //    @PutMapping("/edit")
 //    public ResponseEntity<String> edit(@RequestParam("userIdx") Long userIdx,
@@ -75,6 +79,15 @@ public class MyPageController {
 //        return ResponseEntity.ok("/myPage/edit");
 //    }
 
+    @GetMapping("/bookmark")
+    public ResponseEntity<?> getMyBookmarks() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Long userIdx = userDetails.getIdx();
 
+        List<BoardDTO> boardDTOList = userService.getBookmarkBoards(userIdx);
+
+        return ResponseEntity.ok(boardDTOList);
+    }
 }
 

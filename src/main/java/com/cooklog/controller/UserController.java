@@ -60,6 +60,7 @@ public class UserController {
     @GetMapping("/quit")
     public String quit(@ModelAttribute UserDTO userDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
 		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 		long userId = userDetails.getIdx();
         userService.updateUserDeleted(userId);
