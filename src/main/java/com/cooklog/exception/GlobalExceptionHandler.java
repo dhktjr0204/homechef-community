@@ -4,6 +4,10 @@ import com.cooklog.exception.board.BoardNotFoundException;
 import com.cooklog.exception.board.OverContentLengthLimitException;
 import com.cooklog.exception.board.OverTagCountLimitException;
 import com.cooklog.exception.board.OverTagLengthLimitException;
+import com.cooklog.exception.bookmark.AlreadyBookmarkedException;
+import com.cooklog.exception.bookmark.NotBookmarkedYetException;
+import com.cooklog.exception.likes.AlreadyLikedException;
+import com.cooklog.exception.likes.NotLikedYetException;
 import com.cooklog.exception.user.NotValidateUserException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +46,27 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BoardNotFoundException.class)
     public ResponseEntity<String> BoardNotFoundException(BoardNotFoundException ex){
         return ResponseEntity.notFound().build();
+    }
+
+    //북마크 관련 예외처리
+    @ExceptionHandler(AlreadyBookmarkedException.class)
+    public ResponseEntity<String> AlreadyBookmarkedException(AlreadyBookmarkedException ex) {
+        return new ResponseEntity<>("해당 게시물은 이미 북마크로 등록이 되어있습니다.",HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotBookmarkedYetException.class)
+    public ResponseEntity<String> NotBookmarkedYetException(NotBookmarkedYetException ex) {
+        return new ResponseEntity<>("해당 게시물은 이미 북마크로 등록이 되어있지 않습니다.",HttpStatus.BAD_REQUEST);
+    }
+
+    //좋아요 관련 예외처리
+    @ExceptionHandler(AlreadyLikedException.class)
+    public ResponseEntity<String> AlreadyLikedException(AlreadyLikedException ex) {
+        return new ResponseEntity<>("해당 게시물은 이미 좋아요가 눌러져 있습니다.",HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotLikedYetException.class)
+    public ResponseEntity<String> NotLikedYetException(NotLikedYetException ex) {
+        return new ResponseEntity<>("해당 게시물은 이미 좋아요가 눌러져 있지 않습니다.",HttpStatus.BAD_REQUEST);
     }
 }
