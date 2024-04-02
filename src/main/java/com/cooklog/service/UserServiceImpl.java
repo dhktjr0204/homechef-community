@@ -60,7 +60,6 @@ public class UserServiceImpl implements UserService {
                 .nickname(joinDTO.getNickname())
                 .email(joinDTO.getEmail())
                 .password(encoder.encode(joinDTO.getPassword()))
-                .role(Role.USER)
                 .build();
 
         userRepository.save(user);
