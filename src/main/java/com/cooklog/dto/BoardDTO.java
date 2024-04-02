@@ -21,9 +21,11 @@ public class BoardDTO {
     private String content;
     private LocalDateTime createdAt;
     private Integer readCount;
-    private String profileImage;
+    private String profileImageName;
+    private String profileImageUrl;
     private Long userId; // User의 식별자
     private String userNickname; // User의 닉네임
+    private Boolean userIsDelete;// 탈퇴한 회원인지 식별
     private List<String> imageNames; // Image명 목록
     private List<String> imageUrls; // Image url 목록
     private List<String> tags; // 태그 이름 목록

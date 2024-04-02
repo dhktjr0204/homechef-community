@@ -58,7 +58,7 @@ public class UserController {
         UserDTO userDTO = userService.findUserById(userDetails.getIdx());
         String nickname = userDTO.getNickname();
         String introduction = userDTO.getIntroduction();
-        String profileImage = userDTO.getProfileImage();
+        String profileImage = userDTO.getProfileImageName();
 
         // 모델에 사용자 정보 추가
         model.addAttribute("nickname", nickname);
