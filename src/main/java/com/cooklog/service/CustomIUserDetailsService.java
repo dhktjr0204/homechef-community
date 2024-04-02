@@ -41,27 +41,25 @@ public class CustomIUserDetailsService implements UserDetailsService {
         return new CustomUserDetails(userData);
     }
 
-    //현재 로그인한 유저의 idx를 가져오는 메서드 , 아해 getCurrentUserDTO와 중복되는 코드가 있어서 리팩토링 필요
-    public Long getUserIdx() {
+    public User isValidCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        userRepository.findById(userDetails.getIdx()).orElseThrow(NotValidateUserException::new);
+        return userRepository.findById(userDetails.getIdx()).orElseThrow(NotValidateUserException::new);
+    }
 
-        return userDetails.getIdx();
+    //현재 로그인한 유저의 idx를 가져오는 메서드 , 아해 getCurrentUserDTO와 중복되는 코드가 있어서 리팩토링 필요
+    public Long getUserIdx() {
+        User currentUser = isValidCurrentUser();
+
+        return currentUser.getIdx();
     }
 
     public UserDTO getCurrentUserDTO() throws FileNotFoundException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User user = isValidCurrentUser();
 
-        long userId = userDetails.getIdx();
-
-        User user = userRepository.findById(userId).orElseThrow(NotValidateUserException::new);
-        System.out.println(user.getProfileImage());
         String profileUrl = imageService.fileLoad(user.getProfileImage());
 
-        ;
         return UserDTO.builder()
                 .idx(user.getIdx())
                 .nickname(user.getNickname())

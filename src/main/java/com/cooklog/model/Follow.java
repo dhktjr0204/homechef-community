@@ -6,7 +6,6 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
 @NoArgsConstructor
 @Entity
 @Table(name = "follow")
@@ -23,5 +22,10 @@ public class Follow {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "following_id")
 	private User following;
+
+	public Follow(User follower,User following) {
+		this.follower = follower;
+		this.following = following;
+	}
 
 }
