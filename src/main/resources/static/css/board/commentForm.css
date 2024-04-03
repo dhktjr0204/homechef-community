@@ -38,6 +38,8 @@
 .comment-username {
     font-weight: bold;
     margin-right: 10px;
+    text-decoration: none;
+    color: black;
 }
 
 /* 댓글 내용 스타일 */

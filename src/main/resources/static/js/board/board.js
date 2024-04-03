@@ -130,7 +130,7 @@ document.getElementById('commentForm').addEventListener('submit', function (even
 // 댓글 및 답글을 페이지에 추가하는 함수
 function addCommentOrReplyToPage(commentData, parentCommentId = null) {
     console.log('호출 함수:', commentData, parentCommentId); // 함수 호출 확인
-
+    const userPageLink = `<a href="/myPage/main/${commentData.userId}" class="comment-username">${commentData.userName}</a>`;
     if (parentCommentId) {
         const parentCommentElement = document.querySelector(`.comment[data-comment-id="${parentCommentId}"]`);
 
@@ -146,7 +146,7 @@ function addCommentOrReplyToPage(commentData, parentCommentId = null) {
             <div class="comment reply" data-comment-id="${commentData.id}">
                 <div class="reply-icon">ㄴ</div>
                 <div class="comment-profile"><img src="${commentData.profileImage ? commentData.profileImage : '/img/default_profile.png'}" alt="Profile Image"></div>
-                <div class="comment-username">${commentData.userName}</div>
+                ${userPageLink}
                 <div class="comment-content">${commentData.content}</div>
                 <div class="comment-metadata">
                     <span class="comment-date">${new Date(commentData.createdAt).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
@@ -174,7 +174,7 @@ function addCommentOrReplyToPage(commentData, parentCommentId = null) {
             <div class="comment" data-comment-id="${commentData.id}">
                 <div class="main-comment">
                     <div class="comment-profile"><img src="${commentData.profileImage ? `/img/main/${commentData.profileImage}` : '/img/main/profile1.jpg'}" alt="Profile Image"></div>
-                    <div class="comment-username">${commentData.userName}</div>
+                    ${userPageLink}
                     <div class="comment-content">${commentData.content}</div>
                     <button class="more-options">⋮</button>
                     <div class="options-menu" style="display:none;">
@@ -466,9 +466,6 @@ function fetchComments(page) {
             commentsContainer.innerHTML = ''; // 댓글 목록 초기화
 
             data.content.forEach(comment => {
-                // 여기에서 comment가 대댓글인지 확인하여 적절한 위치에 추가합니다.
-                // 예를 들면, comment.parentCommentId를 체크하여 대댓글인 경우
-                // 해당하는 부모 댓글 아래에 추가하는 로직을 구현할 수 있습니다.
                 if (comment.parentCommentId) {
                     addCommentOrReplyToPage(comment, comment.parentCommentId);
                 } else {
