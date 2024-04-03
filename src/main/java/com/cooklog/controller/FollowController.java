@@ -30,7 +30,7 @@ public class FollowController {
 		Long myId = userDetailsService.getUserIdx();
 		Long followingUserId = followingUser;
 
-		followService.follow(myId,followingUserId);
+//		followService.follow(myId,followingUserId);
 		return ResponseEntity.ok().build();
 	}
 
@@ -41,7 +41,7 @@ public class FollowController {
 		Long myId = userDetailsService.getUserIdx();
 		Long unfollowingUserId = unfollowingUser;
 
-		followService.unfollow(myId,unfollowingUserId);
+//		followService.unfollow(myId,unfollowingUserId);
 		return ResponseEntity.ok().build();
 	}
 

@@ -22,93 +22,93 @@ public class FollowServiceImpl implements FollowService {
 	private final FollowRepository followRepository;
 	private final UserRepository userRepository;
 
-	@Transactional
-	@Override
-	public void follow(Long followerId, Long followingId) {
-		User follower = validateUser(followerId);
-		User following = validateUser(followerId);
+//	@Transactional
+//	@Override
+//	public void follow(Long followerId, Long followingId) {
+//		User follower = validateUser(followerId);
+//		User following = validateUser(followerId);
+//
+//		if(follower.getIdx() == following.getIdx()) {//자기 자신을 팔로우하면 안된다
+//			throw new IllegalArgumentException("자기 자신을 팔로우 할 수 없습니다.");
+//		}
+//
+//		Optional<Follow> isExist = followRepository.findByFollowerIdAndFollowingId(follower.getIdx(),following.getIdx());
+//
+//		if(isExist.isPresent()) {//팔로우를 눌렀는데 이미 팔로우 관계라면?
+//			throw new IllegalArgumentException("이미 팔로우 중인 유저입니다.");
+//		}
+//
+//		Follow follow = new Follow(follower,following);
+//		followRepository.save(follow);
+//	}
+//
+//	@Transactional
+//	@Override
+//	public void unfollow(Long followerId, Long followingId) {
+//		User follower = validateUser(followerId);
+//		User following = validateUser(followerId);
+//
+//		if(follower.getIdx() == following.getIdx()) {//자기 자신을 언팔로우하면 안된다
+//			throw new IllegalArgumentException("자기 자신을 언팔로우 할 수 없습니다.");
+//		}
+//
+//		Optional<Follow> isExist = followRepository.findByFollowerIdAndFollowingId(follower.getIdx(),following.getIdx());
+//
+//		if(isExist.isEmpty()) {//언팔로우를 눌렀는데 이미 언팔로우 관계라면?
+//			throw new IllegalArgumentException("이미 언팔로우 중인 유저입니다.");
+//		}
+//
+//		followRepository.deleteByFollowerIdAndFollowingId(follower.getIdx(),following.getIdx());
+//	}
 
-		if(follower.getIdx() == following.getIdx()) {//자기 자신을 팔로우하면 안된다
-			throw new IllegalArgumentException("자기 자신을 팔로우 할 수 없습니다.");
-		}
-
-		Optional<Follow> isExist = followRepository.findByFollowerIdAndFollowingId(follower.getIdx(),following.getIdx());
-
-		if(isExist.isPresent()) {//팔로우를 눌렀는데 이미 팔로우 관계라면?
-			throw new IllegalArgumentException("이미 팔로우 중인 유저입니다.");
-		}
-
-		Follow follow = new Follow(follower,following);
-		followRepository.save(follow);
-	}
-
-	@Transactional
-	@Override
-	public void unfollow(Long followerId, Long followingId) {
-		User follower = validateUser(followerId);
-		User following = validateUser(followerId);
-
-		if(follower.getIdx() == following.getIdx()) {//자기 자신을 언팔로우하면 안된다
-			throw new IllegalArgumentException("자기 자신을 언팔로우 할 수 없습니다.");
-		}
-
-		Optional<Follow> isExist = followRepository.findByFollowerIdAndFollowingId(follower.getIdx(),following.getIdx());
-
-		if(isExist.isEmpty()) {//언팔로우를 눌렀는데 이미 언팔로우 관계라면?
-			throw new IllegalArgumentException("이미 언팔로우 중인 유저입니다.");
-		}
-
-		followRepository.deleteByFollowerIdAndFollowingId(follower.getIdx(),following.getIdx());
-	}
-
-	@Override
-	public Page<FollowDTO> findFollowingListByUserIdx(Long userIdx, Pageable pageable) {
-		User user = validateUser(userIdx);
-
-		Page<Follow> followPage = followRepository.findByFollowerId(userIdx,pageable);
-		return followPage.map(FollowDTO::new);
-
-	}
-
-	@Override
-	public Page<FollowDTO> findFollowerListByUserIdx(Long userIdx, Pageable pageable) {
-		User user = validateUser(userIdx);
-
-		Page<Follow> followingPage = followRepository.findByFollowingId(userIdx,pageable);
-
-		if(followingPage.isEmpty()) {
-			return Page.empty();
-		}
-
-		return followingPage.map(FollowDTO::new);
-	}
-
-	@Override
-	public Page<FollowDTO> getFollowingListWithFollowStatus(Long userIdx,Long currentUserIdx,Pageable pageable) {
-		User user = validateUser(userIdx);
-		User currentUser = validateUser(currentUserIdx);
-
-		Page<Follow> followingPage = followRepository.findByFollowingId(userIdx,pageable);
-
-		if(followingPage.isEmpty()) {
-			return Page.empty();
-		}
-
-		return followingPage.map(FollowDTO::new);
-	}
-
-	@Override
-	public Page<FollowDTO> getFollowerListWithFollowStatus(Long userIdx,Long currentUserIdx, Pageable pageable) {
-		User user = validateUser(userIdx);
-
-		Page<Follow> followingPage = followRepository.findByFollowingId(userIdx,pageable);
-
-		if(followingPage.isEmpty()) {
-			return Page.empty();
-		}
-
-		return followingPage.map(FollowDTO::new);
-	}
+//	@Override
+//	public Page<FollowDTO> findFollowingListByUserIdx(Long userIdx, Pageable pageable) {
+//		User user = validateUser(userIdx);
+//
+//		Page<Follow> followPage = followRepository.findByFollowerId(userIdx,pageable);
+//		return followPage.map(FollowDTO::new);
+//
+//	}
+//
+//	@Override
+//	public Page<FollowDTO> findFollowerListByUserIdx(Long userIdx, Pageable pageable) {
+//		User user = validateUser(userIdx);
+//
+//		Page<Follow> followingPage = followRepository.findByFollowingId(userIdx,pageable);
+//
+//		if(followingPage.isEmpty()) {
+//			return Page.empty();
+//		}
+//
+//		return followingPage.map(FollowDTO::new);
+//	}
+//
+//	@Override
+//	public Page<FollowDTO> getFollowingListWithFollowStatus(Long userIdx,Long currentUserIdx,Pageable pageable) {
+//		User user = validateUser(userIdx);
+//		User currentUser = validateUser(currentUserIdx);
+//
+//		Page<Follow> followingPage = followRepository.findByFollowingId(userIdx,pageable);
+//
+//		if(followingPage.isEmpty()) {
+//			return Page.empty();
+//		}
+//
+//		return followingPage.map(FollowDTO::new);
+//	}
+//
+//	@Override
+//	public Page<FollowDTO> getFollowerListWithFollowStatus(Long userIdx,Long currentUserIdx, Pageable pageable) {
+//		User user = validateUser(userIdx);
+//
+//		Page<Follow> followingPage = followRepository.findByFollowingId(userIdx,pageable);
+//
+//		if(followingPage.isEmpty()) {
+//			return Page.empty();
+//		}
+//
+//		return followingPage.map(FollowDTO::new);
+//	}
 
 	private User validateUser(Long userIdx) {
 		return userRepository.findById(userIdx).orElseThrow(NotValidateUserException::new);

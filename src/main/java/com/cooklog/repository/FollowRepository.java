@@ -16,19 +16,19 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
     //예외처리) 유저 A와 유저 B가 서로 팔로우 관계인지 확인, 이미 팔로우 중인데 팔로우 버튼을 누르면 안된다
     //결과는 단 1개가 Follow가 return 되거나 null이 나온다
     //select * from follow where follower_id = followerId and following_id = followingId;
-    Optional<Follow> findByFollowerIdAndFollowingId(Long followerId,Long followingId);
-
-    //특정 유저를 unfollow
-    //delete from follow where follower_id = followerId and following_id = followingId;
-    void deleteByFollowerIdAndFollowingId(Long followerId,Long followingId);
+//    Optional<Follow> findByFollowerIdAndFollowingId(Long followerId,Long followingId);
+//
+//    //특정 유저를 unfollow
+//    //delete from follow where follower_id = followerId and following_id = followingId;
+//    void deleteByFollowerIdAndFollowingId(Long followerId,Long followingId);
 
     //특정 유저의 '팔로잉' 리스트를 확인
     //select * from follow where follower_id = followerId;
-    Page<Follow> findByFollowerId(Long followerId, Pageable pageable);
+//    Page<Follow> findByFollowerId(Long followerId, Pageable pageable);
 
     //특정 유저의 '팔로우' 리스트를 확인
     //select * from follow where following_id = followingId
-    Page<Follow> findByFollowingId(Long followingId,Pageable pageable);
+//    Page<Follow> findByFollowingId(Long followingId,Pageable pageable);
 
     //로그인한 유저가 특정 유저의 '팔로잉'리스트의 사람들을 '팔로우'한 상태인지 확인
     //특정 유저(userIdx) followingPage에 내가 팔로우한 사람들은 '팔로잉'이 뜨고 팔로우하지않은 사람들은 '팔로우'가 뜬다
