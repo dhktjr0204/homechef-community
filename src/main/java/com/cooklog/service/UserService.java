@@ -33,9 +33,6 @@ public interface UserService {
 	// 모든 유저의 정보를 가져오는 메소드
 	List<UserDTO> findAllUsers();
 
-	// 사용자 프로필 수정 메소드
-	User updateUserProfile(Long userIdx, UserUpdateRequestDTO userUpdateRequestDTO);
-
 	// 사용자의 역할을 업데이트하는 메소드 추가
 	void updateUserRole(Long userId, Role role);
 

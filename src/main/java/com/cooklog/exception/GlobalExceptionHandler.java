@@ -4,6 +4,8 @@ import com.cooklog.exception.board.BoardNotFoundException;
 import com.cooklog.exception.board.OverContentLengthLimitException;
 import com.cooklog.exception.board.OverTagCountLimitException;
 import com.cooklog.exception.board.OverTagLengthLimitException;
+import com.cooklog.exception.myPage.OverIntroductionLengthLimitException;
+import com.cooklog.exception.myPage.OverNicknameLengthLimitException;
 import com.cooklog.exception.user.NotValidateUserException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,5 +44,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BoardNotFoundException.class)
     public ResponseEntity<String> BoardNotFoundException(BoardNotFoundException ex){
         return ResponseEntity.notFound().build();
+    }
+
+    //마이페이지 예외 처리
+    @ExceptionHandler(OverNicknameLengthLimitException.class)
+    public ResponseEntity<String> OverNicknameLengthLimitException(OverNicknameLengthLimitException ex){
+        return new ResponseEntity<>("ID가 길이를 초과하였습니다.", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OverIntroductionLengthLimitException.class)
+    public ResponseEntity<String> OverIntroductionLengthLimitException(OverIntroductionLengthLimitException ex){
+        return new ResponseEntity<>("인삿말이 길이를 초과하였습니다.", HttpStatus.BAD_REQUEST);
     }
 }

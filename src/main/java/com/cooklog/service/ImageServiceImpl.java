@@ -64,8 +64,6 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public String fileWrite(MultipartFile file, Long userId) throws IOException {
         String fileName=saveS3(file);
-        User user = userRepository.findById(userId).orElseThrow(NotValidateUserException::new);
-        user.update(fileName);
         return fileName;
     }
 
