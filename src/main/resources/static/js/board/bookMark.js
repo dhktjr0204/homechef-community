@@ -19,7 +19,14 @@ async function cancelBookmark(url,markBtn) {
     })
 
     if(!response.ok) {
-      console.log('네트워크 상태가 좋지 않습니다.');
+      if (response.status === 400) {
+        let errorMessage = await response.text(); // 서버로부터 받은 에러 메시지
+        alert(errorMessage); // 에러 메시지를 alert로 표시
+      } else {
+        alert("네트워크 상태가 좋지 않습니다.")
+        console.log('네트워크 상태가 좋지 않습니다.');
+      }
+      return;
     }
 
     markBtn.classList.remove('yellowbookmark');
@@ -37,8 +44,16 @@ async function  addBookmark(url,markBtn) {
     })
 
     if(!response.ok) {
-      console.log('네트워크 상태가 좋지 않습니다.');
+      if (response.status === 400) {
+        let errorMessage = await response.text(); // 서버로부터 받은 에러 메시지
+        alert(errorMessage); // 에러 메시지를 alert로 표시
+      } else {
+        alert("네트워크 상태가 좋지 않습니다.")
+        console.log('네트워크 상태가 좋지 않습니다.');
+      }
+      return;
     }
+
     markBtn.classList.add('yellowbookmark');
     markBtn.classList.remove('emptybookmark');
 

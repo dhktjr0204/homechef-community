@@ -1,6 +1,10 @@
 package com.cooklog.service;
 
 import com.cooklog.dto.CustomUserDetails;
+import com.cooklog.exception.board.BoardNotFoundException;
+import com.cooklog.exception.bookmark.AlreadyBookmarkedException;
+import com.cooklog.exception.bookmark.NotBookmarkedYetException;
+import com.cooklog.exception.user.NotValidateUserException;
 import com.cooklog.model.Board;
 import com.cooklog.model.Bookmark;
 import com.cooklog.model.User;
@@ -31,7 +35,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         Optional<Bookmark> bookmark =  bookmarkRepository.findByUserIdxAndBoardId(validUser.getIdx(),validBoard.getId());
 
         if(bookmark.isPresent()) {//이미 사용자가 해당 게시물을 북마크로 등록해놓았다면
-            throw new IllegalArgumentException("해당 게시물은 이미 북마크로 등록이 되어있습니다.");
+            throw new AlreadyBookmarkedException();
         }
 
         Bookmark newBookmark = new Bookmark(validUser,validBoard);
@@ -47,21 +51,17 @@ public class BookmarkServiceImpl implements BookmarkService {
         Optional<Bookmark> bookmark =  bookmarkRepository.findByUserIdxAndBoardId(validUser.getIdx(),validBoard.getId());
 
         if(bookmark.isEmpty()) {
-            throw new IllegalArgumentException("해당 게시물은 이미 북마크로 등록이 되어있지 않습니다.");
+            throw new NotBookmarkedYetException();
         }
 
         bookmarkRepository.delete(bookmark.get());
     }
 
     private User validateUser(Long userIdx) {
-        User user = userRepository.findById(userIdx).orElseThrow(() -> new IllegalArgumentException("해당 유저는 존재하지 않습니다."));
-
-        return user;
+        return userRepository.findById(userIdx).orElseThrow(NotValidateUserException::new);
     }
 
     private Board validateBoard(Long boardId) {
-        Board board = boardRepository.findById(boardId).orElseThrow(() -> new IllegalArgumentException("일치하는 boardId가 없습니다."));
-
-        return board;
+        return boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
     }
 }

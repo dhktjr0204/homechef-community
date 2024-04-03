@@ -6,6 +6,8 @@ import com.cooklog.dto.MyPageUpdateRequestDTO;
 import com.cooklog.dto.UserDTO;
 import com.cooklog.exception.user.NotValidateUserException;
 import com.cooklog.service.BoardService;
+
+
 import com.cooklog.service.CustomIUserDetailsService;
 import com.cooklog.service.ImageService;
 import com.cooklog.service.MyPageService;
@@ -37,6 +39,7 @@ public class MyPageController {
     private final MyPageService myPageService;
     private final CustomIUserDetailsService userDetailsService;
     private final BoardService boardService;
+    private final CustomIUserDetailsService userDetailsService;
 
     // 마이페이지
     @GetMapping("/main")
@@ -127,11 +130,8 @@ public class MyPageController {
 
     @GetMapping("/bookmark")
     public ResponseEntity<?> getMyBookmarks() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        Long userIdx = userDetails.getIdx();
-
-        List<BoardDTO> boardDTOList = userService.getBookmarkBoards(userIdx);
+        Long currentUserIdx = userDetailsService.getUserIdx();
+        List<BoardDTO> boardDTOList = userService.getBookmarkBoards(currentUserIdx);
 
         return ResponseEntity.ok(boardDTOList);
     }
