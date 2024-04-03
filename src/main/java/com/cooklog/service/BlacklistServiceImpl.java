@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cooklog.model.Blacklist;
+import com.cooklog.model.Role;
 import com.cooklog.model.User;
 import com.cooklog.repository.BlacklistRepository;
 import com.cooklog.repository.UserRepository;
@@ -19,24 +20,29 @@ import com.cooklog.repository.UserRepository;
 public class BlacklistServiceImpl implements BlacklistService {
 	private final BlacklistRepository blacklistRepository;
 	private final UserRepository userRepository;
+	private final UserService userService;
 
 
 	@Override
 	@Transactional
 	public void addToBlacklist(Long userId) {
-		User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
 		if (!blacklistRepository.existsByUserIdx(userId)) {
 			Blacklist blacklist = new Blacklist();
 			blacklist.setUser(user);
 			blacklist.setCreatedAt(LocalDateTime.now());
 			blacklistRepository.save(blacklist);
+			userService.updateUserRole(userId, Role.BLACK); // 역할을 블랙리스트로 변경
 		}
 	}
 
 	@Override
+	@Transactional
 	public void removeFromBlacklist(Long userId) {
 		blacklistRepository.findOneByUserIdx(userId).ifPresent(blacklist -> {
 			blacklistRepository.delete(blacklist);
+			userService.updateUserRole(userId, Role.USER); // 역할을 미식 초보로 변경
 		});
 	}
 }

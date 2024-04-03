@@ -1,19 +1,23 @@
 package com.cooklog.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.cooklog.dto.ReportedContentDTO;
+import com.cooklog.model.Blacklist;
 import com.cooklog.model.Board;
 import com.cooklog.model.Comment;
+import com.cooklog.model.Role;
 import com.cooklog.model.User;
 import com.cooklog.repository.BlacklistRepository;
 import com.cooklog.repository.BoardRepository;
 import com.cooklog.repository.CommentRepository;
 import com.cooklog.repository.UserRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service

@@ -46,6 +46,7 @@
 .comment-content {
     padding: 0px;
     margin: 0 0 3px 0;
+    max-width: 81%;
 }
 
 /* 댓글 추가 버튼 */

@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
+import org.springframework.data.annotation.CreatedDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,4 +25,9 @@ public class Blacklist {
 
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
+
+	@PrePersist
+	protected void onCreate() {
+		createdAt = LocalDateTime.now();
+	}
 }
