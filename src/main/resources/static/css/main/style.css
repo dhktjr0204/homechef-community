@@ -141,6 +141,8 @@ img {
     display: block;
 }
 .username{
+    text-decoration: none;
+    color: black;
     font-size: 21px;
     font-weight: 700;
 }

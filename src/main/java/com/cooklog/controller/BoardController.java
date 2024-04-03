@@ -43,7 +43,7 @@ public class BoardController {
     private final CustomIUserDetailsService userDetailsService;
 
     @GetMapping("/{id}")
-    public String getBoard(@PathVariable Long id, Model model) throws FileNotFoundException {
+    public String getBoard(@PathVariable Long id, Model model) {
         UserDTO userDTO = userDetailsService.getCurrentUserDTO();
 
         //조회수 업데이트
@@ -58,7 +58,7 @@ public class BoardController {
     }
 
     @GetMapping("/write")
-    public String getWriteForm(Model model) throws FileNotFoundException {
+    public String getWriteForm(Model model) {
         UserDTO userDTO = userDetailsService.getCurrentUserDTO();
 
         model.addAttribute("currentLoginUser", userDTO);
@@ -85,7 +85,7 @@ public class BoardController {
     }
 
     @GetMapping("/edit/{id}")
-    public String getEditForm(@PathVariable Long id, Model model) throws FileNotFoundException {
+    public String getEditForm(@PathVariable Long id, Model model) {
 
         UserDTO userDTO = userDetailsService.getCurrentUserDTO();
 
@@ -124,7 +124,7 @@ public class BoardController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id, @RequestParam("userId") Long userId) throws FileNotFoundException {
+    public ResponseEntity<?> delete(@PathVariable Long id, @RequestParam("userId") Long userId) {
         UserDTO userDTO = userDetailsService.getCurrentUserDTO();
 
         //만약 인증되지 않은 사용자라면 예외처리

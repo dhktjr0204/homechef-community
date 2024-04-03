@@ -1,5 +1,6 @@
 package com.cooklog.repository;
 
+
 import com.cooklog.dto.FollowDTO;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
@@ -8,10 +9,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.cooklog.model.Follow;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import com.cooklog.dto.MyPageFollowCountDTO;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface FollowRepository extends JpaRepository<Follow, Long> {
+
 
     //예외처리) 유저 A와 유저 B가 서로 팔로우 관계인지 확인, 이미 팔로우 중인데 팔로우 버튼을 누르면 안된다
     //결과는 단 1개가 Follow가 return 되거나 null이 나온다
@@ -51,4 +54,15 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
         "LEFT JOIN Follow fc ON f.follower.idx = fc.follower.idx AND fc.follower.idx = :currentUserIdx " +
         "WHERE f.following.idx = :userIdx")
     Page<FollowDTO> findFollowerListByUserIdxWithFollowStatus(@Param("userIdx") Long userIdx,@Param("currentUserIdx") Long currentUserIdx, Pageable pageable);
+
+    @Query(value = "SELECT " +
+            "  (SELECT COUNT(*) FROM follow WHERE follower_id = :userId) AS followingCount, " +
+            "  (SELECT COUNT(*) FROM follow WHERE following_id = :userId) AS followerCount,  " +
+            "  CASE " +
+            "    WHEN EXISTS (SELECT 1 FROM follow WHERE follower_id = :loginUserId AND following_id = :userId) THEN 1 " +
+            "    ELSE 0 " +
+            "  END AS isFollow", nativeQuery = true)
+
+    MyPageFollowCountDTO findFollowCountByUserId(Long userId, Long loginUserId);
+
 }

@@ -8,7 +8,7 @@
                 <img th:src="${board.profileImageUrl}" alt="프로필 사진">
             </figure>
             <span th:if="${board.userIsDelete}" class="username" th:value="${board.userId}">탈퇴한 사용자입니다.</span>
-            <span th:unless="${board.userIsDelete}" class="username" th:text="${board.userNickname}" th:value="${board.userId}"></span>
+            <a th:unless="${board.userIsDelete}" class="username" th:text="${board.userNickname}" th:value="${board.userId}" th:href="'/myPage/main/' + ${board.userId}"></a>
         </div>
         <button class="more-options">⋮</button>
         <div class="options-menu">
@@ -29,7 +29,8 @@
         </div>
     </header>
     <section class="image-container">
-        <button th:if="${board.imageUrls.size()}>1" class="prev-btn" onclick="prevSlide(this)">&#10094;</button>
+        <button th:if="${board.imageUrls.size()}>1" class="prev-btn"
+                th:onclick="'prevSlide(' + ${board.id} + ', this)'">&#10094;</button>
         <div class="slider-container">
             <ul class="image-list">
                 <li th:each="image: ${board.imageUrls}">
@@ -38,7 +39,8 @@
                 </li>
             </ul>
         </div>
-        <button th:if="${board.imageUrls.size()}>1" class="next-btn" onclick="nextSlide(this)">&#10095;</button>
+        <button th:if="${board.imageUrls.size()}>1" class="next-btn"
+                th:onclick="'nextSlide(' + ${board.id} + ', this)'">&#10095;</button>
     </section>
 
     <pre class="content" th:text="${board.content}"></pre>

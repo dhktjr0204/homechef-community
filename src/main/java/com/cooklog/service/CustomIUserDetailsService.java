@@ -41,7 +41,9 @@ public class CustomIUserDetailsService implements UserDetailsService {
         return new CustomUserDetails(userData);
     }
 
+
     public User isValidCurrentUser() {
+      
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
@@ -55,15 +57,22 @@ public class CustomIUserDetailsService implements UserDetailsService {
         return currentUser.getIdx();
     }
 
+
     public UserDTO getCurrentUserDTO() throws FileNotFoundException {
         User user = isValidCurrentUser();
 
-        String profileUrl = imageService.fileLoad(user.getProfileImage());
+        String profileUrl = null;
+        try {
+            profileUrl = imageService.fileLoad(user.getProfileImage());
+        } catch (FileNotFoundException e) {
+            profileUrl="";
+        }
+
 
         return UserDTO.builder()
                 .idx(user.getIdx())
                 .nickname(user.getNickname())
-                .introduction(user.getIntroduction())
+                .introduction(user.getIntroduction()==null ? "": user.getIntroduction())
                 .profileImageName(user.getProfileImage())
                 .profileImageUrl(profileUrl)
                 .role(user.getRole())

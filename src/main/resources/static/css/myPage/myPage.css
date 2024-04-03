@@ -29,8 +29,8 @@
     text-decoration: none;
 }
 .profile-image img{
-    width: 60px;
-    height: 60px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
     margin-left: 0;
     margin-right: 40px;
@@ -70,17 +70,23 @@ ul, ol{
     padding: 0;
     list-style: none;
 }
+
 .board-list{
     display: flex;
     flex-wrap: wrap;
+    gap: 30px;
 }
+
 .board-list li{
-    flex-basis: calc(33.3% - 30px);
-    margin: 15px;
+    width: calc((100% / 3) - 30px);
+    height: 100%;
+    overflow: hidden;
 }
+
 .image-item{
     width: 100%;
-    max-width: 100%;
-    height: auto;
-    border-radius: 50px;
+    height: 100%;
+    border-radius: 30px;
+    aspect-ratio: 1/1; /* 1:1 비율 */
+    object-fit: cover;
 }

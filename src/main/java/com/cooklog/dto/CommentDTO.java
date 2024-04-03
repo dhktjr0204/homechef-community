@@ -66,4 +66,15 @@ public class CommentDTO {
 		this.profileImage = profileImage;
 		this.parentCommentId = parentCommentId;
 	}
+
+	public CommentDTO(Long id, String content, LocalDateTime createdAt, Long idx, String nickname, Long boardId, Long parentCommentId, String profileImage) {
+		this.id = id;
+		this.content = content;
+		this.createdAt = createdAt;
+		this.userId = idx;
+		this.userName = nickname;
+		this.boardId = boardId;
+		this.parentCommentId = parentCommentId;
+		this.profileImage = profileImage;
+	}
 }

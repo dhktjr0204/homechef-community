@@ -1,5 +1,6 @@
 package com.cooklog.service;
 
+import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.cooklog.exception.board.BoardNotFoundException;
@@ -12,6 +13,7 @@ import com.cooklog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
@@ -63,9 +65,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public String fileWrite(MultipartFile file, Long userId) throws IOException {
-        String fileName=saveS3(file);
-        User user = userRepository.findById(userId).orElseThrow(NotValidateUserException::new);
-        user.update(fileName);
+        String fileName = saveS3(file);
         return fileName;
     }
 
@@ -83,9 +83,14 @@ public class ImageServiceImpl implements ImageService {
         //새로 전송된 사진들이 시작할 순서
         int orderIndex = 0;
 
-        // 이미 저장된 사진들의 순서를 바꿔준다.
-        if (originalFiles != null) {
-
+        //만약 기존 이미지가 모두 지워졌다면 DB에 저장된 이미지들 모두 삭제
+        if(originalFiles==null){
+            for(Image image:images){
+                imageRepository.delete(image);
+                deleteS3(image.getName());
+            }
+        }else{
+            // 이미 저장된 사진들의 순서를 바꿔준다.
             orderIndex = originalFiles.size();
 
             for (Image image : images) {
@@ -93,6 +98,7 @@ public class ImageServiceImpl implements ImageService {
                 //만약 originalFiles에 없으면 사용자가 삭제한 사진이기 때문에 삭제
                 if (index == -1) {
                     imageRepository.delete(image);
+                    deleteS3(image.getName());
                 } else {
                     //사진이 포함되어있다면 순서 업데이트
                     image.update(index + 1);
@@ -141,6 +147,18 @@ public class ImageServiceImpl implements ImageService {
         amazonS3.putObject(bucket, fileName, file.getInputStream(), metadata);
 
         return fileName;
+    }
+
+    //s3 삭제 로직
+    @Override
+    public void deleteS3(String fileName) {
+        try {
+            amazonS3.deleteObject(bucket, fileName);
+            System.out.println("삭제 완료");
+        }catch (AmazonServiceException e){
+            System.out.println("Amazon 서비스 예외 발생");
+            System.out.println(e.getErrorMessage());
+        }
     }
 
 

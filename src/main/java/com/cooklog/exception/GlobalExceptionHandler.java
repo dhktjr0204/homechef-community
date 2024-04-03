@@ -8,6 +8,8 @@ import com.cooklog.exception.bookmark.AlreadyBookmarkedException;
 import com.cooklog.exception.bookmark.NotBookmarkedYetException;
 import com.cooklog.exception.likes.AlreadyLikedException;
 import com.cooklog.exception.likes.NotLikedYetException;
+import com.cooklog.exception.myPage.OverIntroductionLengthLimitException;
+import com.cooklog.exception.myPage.OverNicknameLengthLimitException;
 import com.cooklog.exception.user.NotValidateUserException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,6 +50,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.notFound().build();
     }
 
+
     //북마크 관련 예외처리
     @ExceptionHandler(AlreadyBookmarkedException.class)
     public ResponseEntity<String> AlreadyBookmarkedException(AlreadyBookmarkedException ex) {
@@ -68,5 +71,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotLikedYetException.class)
     public ResponseEntity<String> NotLikedYetException(NotLikedYetException ex) {
         return new ResponseEntity<>("해당 게시물은 이미 좋아요가 눌러져 있지 않습니다.",HttpStatus.BAD_REQUEST);
+
+    //마이페이지 예외 처리
+    @ExceptionHandler(OverNicknameLengthLimitException.class)
+    public ResponseEntity<String> OverNicknameLengthLimitException(OverNicknameLengthLimitException ex){
+        return new ResponseEntity<>("ID가 길이를 초과하였습니다.", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(OverIntroductionLengthLimitException.class)
+    public ResponseEntity<String> OverIntroductionLengthLimitException(OverIntroductionLengthLimitException ex){
+        return new ResponseEntity<>("인삿말이 길이를 초과하였습니다.", HttpStatus.BAD_REQUEST);
+
     }
 }
