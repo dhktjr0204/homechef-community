@@ -1,9 +1,16 @@
 package com.cooklog.controller;
 
+import com.cooklog.dto.FollowDTO;
+import com.cooklog.dto.UserDTO;
+import com.cooklog.model.User;
 import com.cooklog.service.CustomIUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,7 +37,7 @@ public class FollowController {
 		Long myId = userDetailsService.getUserIdx();
 		Long followingUserId = followingUser;
 
-//		followService.follow(myId,followingUserId);
+		followService.follow(myId,followingUserId);
 		return ResponseEntity.ok().build();
 	}
 
@@ -41,31 +48,60 @@ public class FollowController {
 		Long myId = userDetailsService.getUserIdx();
 		Long unfollowingUserId = unfollowingUser;
 
-//		followService.unfollow(myId,unfollowingUserId);
+		followService.unfollow(myId,unfollowingUserId);
 		return ResponseEntity.ok().build();
 	}
 
 
 	//특정 유저의 '팔로잉'을 확인
 	@GetMapping("/api/users/{userIdx}/following")
-	public String getFollowingList(Pageable pageable,@PathVariable long userIdx,
-		@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
-		userDetailsService.isValidCurrentUser();
-//		Page<FollowDTO> followingList = followService.findFollowingListByUserIdx(userIdx,pageable);
+	public String getFollowingList(
+		@PageableDefault(page = 0, size = 10, sort = "id", direction = Direction.DESC) Pageable pageable,
+		@PathVariable long userIdx,Model model) {
+		UserDTO currentUser = userDetailsService.getCurrentUserDTO();
+		Page<FollowDTO> followingList = followService.getFollowingListWithFollowStatus(userIdx,
+			currentUser.getIdx(), pageable);
 
-//		model.addAttribute("followings",followingList);
-		return "myPage/followerPage";
+		int startPage = 0;
+		int endPage = 0;
+
+		if (followingList.hasContent()) {
+			// followerList가 콘텐츠를 가지고 있을 때만 페이징 계산 실행
+			startPage = Math.max(0, followingList.getPageable().getPageNumber() - 4);
+			endPage = Math.min( followingList.getTotalPages(), followingList.getPageable().getPageNumber() + 5);
+		}
+		model.addAttribute("followings", followingList);
+		model.addAttribute("currentLoginUser",currentUser);
+		model.addAttribute("userIdx",userIdx);
+		model.addAttribute("startPage",startPage);
+		model.addAttribute("endPage",endPage);
+		return "myPage/followingPage";
 	}
 
 
 	//특정 유저의 '팔로워'를 확인
 	@GetMapping("/api/users/{userIdx}/follower")
-	public String getFollowerList(Pageable pageable,@PathVariable long userIdx,Model model) {
-		userDetailsService.isValidCurrentUser();
-//		Page<FollowDTO> followerList = followService.findFollowListByUserIdx(userIdx,pageable);
+	public String getFollowerList(@PageableDefault(page = 0,size = 10, sort = "id", direction = Direction.DESC) Pageable pageable,@PathVariable long userIdx,Model model) {
+		UserDTO currentUser = userDetailsService.getCurrentUserDTO();
+		Page<FollowDTO> followerList = followService.getFollowerListWithFollowStatus(userIdx,
+			currentUser.getIdx(), pageable);
 
-//		model.addAttribute("followers",followerList);
+		int startPage = 0;
+		int endPage = 0;
+
+		if (followerList.hasContent()) {
+			// followerList가 콘텐츠를 가지고 있을 때만 페이징 계산 실행
+			startPage = Math.max(0, followerList.getPageable().getPageNumber() - 4);
+			endPage = Math.min(followerList.getTotalPages(), followerList.getPageable().getPageNumber() + 5);
+		}
+		model.addAttribute("followers",followerList);
+		model.addAttribute("currentLoginUser",currentUser);
+		model.addAttribute("userIdx",userIdx);
+		model.addAttribute("startPage",startPage);
+		model.addAttribute("endPage",endPage);
+
 		return "myPage/followerPage";
+//		return ResponseEntity.ok(followerList);
 	}
 
 }
