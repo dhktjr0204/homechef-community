@@ -321,7 +321,20 @@ function bindCommentOptions() {
             commentInput.focus(); // 입력창에 포커스를 맞춥니다.
         });
     });
+    // 신고 버튼에 대한 이벤트 리스너 추가
+    document.querySelectorAll('.report-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const optionsMenu = this.closest('.options-menu');
+            if (optionsMenu) {
+                optionsMenu.style.display = 'none';
+            }
+            const commentElement = this.closest('.comment');
+            const commentId = commentElement.dataset.commentId;
+            reportComment(commentId);
+        });
+    });
 }
+
 // 옵션 메뉴를 토글하는 함수
 function toggleOptionsMenu(event) {
     const optionsMenu = this.nextElementSibling;
@@ -342,7 +355,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     bindCommentOptions(); // 초기화 시 댓글 옵션 버튼에 이벤트 리스너를 설정
     bindDeleteEvent(); // 댓글 삭제 이벤트 리스너 설정
+    bindReportEvent();
     resetReplyBox();
+    bindBoardReportEvent();
     //댓글 수정 상태라면 엔터키 입력시 수정한 댓글로 변경 가능.
     document.getElementById('commentInput').addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
@@ -364,6 +379,12 @@ function bindDeleteEvent() {
     const commentsDisplayContainer = document.querySelector('.comments-display');
     commentsDisplayContainer.addEventListener('click', function (event) {
         if (event.target.classList.contains('delete-comment-button')) {
+            // 옵션 메뉴를 찾기 위해 event.target을 사용합니다.
+            const optionsMenu = event.target.closest('.comment').querySelector('.options-menu');
+            if (optionsMenu) {
+                optionsMenu.style.display = 'none';
+            }
+
             const isConfirmed = confirm('댓글을 삭제하시겠습니까?');
             if (isConfirmed) {
                 const commentElement = event.target.closest('.comment');
@@ -379,6 +400,62 @@ function bindDeleteEvent() {
         }
     });
 }
+
+function bindReportEvent() {
+    const commentsDisplayContainer = document.querySelector('.comments-display');
+    commentsDisplayContainer.addEventListener('click', function(event) {
+        // 이벤트 타겟이 신고 버튼인지 확인
+        if (event.target.classList.contains('report-button')) {
+            const commentElement = event.target.closest('.comment');
+            const commentId = commentElement.dataset.commentId;
+            const isConfirmed = confirm('이 댓글을 신고하시겠습니까?');
+            if (isConfirmed) {
+                // 신고 요청을 보내는 코드
+                fetch(`/manager/comment/${commentId}`, {
+                    method: 'POST',
+                    // 필요한 경우 추가적인 헤더나 요청 본문을 설정합니다.
+                }).then(response => {
+                    if (response.ok) {
+                        alert('댓글이 신고되었습니다.');
+                    } else {
+                        throw new Error('Failed to report comment');
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                    alert('신고 처리 중 오류가 발생했습니다.');
+                });
+            }
+        }
+    });
+}
+function bindBoardReportEvent() {
+    document.querySelectorAll('.report-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const boardId = this.dataset.boardId; // dataset을 사용하여 boardId를 가져옵니다.
+            const isConfirmed = confirm('이 게시글을 신고하시겠습니까?');
+            if (isConfirmed) {
+                fetch(`/board/reportBoard/${boardId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // 필요한 경우 CSRF 토큰 등의 보안 헤더를 추가하세요.
+                    },
+                    // body를 사용하지 않는 POST 요청이라면 body를 생략할 수 있습니다.
+                }).then(response => {
+                    if (response.ok) {
+                        alert('게시글이 신고되었습니다.');
+                    } else {
+                        throw new Error('Failed to report board');
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                    alert('신고 처리 중 오류가 발생했습니다.');
+                });
+            }
+        });
+    });
+}
+
 // 서버로부터 댓글 데이터를 가져오는 함수
 function fetchComments(page) {
     const boardId = document.getElementById('boardId').value;

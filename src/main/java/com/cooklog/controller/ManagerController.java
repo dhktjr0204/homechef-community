@@ -141,4 +141,9 @@ public class ManagerController {
 		model.addAttribute("posts", posts);
 		return "manager/userPosts-manager";
 	}
+	@PostMapping("/comment/{commentId}")
+	public ResponseEntity<?> reportComment(@PathVariable Long commentId) {
+		reportService.reportComment(commentId);
+		return ResponseEntity.ok().build();
+	}
 }
