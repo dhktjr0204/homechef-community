@@ -50,6 +50,10 @@ textarea{
     justify-content: flex-end;
     gap: 20px;
 }
+.edit-button-container{
+    display: flex;
+    gap: 5px;
+}
 .submit-button, .cancel-button, .edit-button{
     padding: 10px 20px;
     border-radius: 10px;

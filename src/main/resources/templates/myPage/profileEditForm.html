@@ -9,31 +9,36 @@
 <body>
 <div th:replace="~{layout/header.html::main-header}"></div>
 <main>
-    <form class="profile-edit-form" onsubmit="return false">
+    <form class="profile-edit-form" onsubmit="return false" th:object="${currentLoginUser}">
         <div class="user-profile-container">
             <figure class="profile-image" aria-label="프로필">
-                <img src="../../static/img/main/food1.png" th:src="@{/img/main/profile4.jpg}" alt="프로필 사진">
-                <button class="profile-image-edit-button">수정</button>
+                <img src="../../static/img/main/food1.png" th:src="*{profileImageUrl}" th:value="*{profileImageName}" alt="프로필 사진">
+                <div class="edit-button-container">
+                    <button class="profile-image-edit-button" onclick="openFileUploader()">수정</button>
+                    <button class="basic-profile-image-edit-button" onclick="clickEditBasicProfileButton()">기본 이미지로 설정</button>
+                </div>
             </figure>
             <span>ID: </span>
             <!--띄어쓰기 안되게 막아야합니다.-->
             <textarea class="user-name-input" placeholder="id를 입력해주세요"
                       onchange="nameWordCount(this);"
-                      oninput="nameWordCount(this);">example_user</textarea>
+                      oninput="nameWordCount(this);" th:field="*{nickname}" th:value="*{idx}"></textarea>
             <div class="name-text-count">0/50</div>
         </div>
         <textarea class="profile-introduction-input" placeholder="인삿말을 입력해주세요!"
                   onchange="introductionWordCount(this);"
-                  oninput="introductionWordCount(this);">반갑습니다. 오늘도 즐거운 하루입니다.
+                  oninput="introductionWordCount(this);" th:field="*{introduction}">
         </textarea>
         <div class="introduction-text-count">0/300</div>
         <section class="button-container">
-            <button class="cancel-button">취소</button>
-            <button class="submit-button">등록</button>
+            <button class="cancel-button" onclick="clickCancelButton()">취소</button>
+            <button class="submit-button" onclick="clickSubmitButton()">등록</button>
         </section>
     </form>
 </main>
 <script src="../../static/js/board/wordCount.js" th:src="@{/js/board/wordCount.js}"></script>
 <script src="../../static/js/myPage/wordCount.js" th:src="@{/js/myPage/wordCount.js}"></script>
+<script src="../../static/js/myPage/myPageEditForm.js" th:src="@{/js/myPage/myPageEditForm.js}"></script>
+<script src="../../static/js/main/search.js" th:src="@{/js/main/search.js}"></script>
 </body>
 </html>
