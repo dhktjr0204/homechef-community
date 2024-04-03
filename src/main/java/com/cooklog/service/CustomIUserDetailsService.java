@@ -58,7 +58,7 @@ public class CustomIUserDetailsService implements UserDetailsService {
     }
 
 
-    public UserDTO getCurrentUserDTO() throws FileNotFoundException {
+    public UserDTO getCurrentUserDTO() {
         User user = isValidCurrentUser();
 
         String profileUrl = null;

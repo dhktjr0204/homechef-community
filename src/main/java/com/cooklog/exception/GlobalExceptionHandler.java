@@ -70,17 +70,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotLikedYetException.class)
     public ResponseEntity<String> NotLikedYetException(NotLikedYetException ex) {
-        return new ResponseEntity<>("해당 게시물은 이미 좋아요가 눌러져 있지 않습니다.",HttpStatus.BAD_REQUEST);
-
+        return new ResponseEntity<>("해당 게시물은 이미 좋아요가 눌러져 있지 않습니다.", HttpStatus.BAD_REQUEST);
+    }
     //마이페이지 예외 처리
     @ExceptionHandler(OverNicknameLengthLimitException.class)
-    public ResponseEntity<String> OverNicknameLengthLimitException(OverNicknameLengthLimitException ex){
+    public ResponseEntity<String> OverNicknameLengthLimitException(OverNicknameLengthLimitException ex) {
         return new ResponseEntity<>("ID가 길이를 초과하였습니다.", HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(OverIntroductionLengthLimitException.class)
     public ResponseEntity<String> OverIntroductionLengthLimitException(OverIntroductionLengthLimitException ex){
         return new ResponseEntity<>("인삿말이 길이를 초과하였습니다.", HttpStatus.BAD_REQUEST);
-
     }
 }
