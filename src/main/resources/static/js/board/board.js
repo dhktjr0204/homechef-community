@@ -131,6 +131,10 @@ document.getElementById('commentForm').addEventListener('submit', function (even
 function addCommentOrReplyToPage(commentData, parentCommentId = null) {
     console.log('호출 함수:', commentData, parentCommentId); // 함수 호출 확인
     const userPageLink = `<a href="/myPage/main/${commentData.userId}" class="comment-username">${commentData.userName}</a>`;
+    const editDeleteOptions = Number(currentUserId) === commentData.userId?
+        `<li><button class="edit-comment-button">수정</button></li>
+         <li><button class="delete-comment-button">삭제</button></li>` :
+        '';
     if (parentCommentId) {
         const parentCommentElement = document.querySelector(`.comment[data-comment-id="${parentCommentId}"]`);
 
@@ -155,8 +159,7 @@ function addCommentOrReplyToPage(commentData, parentCommentId = null) {
                     <div class="options-menu" style="display:none;">
                         <ul>
                             <li><button class="report-button">신고</button></li>
-                            <li><button class="edit-comment-button">수정</button></li>
-                            <li><button class="delete-comment-button">삭제</button></li>
+                            ${editDeleteOptions}
                         </ul>
                     </div>
             </div>`;
@@ -169,6 +172,8 @@ function addCommentOrReplyToPage(commentData, parentCommentId = null) {
             console.error(`부모 ID ${parentCommentId} 를 찾지 못했습니다.`);
         }
     } else {
+        // 수정 및 삭제 버튼이 현재 로그인한 사용자에게만 표시되도록 검사
+
         // 댓글인 경우의 HTML
         const commentHTML = `
             <div class="comment" data-comment-id="${commentData.id}">
@@ -180,8 +185,7 @@ function addCommentOrReplyToPage(commentData, parentCommentId = null) {
                     <div class="options-menu" style="display:none;">
                         <ul>
                             <li><button class="report-button">신고</button></li>
-                            <li><button class="edit-comment-button">수정</button></li>
-                            <li><button class="delete-comment-button">삭제</button></li>
+                            ${editDeleteOptions}
                         </ul>
                     </div>
                 </div>
