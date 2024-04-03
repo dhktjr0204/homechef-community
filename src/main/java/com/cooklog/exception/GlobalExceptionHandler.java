@@ -1,6 +1,7 @@
 package com.cooklog.exception;
 
 import com.cooklog.exception.board.BoardNotFoundException;
+import com.cooklog.exception.board.NoImageException;
 import com.cooklog.exception.board.OverContentLengthLimitException;
 import com.cooklog.exception.board.OverTagCountLimitException;
 import com.cooklog.exception.board.OverTagLengthLimitException;
@@ -8,6 +9,7 @@ import com.cooklog.exception.bookmark.AlreadyBookmarkedException;
 import com.cooklog.exception.bookmark.NotBookmarkedYetException;
 import com.cooklog.exception.likes.AlreadyLikedException;
 import com.cooklog.exception.likes.NotLikedYetException;
+import com.cooklog.exception.myPage.EmptyNicknameException;
 import com.cooklog.exception.myPage.OverIntroductionLengthLimitException;
 import com.cooklog.exception.myPage.OverNicknameLengthLimitException;
 import com.cooklog.exception.user.NotValidateUserException;
@@ -50,6 +52,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.notFound().build();
     }
 
+    @ExceptionHandler(NoImageException.class)
+    public ResponseEntity<String> NoImageException(NoImageException ex){
+        return new ResponseEntity<>("이미지를 한 장 이상 첨부해주세요.",HttpStatus.BAD_REQUEST);
+    }
 
     //북마크 관련 예외처리
     @ExceptionHandler(AlreadyBookmarkedException.class)
@@ -81,5 +87,10 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(OverIntroductionLengthLimitException.class)
     public ResponseEntity<String> OverIntroductionLengthLimitException(OverIntroductionLengthLimitException ex){
         return new ResponseEntity<>("인삿말이 길이를 초과하였습니다.", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EmptyNicknameException.class)
+    public ResponseEntity<String> EmptyNicknameException(EmptyNicknameException ex){
+        return new ResponseEntity<>("ID를 입력해주세요.", HttpStatus.BAD_REQUEST);
     }
 }

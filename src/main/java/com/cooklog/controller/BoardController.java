@@ -44,14 +44,14 @@ public class BoardController {
 
     @GetMapping("/{id}")
     public String getBoard(@PathVariable Long id, Model model) {
-        UserDTO userDTO = userDetailsService.getCurrentUserDTO();
+        UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
 
         //조회수 업데이트
         boardService.updateReadCnt(id);
 
-        BoardDTO board = boardService.getBoard(id, userDTO.getIdx());
+        BoardDTO board = boardService.getBoard(id, loginUserDTO.getIdx());
 
-        model.addAttribute("currentLoginUser", userDTO);
+        model.addAttribute("currentLoginUser", loginUserDTO);
         model.addAttribute("board", board);
 
         return "board/board";
@@ -59,9 +59,9 @@ public class BoardController {
 
     @GetMapping("/write")
     public String getWriteForm(Model model) {
-        UserDTO userDTO = userDetailsService.getCurrentUserDTO();
+        UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
 
-        model.addAttribute("currentLoginUser", userDTO);
+        model.addAttribute("currentLoginUser", loginUserDTO);
         model.addAttribute("board", new BoardCreateRequestDTO());
 
         return "board/boardForm";
@@ -70,16 +70,21 @@ public class BoardController {
     @PostMapping("/write")
     public ResponseEntity<?> save(BoardCreateRequestDTO boardCreateRequestDTO,
                                   @RequestPart("images") List<MultipartFile> images,
-                                  BindingResult result) throws IOException {
+                                  BindingResult result) {
 
         // 현재 인증된(로그인한) 사용자의 idx 가져와서 userDTO에 할당
-        UserDTO userDTO = userDetailsService.getCurrentUserDTO();
+        UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
+
+        //만약 탈퇴한 회원이라면 예외처리
+        if(loginUserDTO.isDeleted()){
+            throw new NotValidateUserException();
+        }
 
         //저장할 요소들 범위 넘지 않는지 확인하는 validate
         BoardCreateValidator boardCreateValidator = new BoardCreateValidator();
         boardCreateValidator.validate(boardCreateRequestDTO, result);
 
-        Board board = boardService.save(userDTO.getIdx(), boardCreateRequestDTO, images);
+        Board board = boardService.save(loginUserDTO.getIdx(), boardCreateRequestDTO, images);
 
         return ResponseEntity.ok("/board/" + board.getId());
     }
@@ -87,16 +92,16 @@ public class BoardController {
     @GetMapping("/edit/{id}")
     public String getEditForm(@PathVariable Long id, Model model) {
 
-        UserDTO userDTO = userDetailsService.getCurrentUserDTO();
+        UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
 
-        BoardDTO board = boardService.getBoard(id, userDTO.getIdx());
+        BoardDTO board = boardService.getBoard(id, loginUserDTO.getIdx());
 
         //만약 인증되지 않은 사용자라면 404페이지 리턴
-        if (!board.getUserId().equals(userDTO.getIdx())) {
+        if (!board.getUserId().equals(loginUserDTO.getIdx()) || loginUserDTO.isDeleted()) {
             return "error/404";
         }
 
-        model.addAttribute("currentLoginUser", userDTO);
+        model.addAttribute("currentLoginUser", loginUserDTO);
         model.addAttribute("board", board);
 
         return "board/boardEditForm";
@@ -105,12 +110,12 @@ public class BoardController {
     @PutMapping("/edit/{id}")
     public ResponseEntity<?> edit(@PathVariable Long id, BoardUpdateRequestDTO boardUpdateRequestDTO,
                                   @RequestPart(value = "images", required = false) List<MultipartFile> images,
-                                  BindingResult result) throws IOException {
+                                  BindingResult result) {
 
-        UserDTO userDTO = userDetailsService.getCurrentUserDTO();
+        UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
 
-        //만약 인증되지 않은 사용자라면 예외처리
-        if (!boardUpdateRequestDTO.getUserId().equals(userDTO.getIdx())) {
+        //만약 인증되지 않은 사용자거나 탈퇴한 사용자라면 예외처리
+        if (!boardUpdateRequestDTO.getUserId().equals(loginUserDTO.getIdx()) || loginUserDTO.isDeleted()) {
             throw new NotValidateUserException();
         }
 
@@ -125,10 +130,9 @@ public class BoardController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id, @RequestParam("userId") Long userId) {
-        UserDTO userDTO = userDetailsService.getCurrentUserDTO();
+        UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
 
-        //만약 인증되지 않은 사용자라면 예외처리
-        if (!userId.equals(userDTO.getIdx())) {
+        if (!userId.equals(loginUserDTO.getIdx()) || loginUserDTO.isDeleted()) {
             throw new NotValidateUserException();
         }
 

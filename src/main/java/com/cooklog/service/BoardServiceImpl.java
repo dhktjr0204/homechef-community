@@ -4,6 +4,7 @@ import com.cooklog.dto.BoardCreateRequestDTO;
 import com.cooklog.dto.BoardDTO;
 import com.cooklog.dto.BoardUpdateRequestDTO;
 import com.cooklog.exception.board.BoardNotFoundException;
+import com.cooklog.exception.board.NoImageException;
 import com.cooklog.exception.user.NotValidateUserException;
 import com.cooklog.model.Board;
 import com.cooklog.model.Image;
@@ -59,13 +60,13 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public Page<BoardDTO> getAllBoardWithFollow(Pageable pageable, Long userId, Long lastBoardId) {
-        Page<Board> boardPage=boardRepository.findAllBoardWithFollow(userId, lastBoardId, pageable);
+        Page<Board> boardPage = boardRepository.findAllBoardWithFollow(userId, lastBoardId, pageable);
 
         if (boardPage.isEmpty()) {
             return Page.empty();
         }
 
-        return boardPage.map(board->convertBoardToDTO(board, userId));
+        return boardPage.map(board -> convertBoardToDTO(board, userId));
     }
 
     @Override
@@ -78,9 +79,18 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Page<BoardDTO> getSearchByText(String keyword, Long userId, Pageable pageable) {
-        Page<Board> boardPage = boardRepository.findByContentContaining(keyword, pageable)
-                .orElse(Page.empty());
+    public Page<BoardDTO> getSearchByText(String keyword, Long userId, Long lastBoardId, Pageable pageable) {
+        Page<Board> boardPage;
+
+        if (lastBoardId == 0) {
+            boardPage = boardRepository.findByContentContaining(keyword, pageable)
+                    .orElse(Page.empty());
+            ;
+        } else {
+            boardPage = boardRepository.findByContentContainingAndIdLessThanEqual(keyword, lastBoardId, pageable)
+                    .orElse(Page.empty());
+        }
+
 
         if (boardPage.isEmpty()) {
             return Page.empty();
@@ -90,7 +100,7 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public Page<BoardDTO> findBoardsByTags(String tags, Long userId, Pageable pageable) {
+    public Page<BoardDTO> findBoardsByTags(String tags, Long userId, Long lastBoardId, Pageable pageable) {
         //받은 태그가 하나도 없을때 빈 페이지 리턴
         if (tags.isEmpty()) {
             return Page.empty();
@@ -98,8 +108,17 @@ public class BoardServiceImpl implements BoardService {
 
         List<String> tagList = Arrays.asList(tags.split(","));
 
-        Page<Board> boardPage = boardRepository.findBoardsByTagNames(tagList, pageable)
-                .orElse(Page.empty());
+        Page<Board> boardPage;
+
+        //첫 요청일 때
+        if (lastBoardId == 0) {
+            boardPage=boardRepository.findBoardsByTagNames(tagList,pageable)
+                    .orElse(Page.empty());
+        } else {
+            //두 번째 요청일 때부턴 첫 요청한 시점에 존재한 board들만 가져온다.
+            boardPage = boardRepository.findBoardsByTagNamesWithLastBoardId(tagList, lastBoardId, pageable)
+                    .orElse(Page.empty());
+        }
 
         //검색한 결과가 하나도 없다면 빈 페이지 리턴
         if (boardPage.isEmpty()) {
@@ -112,22 +131,13 @@ public class BoardServiceImpl implements BoardService {
     private BoardDTO convertBoardToDTO(Board board, Long userId) {
 
         //게시글에 연결된 사진들 가져오기
-        List<String> fileUrls = null;
-        try {
-            fileUrls = imageService.fileListLoad(board.getImages().stream()
-                    .map(Image::getName)
-                    .collect(Collectors.toList()));
-        } catch (FileNotFoundException e) {
-            fileUrls = new ArrayList<>();
-        }
+        List<String> fileUrls = imageService.fileListLoad(board.getImages().stream()
+                .map(Image::getName)
+                .collect(Collectors.toList()));
+
 
         //유저 프로필 사진 가져오기
-        String profileUrl = null;
-        try {
-            profileUrl = imageService.fileLoad(board.getUser().getProfileImage());
-        } catch (FileNotFoundException e) {
-            profileUrl = "";
-        }
+        String profileUrl = imageService.fileLoad(board.getUser().getProfileImage());
 
         BoardDTO boardDTO = BoardDTO.builder()
                 .id(board.getId())
@@ -154,7 +164,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Transactional
     @Override
-    public Board save(Long userId, BoardCreateRequestDTO requestDTO, List<MultipartFile> images) throws IOException {
+    public Board save(Long userId, BoardCreateRequestDTO requestDTO, List<MultipartFile> images) {
         User user = userRepository.findById(userId)
                 .orElseThrow(NotValidateUserException::new);
 
@@ -167,6 +177,10 @@ public class BoardServiceImpl implements BoardService {
 
         tagService.save(requestDTO.getTags(), board);
 
+        if (images == null || images.isEmpty()) {
+            throw new NoImageException();
+        }
+
         imageService.fileListWrite(images, board);
 
         return board;
@@ -174,7 +188,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Transactional
     @Override
-    public Board updateBoard(Long boardId, BoardUpdateRequestDTO boardDTO, List<String> originalFiles, List<MultipartFile> newFiles) throws IOException {
+    public Board updateBoard(Long boardId, BoardUpdateRequestDTO boardDTO, List<String> originalFiles, List<MultipartFile> newFiles) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(BoardNotFoundException::new);
 
@@ -190,15 +204,9 @@ public class BoardServiceImpl implements BoardService {
             }
         }
 
-        if(originalFiles!=null){
-            for (String file : originalFiles) {
-                System.out.println("원래 있는 파일:" + file);
-            }
-        }
-        if(newFiles!=null){
-            for (MultipartFile file : newFiles) {
-                System.out.println("새로업로드될 파일:" + file.getOriginalFilename());
-            }
+        //수정 시 이미지가 1장도 첨부 안돼있을 경우
+        if (originalFiles == null && newFiles == null) {
+            throw new NoImageException();
         }
 
         imageService.updateFileList(board, originalFiles, newFiles);
@@ -222,7 +230,7 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(BoardNotFoundException::new);
 
-        for(Image image:board.getImages()){
+        for (Image image : board.getImages()) {
             imageService.deleteS3(image.getName());
         }
 

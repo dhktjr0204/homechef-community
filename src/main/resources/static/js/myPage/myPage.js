@@ -22,7 +22,9 @@ function clickUserQuitButton(){
     } else {
         // 아무 처리도 안함
     }
+}
 
-
-
+function clickBoardImage(button){
+    const boardId=button.getAttribute("value");
+    location.href="/board/"+boardId;
 }

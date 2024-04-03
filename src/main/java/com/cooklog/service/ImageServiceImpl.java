@@ -35,7 +35,7 @@ public class ImageServiceImpl implements ImageService {
 
 
     @Override
-    public List<String> fileListWrite(List<MultipartFile> files, Board board) throws IOException {
+    public List<String> fileListWrite(List<MultipartFile> files, Board board) {
         List<String> fileNameList = new ArrayList<>();
 
         for (int i = 0; i < files.size(); i++) {
@@ -50,12 +50,17 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public List<String> fileListLoad(List<String> fileNames) throws FileNotFoundException {
+    public List<String> fileListLoad(List<String> fileNames) {
         List<String> urlList = new ArrayList<>();
 
         for (String imageName : fileNames) {
 
-            String urlText = loadS3(imageName);
+            String urlText = null;
+            try {
+                urlText = loadS3(imageName);
+            } catch (FileNotFoundException e) {
+                urlText="";
+            }
 
             urlList.add(urlText);
         }
@@ -64,18 +69,21 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public String fileWrite(MultipartFile file, Long userId) throws IOException {
-        String fileName = saveS3(file);
-        return fileName;
+    public String fileWrite(MultipartFile file, Long userId) {
+        return saveS3(file);
     }
 
     @Override
-    public String fileLoad(String fileName) throws FileNotFoundException {
-        return loadS3(fileName);
+    public String fileLoad(String fileName) {
+        try {
+            return loadS3(fileName);
+        } catch (FileNotFoundException e) {
+            return "";
+        }
     }
 
     @Override
-    public void updateFileList(Board board, List<String> originalFiles, List<MultipartFile> newFiles) throws IOException {
+    public void updateFileList(Board board, List<String> originalFiles, List<MultipartFile> newFiles){
 
         List<Image> images = imageRepository.findAllByBoard_IdOrderByOrder(board.getId())
                 .orElseThrow(BoardNotFoundException::new);
@@ -133,7 +141,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     //s3 저장 로직
-    private String saveS3(MultipartFile file) throws IOException {
+    private String saveS3(MultipartFile file) {
         UUID uuid = UUID.randomUUID();
 
         String directory = "images/";
@@ -144,7 +152,11 @@ public class ImageServiceImpl implements ImageService {
         metadata.setContentLength(file.getSize());
         metadata.setContentType(file.getContentType());
 
-        amazonS3.putObject(bucket, fileName, file.getInputStream(), metadata);
+        try {
+            amazonS3.putObject(bucket, fileName, file.getInputStream(), metadata);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         return fileName;
     }

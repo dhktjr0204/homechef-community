@@ -36,8 +36,6 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final BookmarkRepository bookmarkRepository;
-    private final ImageService imageService;
-    private final FollowRepository followRepository;
     private final BCryptPasswordEncoder encoder;
 
     // JoinDTO 객체를 받아 사용자 정보를 추가(저장)하는 메서드
@@ -164,56 +162,5 @@ public class UserServiceImpl implements UserService {
 
         return boardList;
     }
-
-    // 사용자가 작성한 게시물의 대표 이미지 URL을 가져옴
-    @Override
-    public List<MyPageDTO> getBoardByUserId(Long userIdx) {
-        List<MyPageDTO> myPageDTOList = new ArrayList<>();
-        List<Board> boardList = boardRepository.findByUserIdx(userIdx);
-
-        for (Board board : boardList ) {
-
-            String boardImageUrl = null;
-            try {
-                boardImageUrl = imageService.fileLoad(board.getImages().get(0).getName());
-            } catch (FileNotFoundException e) {
-                boardImageUrl = "";
-            }
-            MyPageDTO myPageDTO = MyPageDTO.builder()
-                    .id(board.getId())
-                    .imageUrl(boardImageUrl).build();
-
-            myPageDTOList.add(myPageDTO);
-        }
-
-        return myPageDTOList;
-    }
-
-    // 사용자 프로필 이미지 URL 생성 후 UserDTO 객체에 담는 메서드
-    @Override
-    public UserDTO getUserDTO(Long userIdx) {
-        User user = userRepository.findById(userIdx).orElseThrow(NotValidateUserException::new);
-
-        String profileImageUrl = null;
-        try {
-            profileImageUrl = imageService.fileLoad(user.getProfileImage());
-        } catch (FileNotFoundException e) {
-            profileImageUrl = "";
-        }
-        UserDTO userDTO = UserDTO.builder()
-                .idx(user.getIdx())
-                .nickname(user.getNickname())
-                .introduction(user.getIntroduction())
-                .profileImageUrl(profileImageUrl).build();
-
-        return userDTO;
-    }
-
-    // 로그인 한 사용자의 팔로우-팔로워 수를 가져옴
-    @Override
-    public MyPageFollowCountDTO getFollowCountDTO(Long userIdx, Long loginUserId) {
-        return followRepository.findFollowCountByUserId(userIdx, loginUserId);
-    }
-
 }
 

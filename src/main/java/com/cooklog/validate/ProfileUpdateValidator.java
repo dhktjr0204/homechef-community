@@ -1,6 +1,7 @@
 package com.cooklog.validate;
 
 import com.cooklog.dto.MyPageUpdateRequestDTO;
+import com.cooklog.exception.myPage.EmptyNicknameException;
 import com.cooklog.exception.myPage.OverIntroductionLengthLimitException;
 import com.cooklog.exception.myPage.OverNicknameLengthLimitException;
 import org.springframework.validation.Errors;
@@ -20,6 +21,9 @@ public class ProfileUpdateValidator implements Validator {
         if(isOverNicknameLengthLimit(nickname)){
             throw new OverNicknameLengthLimitException();
         }
+        if(isEmptyNickname(nickname)){
+            throw new EmptyNicknameException();
+        }
         if(isOverIntroductionLengthLimit(introduction)){
             throw new OverIntroductionLengthLimitException();
         }
@@ -27,6 +31,9 @@ public class ProfileUpdateValidator implements Validator {
     private boolean isOverNicknameLengthLimit(String nickname){
         return nickname.length()>50;
     }
-    private boolean isOverIntroductionLengthLimit(String introduction){return introduction.length()>500;}
+    private boolean isEmptyNickname(String nickname){
+        return nickname.isEmpty();
+    }
+    private boolean isOverIntroductionLengthLimit(String introduction){return introduction.length()>300;}
 
 }
