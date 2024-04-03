@@ -42,25 +42,24 @@ public class CustomIUserDetailsService implements UserDetailsService {
     }
 
 
-    //현재 로그인한 유저의 idx를 가져오는 메서드 , 아해 getCurrentUserDTO와 중복되는 코드가 있어서 리팩토링 필요
-    public Long getUserIdx() {
+    public User isValidCurrentUser() {
+      
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        userRepository.findById(userDetails.getIdx()).orElseThrow(NotValidateUserException::new);
+        return userRepository.findById(userDetails.getIdx()).orElseThrow(NotValidateUserException::new);
+    }
 
-        return userDetails.getIdx();
+    //현재 로그인한 유저의 idx를 가져오는 메서드 , 아해 getCurrentUserDTO와 중복되는 코드가 있어서 리팩토링 필요
+    public Long getUserIdx() {
+        User currentUser = isValidCurrentUser();
+
+        return currentUser.getIdx();
     }
 
 
-    public UserDTO getCurrentUserDTO() {
-
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-
-        long userId = userDetails.getIdx();
-
-        User user = userRepository.findById(userId).orElseThrow(NotValidateUserException::new);
+    public UserDTO getCurrentUserDTO() throws FileNotFoundException {
+        User user = isValidCurrentUser();
 
         String profileUrl = null;
         try {
@@ -69,7 +68,7 @@ public class CustomIUserDetailsService implements UserDetailsService {
             profileUrl="";
         }
 
-        ;
+
         return UserDTO.builder()
                 .idx(user.getIdx())
                 .nickname(user.getNickname())
