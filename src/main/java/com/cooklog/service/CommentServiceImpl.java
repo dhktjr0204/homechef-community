@@ -1,7 +1,6 @@
 package com.cooklog.service;
 
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,7 +13,7 @@ import com.cooklog.model.Comment;
 
 import jakarta.persistence.Version;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,15 +21,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cooklog.dto.CommentDTO;
 import com.cooklog.model.User;
 import com.cooklog.repository.BoardRepository;
 import com.cooklog.repository.CommentRepository;
 import com.cooklog.repository.UserRepository;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

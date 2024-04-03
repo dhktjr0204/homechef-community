@@ -48,6 +48,7 @@ public class UserDTO {
 		this.isDeleted = isDeleted;
 	}
 
+
 	public UserDTO() {
 
 	}
