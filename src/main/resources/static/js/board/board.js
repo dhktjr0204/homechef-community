@@ -1,6 +1,3 @@
-
-//화면 넘기기 기능
-let boardSlideIndex;
 let currentUserId;
 
 // 객체를 사용하여 각 게시물의 슬라이드 인덱스 관리
