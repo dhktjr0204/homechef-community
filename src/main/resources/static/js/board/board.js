@@ -1,34 +1,42 @@
+
+//화면 넘기기 기능
 let boardSlideIndex;
 let currentUserId;
 
-//slide 사용하는 곳이 여러 곳이기 때문에 새로고침될 때마다 0으로 초기화 필요하다.
+// 객체를 사용하여 각 게시물의 슬라이드 인덱스 관리
+const boardSlideIndex = {};
+
+//slide 사용하는 곳이 여러 곳이기 때문에 새로고침될 때마다 0으로 초기화 필요하다.(board, main)
 document.addEventListener('DOMContentLoaded', function () {
-    boardSlideIndex = 0;
+    for (let key in boardSlideIndex) {
+        delete boardSlideIndex[key];
+    }
 });
 
-function prevSlide(button) {
-    //현재 버튼이 속한 container 찾기
-    const imageContainer = button.closest('.image-container');
-    const imageList = imageContainer.querySelector('.image-list');
-    const imageItem = imageContainer.querySelectorAll('.image-item');
+function prevSlide(boardId, button) {
+    let currentIndex = boardSlideIndex[boardId] || 0; // 해당 게시물의 슬라이드 인덱스를 가져오거나, 없으면 0으로 초기화
+    const imageItem = button.closest('.image-container').querySelectorAll('.image-item').length; //게시물에 등록된 사진의 개수
     // 음수가 되지 않게 imageItem.length를 더해주었다.
-    boardSlideIndex = (boardSlideIndex - 1 + imageItem.length) % imageItem.length;
-    //왼쪽방향으로 이동
-    const newPosition = -boardSlideIndex * imageItem[0].offsetWidth;
-    imageList.style.transform = `translateX(${newPosition}px)`;
+    currentIndex = (currentIndex - 1 + imageItem) % imageItem;
+    moveSlide(boardId, currentIndex, button);
 }
 
-function nextSlide(button) {
-    //현재 버튼이 속한 container 찾기
-    const imageContainer = button.closest('.image-container');
-    const imageList = imageContainer.querySelector('.image-list');
-    const imageItem = imageContainer.querySelectorAll('.image-item');
+function nextSlide(boardId, button) {
+    let currentIndex = boardSlideIndex[boardId] || 0; // 해당 게시물의 슬라이드 인덱스를 가져오거나, 없으면 0으로 초기화
+    const imageItem = button.closest('.image-container').querySelectorAll('.image-item').length;//게시물에 등록된 사진의 개수
     // 현재 위치에서 1칸 이동, 만약 뒤에 더 이미지가 없다면 처음으로 이동
-    boardSlideIndex = (boardSlideIndex + 1) % imageItem.length;
-    //imageWidth만큼 왼쪽 방향으로 이동
-    const newPosition = -boardSlideIndex * imageItem[0].offsetWidth;
-    imageList.style.transform = `translateX(${newPosition}px)`;
+    currentIndex = (currentIndex + 1) % imageItem;
+    moveSlide(boardId, currentIndex, button);
 }
+
+function moveSlide(boardId, newIndex, button) {
+    const imageList = button.closest('.image-container').querySelector('.image-list');
+    const imageWidth = imageList.querySelector('.image-item').offsetWidth;
+    const newPosition = -newIndex * imageWidth;
+    imageList.style.transform = `translateX(${newPosition}px)`;
+    boardSlideIndex[boardId] = newIndex; // 해당 게시물의 슬라이드 인덱스 업데이트
+}
+//화면 넘기기 기능 끝
 
 function clickUpdateBoard(button) {
     // 수정 버튼이 속한 게시물의 부모 요소인 article을 찾음.
@@ -42,16 +50,16 @@ function clickDeleteBoard(button) {
     const boardArticle = button.closest('.board-container');
 
     const boardId = boardArticle.querySelector('.board-id').value;
-    const userId= boardArticle.querySelector('.username').getAttribute("value");
+    const userId = boardArticle.querySelector('.username').getAttribute("value");
     if (confirmation) {
-        fetch("/board/delete/" + boardId + "?userId="+userId, {
+        fetch("/board/delete/" + boardId + "?userId=" + userId, {
             method: "DELETE",
         }).then(response => {
             if (!response.ok) {
                 return response.text().then(msg => {
                     if (response.status === 401) {
                         alert(msg);
-                    }else if(response.status===404){
+                    } else if (response.status === 404) {
                         alert("해당 게시물을 찾을 수 없습니다.");
                         throw new Error("해당 게시물을 찾을 수 없습니다.");
                     }
@@ -62,7 +70,7 @@ function clickDeleteBoard(button) {
         }).then(url => {
             if (url) {
                 window.location.replace(url);
-            }else{
+            } else {
                 window.location.replace("/");
             }
         }).catch(error => {
@@ -195,7 +203,19 @@ function addCommentOrReplyToPage(commentData, parentCommentId = null) {
         const commentsContainer = document.querySelector('.comments-display');
         commentsContainer.insertAdjacentHTML('afterbegin', commentHTML);
     }
+
+    bindCommentOptions(); // 이 함수는 새로운 댓글 요소에 이벤트 리스너를 바인딩합니다.
+}
+
+// 대댓글이 들어갈 컨테이너를 생성하는 함수입니다.
+function createRepliesContainer(parentComment) {
+    const container = document.createElement('div');
+    container.className = 'replies-container';
+    parentComment.appendChild(container);
+    return container;
+
     bindCommentOptions();
+
 }
 
 // '답글 달기' 버튼 이벤트 리스너
@@ -345,13 +365,13 @@ document.addEventListener('DOMContentLoaded', function () {
 // 댓글 삭제 기능을 위한 이벤트 리스너를 설정하는 함수
 function bindDeleteEvent() {
     const commentsDisplayContainer = document.querySelector('.comments-display');
-    commentsDisplayContainer.addEventListener('click', function(event) {
+    commentsDisplayContainer.addEventListener('click', function (event) {
         if (event.target.classList.contains('delete-comment-button')) {
             const isConfirmed = confirm('댓글을 삭제하시겠습니까?');
             if (isConfirmed) {
                 const commentElement = event.target.closest('.comment');
                 const commentId = commentElement.dataset.commentId;
-                fetch(`/board/comments/${commentId}`, { method: 'DELETE' })
+                fetch(`/board/comments/${commentId}`, {method: 'DELETE'})
                     .then(response => {
                         if (!response.ok) throw new Error('Failed to delete comment');
                         console.log('Comment deleted');
@@ -421,6 +441,34 @@ function createPaginationButton(text, clickHandler, isActive = false) {
     return button;
 }
 
+// 댓글 삭제 로직
+function deleteComment(commentId) {
+    fetch(`/board/comments/${commentId}`, {
+        method: 'DELETE',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to delete comment');
+            }
+            console.log('Comment deleted');
+            // 페이지에서 댓글 요소를 제거
+            removeCommentElement(commentId);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+// 댓글 요소를 DOM에서 제거하는 함수
+function removeCommentElement(commentId) {
+    const commentElement = document.querySelector(`.comment[data-comment-id="${commentId}"]`);
+    if (commentElement) {
+        commentElement.remove();
+    }
+}
+
+
+//수정 요소 시작
 // 수정된 내용을 서버로 전송하고 페이지에서 댓글을 업데이트하는 함수
 function updateComment(commentId, updatedContent) {
     // 서버로 수정된 댓글 내용을 전송하는 코드

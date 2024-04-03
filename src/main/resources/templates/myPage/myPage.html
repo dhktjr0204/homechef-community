@@ -41,7 +41,7 @@
             <div class="options-menu">
                 <ul>
                     <!--만약 자기 마이페이지라면 프로필수정만 보이게, 다른 사람 마이페이지라면 신고만 보이게 하셔야 합니다.-->
-                    <li>
+                    <li th:if="${currentLoginUser.idx}==${user.idx}">
                         <button class="update-board-button" onclick="clickEditProfileButton()">프로필 수정</button>
                     </li>
                     <li>
@@ -62,5 +62,6 @@
     </section>
 </main>
 <script src="../../static/js/myPage/myPage.js" th:src="@{/js/myPage/myPage.js}"></script>
+<script src="../../static/js/main/search.js" th:src="@{/js/main/search.js}"></script>
 </body>
 </html>

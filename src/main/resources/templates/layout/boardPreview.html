@@ -29,7 +29,8 @@
         </div>
     </header>
     <section class="image-container">
-        <button th:if="${board.imageUrls.size()}>1" class="prev-btn" onclick="prevSlide(this)">&#10094;</button>
+        <button th:if="${board.imageUrls.size()}>1" class="prev-btn"
+                th:onclick="'prevSlide(' + ${board.id} + ', this)'">&#10094;</button>
         <div class="slider-container">
             <ul class="image-list">
                 <li th:each="image: ${board.imageUrls}">
@@ -38,7 +39,8 @@
                 </li>
             </ul>
         </div>
-        <button th:if="${board.imageUrls.size()}>1" class="next-btn" onclick="nextSlide(this)">&#10095;</button>
+        <button th:if="${board.imageUrls.size()}>1" class="next-btn"
+                th:onclick="'nextSlide(' + ${board.id} + ', this)'">&#10095;</button>
     </section>
 
     <pre class="content" th:text="${board.content}"></pre>

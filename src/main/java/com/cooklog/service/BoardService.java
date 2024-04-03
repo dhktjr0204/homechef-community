@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface BoardService {
     Page<BoardDTO> getAllBoard(Pageable pageable, Long userId, Long lastBoardId, String sortType);
+    Page<BoardDTO> getAllBoardWithFollow(Pageable pageable, Long userId, Long lastBoardId);
 
     Board save(Long userId, BoardCreateRequestDTO requestDTO, List<MultipartFile> images) throws IOException;
 

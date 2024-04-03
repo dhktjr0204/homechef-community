@@ -31,6 +31,10 @@ if (editButton) {
     });
 }
 
+function clickCancelButton(){
+    window.location.replace("/");
+}
+
 function handleSubmit(url, method) {
 
     const formData = new FormData(document.querySelector('.board-form'));

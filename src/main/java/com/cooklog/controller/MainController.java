@@ -50,11 +50,30 @@ public class MainController {
         }
     }
 
+
+    //팔로우만 보기
+    @GetMapping("/follow")
+    public String getBoardWithFollow(@PageableDefault(page = 0, size = 3, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+                                     @RequestParam(value = "id", defaultValue = "0") Long lastBoardId, Model model) {
+        UserDTO userDTO = userDetailsService.getCurrentUserDTO();
+
+        Page<BoardDTO> allBoard = boardService.getAllBoardWithFollow(pageable, userDTO.getIdx(), lastBoardId);
+
+        List<CommentDTO> comments = commentService.getCommentInfoByBoardId(allBoard);
+
+        model.addAttribute("currentLoginUser", userDTO);
+        model.addAttribute("boards", allBoard);
+        model.addAttribute("comments", comments);
+
+        return "layout/boardPreview";
+    }
+
+    //텍스트 검색
     @GetMapping("/search")
     public String searchByText(@RequestParam(value = "keyword") String keyword,
-                         @PageableDefault(page = 0, size = 3, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-                         @RequestParam(value = "id", defaultValue = "0") Long lastBoardId,
-                         Model model) {
+                               @PageableDefault(page = 0, size = 3, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+                               @RequestParam(value = "id", defaultValue = "0") Long lastBoardId,
+                               Model model) {
         //현재 로그인 된 유저 정보 가져오기
         UserDTO userDTO = userDetailsService.getCurrentUserDTO();
 
@@ -69,16 +88,18 @@ public class MainController {
 
         if (lastBoardId == 0) {
             return "main/searchPage";
-        }else{
+        } else {
             return "layout/boardPreview";
         }
     }
 
+
+    //해시태그 검색
     @GetMapping("/hashtag_search")
     public String searchByhashTag(@RequestParam(value = "keyword") String tags,
-                                          @PageableDefault(page = 0, size = 3, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-                                          @RequestParam(value = "id", defaultValue = "0") Long lastBoardId,
-                                          Model model){
+                                  @PageableDefault(page = 0, size = 3, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+                                  @RequestParam(value = "id", defaultValue = "0") Long lastBoardId,
+                                  Model model) {
         //현재 로그인 된 유저 정보 가져오기
         UserDTO userDTO = userDetailsService.getCurrentUserDTO();
 
@@ -93,7 +114,7 @@ public class MainController {
 
         if (lastBoardId == 0) {
             return "main/searchPage";
-        }else{
+        } else {
             return "layout/boardPreview";
         }
     }

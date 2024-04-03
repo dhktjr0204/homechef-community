@@ -58,6 +58,17 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public Page<BoardDTO> getAllBoardWithFollow(Pageable pageable, Long userId, Long lastBoardId) {
+        Page<Board> boardPage=boardRepository.findAllBoardWithFollow(userId, lastBoardId, pageable);
+
+        if (boardPage.isEmpty()) {
+            return Page.empty();
+        }
+
+        return boardPage.map(board->convertBoardToDTO(board, userId));
+    }
+
+    @Override
     public BoardDTO getBoard(Long boardId, Long userId) {
 
         Board board = boardRepository.findById(boardId)
@@ -179,6 +190,17 @@ public class BoardServiceImpl implements BoardService {
             }
         }
 
+        if(originalFiles!=null){
+            for (String file : originalFiles) {
+                System.out.println("원래 있는 파일:" + file);
+            }
+        }
+        if(newFiles!=null){
+            for (MultipartFile file : newFiles) {
+                System.out.println("새로업로드될 파일:" + file.getOriginalFilename());
+            }
+        }
+
         imageService.updateFileList(board, originalFiles, newFiles);
 
         return board;
@@ -199,6 +221,10 @@ public class BoardServiceImpl implements BoardService {
 
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(BoardNotFoundException::new);
+
+        for(Image image:board.getImages()){
+            imageService.deleteS3(image.getName());
+        }
 
         boardRepository.delete(board);
 
