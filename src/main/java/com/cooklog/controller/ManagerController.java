@@ -85,6 +85,16 @@ public class ManagerController {
 		model.addAttribute("boards", boards);
 		return "/manager/board-manager";
 	}
+	@DeleteMapping("/board/delete/{id}")
+	public ResponseEntity<?> deleteBoard(@PathVariable Long id) {
+		try {
+			boardService.deleteBoard(id); // 게시글 삭제 서비스 호출
+			return ResponseEntity.ok().build(); // 성공 응답
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시글 삭제 중 오류 발생");
+		}
+	}
 
 	@GetMapping("/comment")
 	public String listComments(Model model) {

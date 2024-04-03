@@ -111,7 +111,7 @@ public class CommentServiceImpl implements CommentService {
 		User user = userRepository.findById(commentDTO.getUserId())
 			.orElseThrow(() -> new RuntimeException("User not found"));
 		// 대댓글인 경우 parentCommentId를 DTO에서 받아오고, 그렇지 않은 경우 0을 설정
-		Long parentCommentId = commentDTO.getParentCommentId() != null ? commentDTO.getParentCommentId() : null;
+		Long parentCommentId = commentDTO.getParentCommentId() != null ? commentDTO.getParentCommentId() : 0L;
 		Comment newComment = new Comment();
 		newComment.setBoard(board);
 		newComment.setUser(user);

@@ -52,7 +52,7 @@
                 button.addEventListener('click', function() {
                     const boardId = this.getAttribute('data-id');
                     if (confirm('정말 삭제하시겠습니까?')) {
-                        fetch('/board/delete/' + boardId, {
+                        fetch('/manager/board/delete/' + boardId, {
                             method: 'DELETE',
                         }).then(response => {
                             if (response.ok) {
