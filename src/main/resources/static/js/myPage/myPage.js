@@ -1,4 +1,5 @@
 function clickEditProfileButton(){
+
     location.href="/myPage/edit";
 }
 function clickLogoutButton() {
@@ -20,4 +21,8 @@ function clickUserQuitButton(){
     } else {
         // 아무 처리도 안함
     }
+
+    const userId=document.querySelector('.user-name').getAttribute("value");
+    location.href="/myPage/edit/"+userId;
+
 }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookmarkRepository extends JpaRepository<Bookmark,Long> {
-
+    //select * from bookmark where user_idx = userIdx and board_id = boardId;
     Optional<Bookmark> findByUserIdxAndBoardId(Long userIdx,Long boardId);
 
     //select * from bookmark where user_idx = userIdx;

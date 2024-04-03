@@ -31,7 +31,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     //최근 댓글 하나와 전체 댓글 개수
     @Query(value = "SELECT c.id, c.board_id as boardId, c.user_idx as userId, c.content, c.created_at as createdAt, u.nickname as userName, " +
-            "(SELECT COUNT(*) FROM Comment sub WHERE sub.parent_comment_id= :parentCommentId AND sub.board_id= :boardId) AS totalCount " +
+            "(SELECT COUNT(*) FROM comment sub WHERE sub.parent_comment_id= :parentCommentId AND sub.board_id= :boardId) AS totalCount " +
             "FROM comment c " +
             "INNER JOIN user u ON c.user_idx=u.idx " +
             "WHERE c.parent_comment_id= :parentCommentId AND c.board_id= :boardId " +

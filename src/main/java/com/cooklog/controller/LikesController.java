@@ -2,6 +2,7 @@ package com.cooklog.controller;
 
 import com.cooklog.dto.CustomUserDetails;
 import com.cooklog.dto.LikesDTO;
+import com.cooklog.service.CustomIUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import com.cooklog.service.LikesService;
 public class LikesController {
 
 	private final LikesService likesService;
+	private final CustomIUserDetailsService userDetailsService;
 
 	//게시물의 좋아요 개수뿐만 아니라 사용자가 게시물에 좋아요를 누른상태인지 아닌지 확인해야 하므로 getPostLikes 에서 getLikesInfo로 변경
 //	@GetMapping("")
@@ -41,8 +43,8 @@ public class LikesController {
 
 	@PostMapping("/add")
 	public ResponseEntity<?> addLike(@RequestParam("boardId") long boardId) {
-
-		likesService.addLike(getUserIdx(),boardId);
+		Long currentUserIdx = userDetailsService.getUserIdx();
+		likesService.addLike(currentUserIdx,boardId);
 		Long likesNum = likesService.getNumberOfLikesByBoardId(boardId);
 
 		return ResponseEntity.ok(likesNum);
@@ -50,18 +52,10 @@ public class LikesController {
 
 	@DeleteMapping("/cancel")
 	public ResponseEntity<?> cancelLike(@RequestParam("boardId") long boardId) {
-
-		likesService.cancelLike(getUserIdx(),boardId);
+		Long currentUserIdx = userDetailsService.getUserIdx();
+		likesService.cancelLike(currentUserIdx,boardId);
 		Long likesNum = likesService.getNumberOfLikesByBoardId(boardId);
 
 		return ResponseEntity.ok(likesNum);
-	}
-
-	//현재 인증된 사용자의 idx를 가져온다
-	private Long getUserIdx() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		//인증되지 않은 사용자면 자동으로 로그인 화면으로 리다이렉트 되게 스프링 시큐리티 설정이 되어 있다
-		CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-		return userDetails.getIdx();
 	}
 }

@@ -39,18 +39,9 @@ public class BoardDTO {
         this.createdAt = createdAt;
     }
 
+    //마이페이지에서 게시물의 1번째 사진만 보여줄거라서 boardId랑 image첫번째것만 가져오면 된다
     public BoardDTO(Board board,Long userIdx) {
         this.id = board.getId();
-        this.content = board.getContent();
-        this.createdAt = board.getCreatedAt();
-        this.readCount = board.getReadCount();
-        this.profileImageName = board.getUser().getProfileImage();
-        this.userId = board.getUser().getIdx();
-        this.userNickname = board.getUser().getNickname();
-        this.imageNames = board.getImages().stream().map(Image::getName).collect(Collectors.toList());
-        this.tags = board.getTags().stream().map(Tag::getName).collect(Collectors.toList());
-        this.likeCount = board.getLikes().size();
-        this.isLike = board.getLikes().stream().anyMatch(like -> like.getUser().getIdx().equals(userIdx));
-        this.isMarked = true;
+        //this.imageNames = ??
     }
 }

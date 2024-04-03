@@ -15,5 +15,6 @@ public interface ImageService {
     List<String> fileListLoad(List<String> fileNames) throws FileNotFoundException;
     String fileWrite(MultipartFile file, Long userId) throws IOException;
     String fileLoad(String fileName) throws FileNotFoundException;
+    void deleteS3(String fileName);
     void updateFileList(Board board, List<String> originalFiles, List<MultipartFile> newFiles) throws IOException;
 }

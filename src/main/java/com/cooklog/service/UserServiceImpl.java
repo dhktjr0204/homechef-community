@@ -135,17 +135,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    @Transactional
-    @Override
-    public User updateUserProfile(Long userIdx, UserUpdateRequestDTO userDTO) {
-        User user = userRepository.findById(userIdx)
-                .orElseThrow(() -> new IllegalArgumentException("해당 userId가 없습니다."));
-
-        user.update(userDTO.getNickname(), userDTO.getIntroduction());
-
-        return user;
-    }
-
     // 사용자 탈퇴 유무 업데이트 후 저장
     @Override
     public void updateUserDeleted(Long userIdx) {
