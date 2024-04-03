@@ -1,9 +1,14 @@
 package com.cooklog.controller;
 
-import com.cooklog.dto.BoardDTO;
-import com.cooklog.dto.CustomUserDetails;
-import com.cooklog.dto.MyPageUpdateRequestDTO;
-import com.cooklog.dto.UserDTO;
+
+import com.cooklog.dto.*;
+
+import com.cooklog.model.Board;
+import com.cooklog.model.Image;
+import com.cooklog.service.BoardService;
+
+import com.cooklog.service.CustomIUserDetailsService;
+import com.cooklog.service.ImageService;
 import com.cooklog.exception.user.NotValidateUserException;
 import com.cooklog.service.BoardService;
 
@@ -12,8 +17,10 @@ import com.cooklog.service.CustomIUserDetailsService;
 import com.cooklog.service.ImageService;
 import com.cooklog.service.MyPageService;
 import com.cooklog.service.MyPageServiceImpl;
+
 import com.cooklog.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,12 +29,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -39,36 +48,27 @@ public class MyPageController {
     private final MyPageService myPageService;
     private final CustomIUserDetailsService userDetailsService;
     private final BoardService boardService;
-    private final CustomIUserDetailsService userDetailsService;
 
     // 마이페이지
-    @GetMapping("/main")
-    public String getMyPage(Model model){
-        UserDTO userDTO1 = userDetailsService.getCurrentUserDTO();
+    @GetMapping("/main/{id}")
+    public String getMyPage(@PathVariable Long id, Model model) throws FileNotFoundException {
 
-        // 현재 인증된 사용자의 정보를 가져오기
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        // 현재 로그인 된 유저 정보 가져오기
+        UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
 
-        // 현 사용자의 idx 값으로 이외 정보들 가져오기
-        UserDTO userDTO = userService.findUserById(userDetails.getIdx());
-        String nickname = userDTO.getNickname();
-        String introduction = userDTO.getIntroduction();
-        String profileImage = userDTO.getProfileImageName();
+        // 팔로우한 갯수 가져오기
+        MyPageFollowCountDTO followCountDTO = userService.getFollowCountDTO(id, loginUserDTO.getIdx());
+
+
+        // 사용자가 작성한 게시물 리스트 가져오기
+        List<MyPageDTO> myPageDTOS = userService.getBoardByUserId(id);
+        UserDTO userDTO = userService.getUserDTO(id);
 
         // 모델에 사용자 정보 추가
-        model.addAttribute("currentLoginUser", userDTO1);
-        model.addAttribute("nickname", nickname);
-        model.addAttribute("introduction", introduction);
-        model.addAttribute("profileImage", profileImage);
-
-        // 사용자가 작성한 게시물 목록 가져옴
-//        List<BoardDTO> currentUserBoards = boardService.findBoardsByUserId(userDetails.getIdx());
-
-        // 사용자가 작성한 게시물 갯수 가져옴
-        Long boardCnt = userService.getNumberOfBoardByUserId(userDTO.getIdx());
-
-        model.addAttribute("boardCnt",boardCnt);
+        model.addAttribute("currentLoginUser", loginUserDTO);
+        model.addAttribute("boards",myPageDTOS);
+        model.addAttribute("user",userDTO);
+        model.addAttribute("followCount",followCountDTO);
 
         return "myPage/myPage";
     }

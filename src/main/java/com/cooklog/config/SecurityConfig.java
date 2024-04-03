@@ -19,10 +19,10 @@
  	@Bean
  	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
-		 // "/", "/login", "/join", "/joinProc 에는 인증 없이 접근 가능하도록 - permitAll()
+		 // "/login", "/join", "/joinProc 에는 인증 없이 접근 가능하도록 - permitAll()
  		http
  			.authorizeHttpRequests((auth) -> auth
- 				.requestMatchers("/", "/login","/join", "/joinProc").permitAll()
+ 				.requestMatchers("/login","/join", "/joinProc").permitAll()
  				.requestMatchers("/admin").hasAuthority("ADMIN")
  				//                        .requestMatchers("/my/**").hasAnyRole("ADMIN", "USER")
 
@@ -38,7 +38,7 @@
  				.usernameParameter("email")
  				.permitAll()
  			)
-			.logout(auth -> auth.logoutSuccessUrl("/") // 로그아웃 설정
+			.logout(auth -> auth.logoutSuccessUrl("/login") // 로그아웃 설정
 					.invalidateHttpSession(true))
 			.csrf(auth -> auth.disable());
 
