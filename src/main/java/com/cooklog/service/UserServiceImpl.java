@@ -12,25 +12,21 @@ import com.cooklog.repository.BoardRepository;
 import com.cooklog.model.Bookmark;
 import com.cooklog.repository.BookmarkRepository;
 
-import com.cooklog.repository.FollowRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.cooklog.model.Board;
 import com.cooklog.model.Role;
 import com.cooklog.model.User;
 import com.cooklog.repository.UserRepository;
 
-import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
 
 @Service
 @RequiredArgsConstructor
@@ -56,6 +52,7 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         userRepository.save(user);
+
     }
 
     @Override

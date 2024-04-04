@@ -56,6 +56,9 @@ function clickSubmitButton() {
     if(nickname.length===0){
         alert("ID를 입력해주세요.");
         return;
+    } else if (nickname.length > 20) {
+        alert("ID가 길이를 초과하였습니다. 20자 이하로 입력해 주세요.");
+        return;
     }
 
     const formData = new FormData(document.querySelector('.profile-edit-form'));

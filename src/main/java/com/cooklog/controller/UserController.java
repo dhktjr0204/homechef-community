@@ -22,16 +22,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @GetMapping("/user/profile")
-    public String userProfile(Model model) {
-        // 예시로 1번 ID 사용자 정보를 조회
-        UserDTO userDto = userService.findUserById(1L);
-
-        if (userDto != null) {
-            model.addAttribute("user", userDto);
-        }
-        return "main/index";
-    }
 
     //로그인 유효성 검사
     @GetMapping("/login")
@@ -61,12 +51,12 @@ public class UserController {
     @PostMapping("/joinProc")
     public ResponseEntity<?> joinProc(@ModelAttribute JoinDTO joinDTO, BindingResult result){
 
-            JoinValidator joinValidator = new JoinValidator();
-            joinValidator.validate(joinDTO, result);
+        JoinValidator joinValidator = new JoinValidator();
+        joinValidator.validate(joinDTO, result);
 
-            userService.joinSave(joinDTO);
+        userService.joinSave(joinDTO);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok("가입 성공");
     }
 
     // 로그인 한 사용자 회원 탈퇴 (db에 업데이트 후 저장됨)
