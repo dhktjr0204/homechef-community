@@ -23,18 +23,16 @@
         <table class="content-table">
             <thead>
             <tr>
-                <th>게시물 내용</th>
+                <th>내용</th>
                 <th>작성 시간</th>
-                <th>댓글 내용</th>
-                <th>작성 시간</th>
+                <th>유형</th>
             </tr>
             </thead>
             <tbody>
             <tr th:each="post : ${posts}">
-                <td th:text="${post.boardContent}"></td>
-                <td th:text="${#temporals.format(post.boardCreatedAt, 'yyyy-MM-dd HH:mm')}"></td>
-                <td th:text="${post.commentContent}"></td>
-                <td th:text="${#temporals.format(post.commentCreatedAt, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${post.content}"></td>
+                <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+                <td th:text="${post.isBoard ? '게시물' : '댓글'}"></td>
             </tr>
             </tbody>
         </table>

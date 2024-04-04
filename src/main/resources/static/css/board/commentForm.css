@@ -38,12 +38,15 @@
 .comment-username {
     font-weight: bold;
     margin-right: 10px;
+    text-decoration: none;
+    color: black;
 }
 
 /* 댓글 내용 스타일 */
 .comment-content {
     padding: 0px;
     margin: 0 0 3px 0;
+    max-width: 81%;
 }
 
 /* 댓글 추가 버튼 */

@@ -43,5 +43,4 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 	Page<Comment> findByBoardId(Long boardId, Pageable pageable);
 
 	Page<Comment> findByParentCommentId(Long parentId, Pageable pageable);
-
 }

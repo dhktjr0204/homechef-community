@@ -47,4 +47,11 @@ public class BoardDTO {
         this.id = board.getId();
         //this.imageNames = ??
     }
+
+    public BoardDTO(Long id, String content, String nickname, LocalDateTime createdAt) {
+        this.id = id;
+        this.content = content;
+        this.userNickname = nickname;
+        this.createdAt = createdAt;
+    }
 }

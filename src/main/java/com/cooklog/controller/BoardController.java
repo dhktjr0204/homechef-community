@@ -10,6 +10,7 @@ import com.cooklog.model.Board;
 import com.cooklog.service.BoardService;
 import com.cooklog.service.CommentService;
 import com.cooklog.service.CustomIUserDetailsService;
+import com.cooklog.service.ReportService;
 import com.cooklog.validate.BoardCreateValidator;
 import com.cooklog.validate.BoardUpdateValidator;
 import lombok.RequiredArgsConstructor;
@@ -41,6 +42,7 @@ public class BoardController {
     private final BoardService boardService;
     private final CommentService commentService;
     private final CustomIUserDetailsService userDetailsService;
+    private final ReportService reportService;
 
     @GetMapping("/{id}")
     public String getBoard(@PathVariable Long id, Model model) {
@@ -183,6 +185,11 @@ public class BoardController {
     ) {
         List<CommentDTO> replies = commentService.getRepliesByCommentId(parentId, page, size);
         return ResponseEntity.ok(replies);
+    }
+    @PostMapping("/reportBoard/{boardId}")
+    public ResponseEntity<?> reportBoard(@PathVariable Long boardId) {
+        reportService.reportBoard(boardId);
+        return ResponseEntity.ok().build();
     }
 }
 

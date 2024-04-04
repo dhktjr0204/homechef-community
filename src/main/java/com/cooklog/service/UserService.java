@@ -41,4 +41,7 @@ public interface UserService {
 
 	// 사용자의 북마크 리스트를 가져오는 메소드
 	List<BoardDTO> getBookmarkBoards(Long userIdx);
+
+	void resetReportCount(Long userId);
+
 }

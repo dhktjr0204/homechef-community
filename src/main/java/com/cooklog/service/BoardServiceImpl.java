@@ -246,6 +246,7 @@ public class BoardServiceImpl implements BoardService {
         return boards.stream().map(board -> new BoardDTO(
                 board.getId(),
                 board.getContent(),
+                board.getUser().getNickname(),
                 board.getCreatedAt()
         )).collect(Collectors.toList());
 

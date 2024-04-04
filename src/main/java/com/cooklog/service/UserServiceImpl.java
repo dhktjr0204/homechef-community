@@ -4,6 +4,8 @@ package com.cooklog.service;
 import com.cooklog.dto.*;
 
 import com.cooklog.exception.user.NotValidateUserException;
+import com.cooklog.model.Blacklist;
+import com.cooklog.repository.BlacklistRepository;
 import com.cooklog.repository.BoardRepository;
 
 import com.cooklog.model.Bookmark;
@@ -37,6 +39,7 @@ public class UserServiceImpl implements UserService {
     private final BoardRepository boardRepository;
     private final BookmarkRepository bookmarkRepository;
     private final BCryptPasswordEncoder encoder;
+    private final BlacklistRepository blacklistRepository;
 
     // JoinDTO 객체를 받아 사용자 정보를 추가(저장)하는 메서드
     @Override
@@ -127,10 +130,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUserRole(Long userId, Role role) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("유저를 찾지 못함"));
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
         user.setRole(role);
         userRepository.save(user);
+
+        // 사용자의 역할이 BLACK으로 변경되는 경우에만 Black 테이블에 추가
+        if (role == Role.BLACK) {
+            Blacklist black = new Blacklist();
+            black.setUser(user); // Black 엔터티에 User 설정
+            blacklistRepository.save(black); // Black 엔터티 저장
+        }
     }
 
     // 사용자 탈퇴 유무 업데이트 후 저장
@@ -161,6 +173,14 @@ public class UserServiceImpl implements UserService {
         List<BoardDTO> boardList = bookmarkList.stream().map(bookmark -> new BoardDTO(bookmark.getBoard(),userIdx)).collect(Collectors.toList());
 
         return boardList;
+    }
+
+    @Override
+    public void resetReportCount(Long userId) {
+        userRepository.findById(userId).ifPresent(user -> {
+            user.setReportCount(0); // 신고 횟수를 0으로 초기화
+            userRepository.save(user); // 변경된 사용자 정보 저장
+        });
     }
 }
 
