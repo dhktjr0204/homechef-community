@@ -15,12 +15,6 @@
         <img src="../../static/img/main/food1.png" th:src="${following.followingUserProfileImage}" alt="프로필 사진">
       </figure>
       <p class="user-name" th:text="${following.followingUserNickName}">example_user</p>
-      <!--일단 모두 필요하기 때문에 다 만들어놓겠습니다 나중에 th:if로 처리해주세요-->
-      <!--만약 자기 마이페이지가 아닐 시 팔로우된 사람이면 팔로잉으로 표시, 팔로우 안된 사람이면 팔로우로 표시-->
-      <!--인스타그램 참고-->
-      <!--            <button class="delete-follower-button">삭제</button>-->
-      <!--            <button class="follow-button">팔로우</button>-->
-      <!--            <button class="un-follow-button">팔로잉</button>-->
       <button th:unless="${currentLoginUser.idx eq following.followingId}" th:class="${following.isFollowing() == false ? 'follow-button' : 'un-follow-button'}"
               onclick="clickButton(event)"
               th:data-userid="${following.followingId}"
@@ -33,15 +27,15 @@
         <ul class="pagination" th:unless="${followings.isEmpty()}">
           <!-- 이전 페이지 버튼 -->
           <li class="page-item" th:classappend="${followings.pageable.pageNumber == 0} ? 'disabled' : ''">
-            <a class="page-link" th:href="@{/api/users/{userIdx}/following(page=${followings.pageable.pageNumber - 1},userIdx=${userIdx})}" >«</a>
+            <a class="page-link" th:href="@{/user/{targetUserIdx}/following(page=${followings.pageable.pageNumber - 1},targetUserIdx=${targetUserIdx})}" >«</a>
           </li>
           <!-- 페이지 번호 -->
           <li th:each="pageNum: ${#numbers.sequence(startPage+1, endPage+1)}" class="page-item" th:classappend="${pageNum - 1 == followings.pageable.pageNumber} ? 'active' : ''">
-            <a class="page-link" th:href="@{/api/users/{userIdx}/following(page=${pageNum - 1}, size=${followings.pageable.pageSize},userIdx=${userIdx})}" th:text="${pageNum}"></a>
+            <a class="page-link" th:href="@{/user/{targetUserIdx}/following(page=${pageNum - 1}, size=${followings.pageable.pageSize},targetUserIdx=${targetUserIdx})}" th:text="${pageNum}"></a>
           </li>
           <!-- 다음 페이지 버튼 -->
           <li class="page-item" th:classappend="${followings.pageable.pageNumber + 1 >= followings.totalPages} ? 'disabled' : ''">
-            <a class="page-link" th:href="@{/api/users/{userIdx}/following(page=${followings.pageable.pageNumber + 1},userIdx=${userIdx})}">»</a>
+            <a class="page-link" th:href="@{/user/{targetUserIdx}/following(page=${followings.pageable.pageNumber + 1},targetUserIdx=${targetUserIdx})}">»</a>
           </li>
         </ul>
       </nav>
