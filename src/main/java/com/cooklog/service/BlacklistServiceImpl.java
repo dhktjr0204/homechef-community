@@ -43,6 +43,9 @@ public class BlacklistServiceImpl implements BlacklistService {
 		blacklistRepository.findOneByUserIdx(userId).ifPresent(blacklist -> {
 			blacklistRepository.delete(blacklist);
 			userService.updateUserRole(userId, Role.USER); // 역할을 미식 초보로 변경
+
+			// 신고 횟수를 초기화하는 코드 추가
+			userService.resetReportCount(userId);
 		});
 	}
 }

@@ -226,5 +226,12 @@ public class UserServiceImpl implements UserService {
     public MyPageFollowCountDTO getFollowCountDTO(Long userIdx, Long loginUserId) {
         return followRepository.findFollowCountByUserId(userIdx, loginUserId);
     }
+    @Override
+    public void resetReportCount(Long userId) {
+        userRepository.findById(userId).ifPresent(user -> {
+            user.setReportCount(0); // 신고 횟수를 0으로 초기화
+            userRepository.save(user); // 변경된 사용자 정보 저장
+        });
+    }
 }
 
