@@ -24,7 +24,7 @@
             <div class="options-menu">
                 <ul>
                     <li th:unless="${currentLoginUser.idx} eq ${board.userId}">
-                        <button class="report-button">신고</button>
+                        <button class="report-button" th:attr="data-board-id=${board.id}">신고</button>
                     </li>
                     <li th:if="${currentLoginUser.idx} eq ${board.userId}">
                         <button class="update-board-button" onclick="clickUpdateBoard(this)">수정</button>

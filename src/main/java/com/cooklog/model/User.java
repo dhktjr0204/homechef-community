@@ -78,4 +78,8 @@ public class User {
 		this.idx = idx;
 		this.isDeleted = true; // tinyint 라서 true=1
   }
+
+	public void increaseReportCount() {
+		this.reportCount += 1;
+	}
 }

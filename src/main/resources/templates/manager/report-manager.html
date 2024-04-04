@@ -33,7 +33,7 @@
             <tr th:each="info : ${reportedInfo}">
                 <td><a th:href="@{/manager/userPosts/{userId}(userId=${info.userId})}" th:text="${info.getUserNickname()}"></a></td>
                 <td th:text="${info.getReportCount()}"></td>
-                <td th:text="${info.isBlacklisted() ?'블랙 회원' : '일반 유저'}"></td>
+                <td th:text="${info.isBlacklisted() ?'블랙 리스트' : '일반 유저'}"></td>
                 <td>
                     <button class="block-btn" th:data-id="${info.userId}" onclick="addToBlacklist(this.getAttribute('data-id'))">등록</button>
                     <button class="block-btn" th:data-id="${info.userId}" onclick="removeFromBlacklist(this.getAttribute('data-id'))">해제</button>

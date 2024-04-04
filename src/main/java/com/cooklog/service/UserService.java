@@ -50,4 +50,6 @@ public interface UserService {
 
 	// 로그인 한 사용자의 팔로우 팔로워 수 가져오는 메소드
 	MyPageFollowCountDTO getFollowCountDTO(Long userIdx, Long loginUserId);
+
+	void resetReportCount(Long userId);
 }

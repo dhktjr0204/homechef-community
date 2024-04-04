@@ -11,7 +11,6 @@ public class ReportedContentDTO {
 	private Long userId; // 신고된 사용자의 ID
 	private boolean isBlacklisted;
 
-	// 기본 생성자
 
 	// 모든 필드를 초기화하는 생성자
 	public ReportedContentDTO(String userNickname,int reportCount, Long userId, boolean isBlacklisted) {
