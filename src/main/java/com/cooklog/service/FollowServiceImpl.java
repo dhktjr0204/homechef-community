@@ -98,7 +98,7 @@ public class FollowServiceImpl implements FollowService {
 			String profileUrl = null;
 
 			profileUrl = imageService.fileLoad(followDTO.getFollowingUserProfileImage());
-			System.out.println("----------------------------"+profileUrl);
+
 			followDTO.setFollowingUserProfileImage(profileUrl);
 		}
 

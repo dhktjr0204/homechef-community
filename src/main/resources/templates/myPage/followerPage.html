@@ -14,7 +14,9 @@
             <figure class="profile-picture" aria-label="프로필">
                 <img src="../../static/img/main/food1.png" th:src="${follower.followerUserProfileImage}" alt="프로필 사진">
             </figure>
-            <p class="user-name" th:text="${follower.followerUserNickName}">example_user</p>
+            <p class="user-name" >
+                <a th:href="@{/myPage/main/{id}(id=${follower.followerId})}" th:text="${follower.followerUserNickName}"></a>
+            </p>
             <button th:unless="${currentLoginUser.idx eq follower.followerId}" th:class="${follower.isFollowing() == false ? 'follow-button' : 'un-follow-button'}"
                     onclick="clickButton(event)"
                     th:data-userid="${follower.followerId}"
