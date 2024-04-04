@@ -64,6 +64,11 @@
         <pre class="profile-introduction" th:text="${user.introduction}">반갑습니다. 오늘도 즐거운 하루입니다.</pre>
     </section>
 
+    <div class="tabs">
+        <button class="tab-button active" onclick="switchTab('Posts')">게시물</button>
+        <button th:if="${currentLoginUser.idx} == ${user.idx}"class="tab-button" onclick="switchTab('Bookmarks'); loadMyBookmarks()">북마크</button>
+    </div>
+
     <section class="board-list-container">
         <ul class="board-list">
             <li th:each="board: ${boards}">
@@ -71,6 +76,14 @@
             </li>
         </ul>
         <div th:if="${boards.isEmpty()}" class="no-content-container">
+            <p class="no-content-text">콘텐츠가 없습니다.</p>
+        </div>
+    </section>
+
+    <section id="bookmarkContainer" class="board-list-container" style="display:none;">
+        <ul id="bookmarkList" class="board-list">
+        </ul>
+        <div id="noContentContainer" class="no-content-container">
             <p class="no-content-text">콘텐츠가 없습니다.</p>
         </div>
     </section>

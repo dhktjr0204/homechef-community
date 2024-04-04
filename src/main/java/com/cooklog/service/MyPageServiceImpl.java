@@ -9,6 +9,7 @@ import com.cooklog.model.Board;
 import com.cooklog.model.Image;
 import com.cooklog.model.User;
 import com.cooklog.repository.BoardRepository;
+import com.cooklog.repository.BookmarkRepository;
 import com.cooklog.repository.FollowRepository;
 import com.cooklog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +27,7 @@ public class MyPageServiceImpl implements MyPageService {
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final FollowRepository followRepository;
+    private final BookmarkRepository bookmarkRepository;
 
     private final String BASIC_IMAGE = "images/db181dbe-7139-4f6c-912f-a53f12de6789_기본프로필.png";
 
@@ -58,14 +58,14 @@ public class MyPageServiceImpl implements MyPageService {
     @Override
     public List<MyPageDTO> getBoardByUserId(Long userIdx) {
         List<MyPageDTO> myPageDTOList = new ArrayList<>();
-        List<Board> boardList = boardRepository.findByUserIdx(userIdx);
+        List<Object[]> boardList = boardRepository.findAllOrderByCreatedAtDesc(userIdx);
 
-        for (Board board : boardList) {
-
-            String boardImageUrl = imageService.fileLoad(board.getImages().get(0).getName());
+        for (Object[] board : boardList) {
+            System.out.println("=========================================================================imageservoce추가테스트");
+            String boardImageUrl = imageService.fileLoad((String)board[1]);
 
             MyPageDTO myPageDTO = MyPageDTO.builder()
-                    .id(board.getId())
+                    .id((Long)board[0])
                     .imageUrl(boardImageUrl).build();
 
             myPageDTOList.add(myPageDTO);
@@ -94,5 +94,27 @@ public class MyPageServiceImpl implements MyPageService {
     @Override
     public MyPageFollowCountDTO getFollowCountDTO(Long userIdx, Long loginUserId) {
         return followRepository.findFollowCountByUserId(userIdx, loginUserId);
+    }
+
+    //로그인한 사용자의 북마크 게시물을 가져온다
+    @Override
+    public List<MyPageDTO> getBookmarkBoards(Long currentUserIdx) {
+        System.out.println("========================getBookmarkBoards 시작=====================================");
+        List<Object[]> bookmarkBoards = bookmarkRepository.findAllBookmarkedBoardsByUserIdx(currentUserIdx);
+        List<MyPageDTO> resultBoards = new ArrayList<>();
+
+        for (Object[] board : bookmarkBoards) {
+            System.out.println("============================imageService 시작==========================");
+            String boardImageUrl = imageService.fileLoad((String)board[1]);
+
+            MyPageDTO myPageDTO = MyPageDTO.builder()
+                .id((Long)board[0])
+                .imageUrl(boardImageUrl)
+                .build();
+
+            resultBoards.add(myPageDTO);
+        }
+        System.out.println("=================================end======================");
+        return resultBoards;
     }
 }

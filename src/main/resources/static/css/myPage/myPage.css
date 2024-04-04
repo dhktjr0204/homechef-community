@@ -2,7 +2,7 @@
 .user-profile-container{
     padding: 30px 0;
     margin-bottom: 70px;
-    border-bottom: 1px solid #c4c4c4;
+    /*border-bottom: 1px solid #c4c4c4;*/
 }
 .user-profile-container{
     width: 100%;
@@ -67,6 +67,29 @@
     font-family: 'Open Sans', sans-serif;
     padding: 10px;
     white-space: pre-wrap;
+}
+
+/*탭 */
+.tabs {
+    border-bottom: 1px solid #c4c4c4;
+}
+
+.tab-button {
+    background-color: inherit;
+    border:1px solid #c4c4c4;;
+    border-bottom: none;
+    border-radius: 5px;
+    padding:10px;
+    cursor: pointer;
+}
+
+.tab-button:hover {
+    background-color: #f5f3f3;
+}
+
+.tab-button.active {
+    background-color: #FFAA06;
+    color:white;
 }
 
 /*이미지 섹션*/

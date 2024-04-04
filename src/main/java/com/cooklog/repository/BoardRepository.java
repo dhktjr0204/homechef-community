@@ -1,6 +1,7 @@
 package com.cooklog.repository;
 
 import com.cooklog.model.Board;
+import java.util.Objects;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,8 +19,15 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query(value = "update board set readcnt = readcnt+1 where id = :id", nativeQuery = true)
     void updateReadCnt(Long id);
 
-
     List<Board> findByUserIdx(Long userId);
+
+    @Query(value = "select i.board_id, i.name "
+        + "from board b "
+        + "join image i "
+        + "on b.id = i.board_id "
+        + "where b.user_idx = :userIdx and i.order = 1 "
+        + "order by b.created_at desc ",nativeQuery = true)
+    List<Object[]> findAllOrderByCreatedAtDesc(Long userIdx);
 
     //마지막 board id가 없을 경우(첫 요청일 경우)
     Page<Board> findAll(Pageable pageable);

@@ -166,17 +166,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<BoardDTO> getBookmarkBoards(Long userIdx) {
-        User user = userRepository.findById(userIdx)
-            .orElseThrow(() -> new IllegalArgumentException("해당 userId가 없습니다."));
-
-        List<Bookmark> bookmarkList = bookmarkRepository.findAllByUserIdx(userIdx);
-        List<BoardDTO> boardList = bookmarkList.stream().map(bookmark -> new BoardDTO(bookmark.getBoard(),userIdx)).collect(Collectors.toList());
-
-        return boardList;
-    }
-
-    @Override
     public void resetReportCount(Long userId) {
         userRepository.findById(userId).ifPresent(user -> {
             user.setReportCount(0); // 신고 횟수를 0으로 초기화
