@@ -79,6 +79,7 @@ public class ManagerController {
 		return "redirect:/manager/user"; // 업데이트 후에는 역할 관리 페이지로 리다이렉트
 	}
 
+
 	@GetMapping("/board")
 	public String listBoards(Model model) {
 		List<BoardDTO> boards = boardService.findAllBoards();
@@ -134,6 +135,7 @@ public class ManagerController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("블랙리스트 해제에 실패하였습니다: " + e.getMessage());
 		}
 	}
+
 	@GetMapping("/userPosts/{userId}")
 	public String showUserPosts(@PathVariable Long userId, Model model) {
 		// boards와 comments를 결합하여 UserPostDTO의 리스트를 생성하는 로직 구현

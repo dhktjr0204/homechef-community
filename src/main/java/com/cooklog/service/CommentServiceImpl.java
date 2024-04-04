@@ -35,6 +35,7 @@ public class CommentServiceImpl implements CommentService {
 	private final CommentRepository commentRepository;
 	private final BoardRepository boardRepository;
 	private final UserRepository userRepository;
+	private final ImageService imageService;
 
 	@Override
 	public List<CommentDTO> findAllComments() {
@@ -143,6 +144,7 @@ public class CommentServiceImpl implements CommentService {
 
 	private CommentDTO convertToDto(Comment comment) {
 		User user = comment.getUser();
+		String profileUrl = imageService.fileLoad(user.getProfileImage());
 		return new CommentDTO(
 			comment.getId(),
 			comment.getContent(),
@@ -151,7 +153,7 @@ public class CommentServiceImpl implements CommentService {
 			user.getNickname(),
 			comment.getBoard().getId(),
 			comment.getParentCommentId(),
-			user.getProfileImage() // 이 부분은 User 엔티티에 프로필 이미지 필드가 있다고 가정
+			profileUrl // 이 부분은 User 엔티티에 프로필 이미지 필드가 있다고 가정
 		);
 	}
 

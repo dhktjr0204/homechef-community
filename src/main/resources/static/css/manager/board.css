@@ -46,7 +46,11 @@ header img{
     margin-top: 20px;
     text-align-last: center;
 }
-
+.content-table a{
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
 .content-table thead {
     background-color: #FFA500;
     color: white;

@@ -37,6 +37,7 @@ public class BlacklistServiceImpl implements BlacklistService {
 		}
 	}
 
+
 	@Override
 	@Transactional
 	public void removeFromBlacklist(Long userId) {

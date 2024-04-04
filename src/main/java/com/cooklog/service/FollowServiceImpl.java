@@ -96,11 +96,7 @@ public class FollowServiceImpl implements FollowService {
 		for(FollowDTO followDTO : followingList) {
 			String profileUrl = null;
 
-			try {
-				profileUrl = imageService.fileLoad(followDTO.getFollowingUserProfileImage());
-			} catch (FileNotFoundException e) {
-				profileUrl = "";
-			}
+			profileUrl = imageService.fileLoad(followDTO.getFollowingUserProfileImage());
 
 			followDTO.setFollowingUserProfileImage(profileUrl);
 		}
@@ -122,11 +118,7 @@ public class FollowServiceImpl implements FollowService {
 		for(FollowDTO followDTO : followerList) {
 			String profileUrl = null;
 
-			try {
-				profileUrl = imageService.fileLoad(followDTO.getFollowerUserProfileImage());
-			} catch (FileNotFoundException e) {
-				profileUrl = "";
-			}
+			profileUrl = imageService.fileLoad(followDTO.getFollowerUserProfileImage());
 
 			followDTO.setFollowerUserProfileImage(profileUrl);
 		}
