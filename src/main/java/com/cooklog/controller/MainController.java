@@ -32,13 +32,13 @@ public class MainController {
                         @RequestParam(value = "id", defaultValue = "0") Long lastBoardId, Model model) {
 
         //현재 로그인 된 유저 정보 가져오기
-        UserDTO userDTO = userDetailsService.getCurrentUserDTO();
+        UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
 
-        Page<BoardDTO> allBoard = boardService.getAllBoard(pageable, userDTO.getIdx(), lastBoardId, pageable.getSort().toString());
+        Page<BoardDTO> allBoard = boardService.getAllBoard(pageable, loginUserDTO.getIdx(), lastBoardId, pageable.getSort().toString());
 
         List<CommentDTO> comments = commentService.getCommentInfoByBoardId(allBoard);
 
-        model.addAttribute("currentLoginUser", userDTO);
+        model.addAttribute("currentLoginUser", loginUserDTO);
         model.addAttribute("boards", allBoard);
         model.addAttribute("comments", comments);
 
@@ -55,13 +55,13 @@ public class MainController {
     @GetMapping("/follow")
     public String getBoardWithFollow(@PageableDefault(page = 0, size = 3, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
                                      @RequestParam(value = "id", defaultValue = "0") Long lastBoardId, Model model) {
-        UserDTO userDTO = userDetailsService.getCurrentUserDTO();
+        UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
 
-        Page<BoardDTO> allBoard = boardService.getAllBoardWithFollow(pageable, userDTO.getIdx(), lastBoardId);
+        Page<BoardDTO> allBoard = boardService.getAllBoardWithFollow(pageable, loginUserDTO.getIdx(), lastBoardId);
 
         List<CommentDTO> comments = commentService.getCommentInfoByBoardId(allBoard);
 
-        model.addAttribute("currentLoginUser", userDTO);
+        model.addAttribute("currentLoginUser", loginUserDTO);
         model.addAttribute("boards", allBoard);
         model.addAttribute("comments", comments);
 
@@ -75,13 +75,13 @@ public class MainController {
                                @RequestParam(value = "id", defaultValue = "0") Long lastBoardId,
                                Model model) {
         //현재 로그인 된 유저 정보 가져오기
-        UserDTO userDTO = userDetailsService.getCurrentUserDTO();
+        UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
 
-        Page<BoardDTO> searchByText = boardService.getSearchByText(keyword, userDTO.getIdx(), pageable);
+        Page<BoardDTO> searchByText = boardService.getSearchByText(keyword, loginUserDTO.getIdx(), lastBoardId, pageable);
 
         List<CommentDTO> comments = commentService.getCommentInfoByBoardId(searchByText);
 
-        model.addAttribute("currentLoginUser", userDTO);
+        model.addAttribute("currentLoginUser", loginUserDTO);
         model.addAttribute("keyword", keyword);
         model.addAttribute("boards", searchByText);
         model.addAttribute("comments", comments);
@@ -101,13 +101,13 @@ public class MainController {
                                   @RequestParam(value = "id", defaultValue = "0") Long lastBoardId,
                                   Model model) {
         //현재 로그인 된 유저 정보 가져오기
-        UserDTO userDTO = userDetailsService.getCurrentUserDTO();
+        UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
 
-        Page<BoardDTO> searchByTags = boardService.findBoardsByTags(tags, userDTO.getIdx(), pageable);
+        Page<BoardDTO> searchByTags = boardService.findBoardsByTags(tags, loginUserDTO.getIdx(), lastBoardId, pageable);
 
         List<CommentDTO> comments = commentService.getCommentInfoByBoardId(searchByTags);
 
-        model.addAttribute("currentLoginUser", userDTO);
+        model.addAttribute("currentLoginUser", loginUserDTO);
         model.addAttribute("keyword", tags);
         model.addAttribute("boards", searchByTags);
         model.addAttribute("comments", comments);

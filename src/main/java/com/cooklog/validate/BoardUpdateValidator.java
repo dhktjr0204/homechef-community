@@ -35,12 +35,19 @@ public class BoardUpdateValidator implements Validator {
     private boolean isOverContentLengthLimit(String content){
         return content.length()>500;
     }
-    private boolean isOverTagCountLimit(List<String> tags){return tags.size()>10;}
+    private boolean isOverTagCountLimit(List<String> tags){
+        if (tags!=null) {
+            return tags.size() > 10;
+        }
+        return false;
+    }
 
     private boolean isOverTagLengthLimit(List<String> tags){
-        for(String tag: tags){
-            if(tag.length()>255){
-                return true;
+        if(tags!=null){
+            for (String tag : tags) {
+                if (tag.length() > 255) {
+                    return true;
+                }
             }
         }
         return false;
