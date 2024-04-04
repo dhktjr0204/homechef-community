@@ -283,26 +283,6 @@ class BoardServiceImplTest {
         verify(imageService,never()).fileListWrite(any(),any());
     }
 
-//    @Test
-//    @DisplayName("tag 저장 중 예외가 발생했을 때 트랜잭션 확인 테스트")
-//    void saveBoard_withTransaction() {
-//        //given
-//        Long userId = 1L;
-//        BoardCreateRequestDTO requestDTO = createBoardCreateRequestDTO();
-//        List<MultipartFile> images = createDummyImageList();
-//        when(userRepository.findById(userId)).thenReturn(Optional.of(new User()));
-//        //태그 저장하다가 예외가 발생한 경우
-//        when(tagService.save(any(),any())).thenThrow(DuplicateKeyException.class);
-//
-//        //when
-//        assertThatThrownBy(() -> boardService.save(userId, requestDTO, images))
-//                .isInstanceOf(DuplicateKeyException.class);
-//
-//        //then
-//        //board 저장 안 됐는지 확인
-//        verify(boardRepository, never()).save(any());
-//    }
-
     //수정 테스트
     @Test
     @DisplayName("수정 테스트")

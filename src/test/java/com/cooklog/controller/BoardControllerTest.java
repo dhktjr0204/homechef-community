@@ -7,6 +7,7 @@ import com.cooklog.model.Board;
 import com.cooklog.service.BoardService;
 import com.cooklog.service.CommentService;
 import com.cooklog.service.CustomIUserDetailsService;
+import com.cooklog.service.ReportService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,8 @@ class BoardControllerTest {
     private CommentService commentService;
     @MockBean
     private CustomIUserDetailsService userDetailsService;
+    @MockBean
+    private ReportService reportService;
 
     private BoardCreateRequestDTO createDummyBoardCreateDTO(String content, List<String> tags) {
         BoardCreateRequestDTO requestDTO = new BoardCreateRequestDTO();
