@@ -12,7 +12,7 @@ import com.cooklog.exception.likes.NotLikedYetException;
 import com.cooklog.exception.myPage.EmptyNicknameException;
 import com.cooklog.exception.myPage.OverIntroductionLengthLimitException;
 import com.cooklog.exception.myPage.OverNicknameLengthLimitException;
-import com.cooklog.exception.user.NotValidateUserException;
+import com.cooklog.exception.user.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,6 +25,30 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotValidateUserException.class)
     public ResponseEntity<String> NotValidateUserException(NotValidateUserException e){
         return new ResponseEntity<>("인증되지 않은 사용자입니다.", HttpStatus.UNAUTHORIZED);
+    }
+
+    // 회원가입 관련 예외처리
+    @ExceptionHandler(AlreadyExistsEmailException.class)
+    public ResponseEntity<String> AlreadyExistsEmailException(
+            AlreadyExistsEmailException ex) {
+        return new ResponseEntity<>("이미 존재하는 이메일입니다.", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(LengthPasswordException.class)
+    public ResponseEntity<String> LengthPasswordException(LengthPasswordException ex){
+        return new ResponseEntity<>("비밀번호는 최소 8자 이상이어야 합니다.", HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(NotIncludeEngilshPasswordException.class)
+    public ResponseEntity<String> NotIncludeEngilshPasswordException(NotIncludeEngilshPasswordException ex){
+        return new ResponseEntity<>("비밀번호는 영문자를 포함해야 합니다.", HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(NotIncludeNumPasswordException.class)
+    public ResponseEntity<String> NotIncludeNumPasswordException(NotIncludeNumPasswordException ex){
+        return new ResponseEntity<>("비밀번호는 숫자를 포함해야 합니다.", HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(NotIncludeSpecialCharException.class)
+    public ResponseEntity<String> NotIncludeSpecialCharException(NotIncludeSpecialCharException ex){
+        return new ResponseEntity<>("비밀번호는 특수문자를 포함해야 합니다.", HttpStatus.BAD_REQUEST);
     }
 
     //게시글 관련 예외처리
@@ -60,7 +84,7 @@ public class GlobalExceptionHandler {
     //북마크 관련 예외처리
     @ExceptionHandler(AlreadyBookmarkedException.class)
     public ResponseEntity<String> AlreadyBookmarkedException(AlreadyBookmarkedException ex) {
-        return new ResponseEntity<>("해당 게시물은 이미 북마크로 등록이 되어있습니다.",HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("해당 게시물은 이미 북마크로 등록이 되어있습니다.", HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(NotBookmarkedYetException.class)

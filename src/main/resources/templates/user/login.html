@@ -42,4 +42,15 @@
     </form>
 </div>
 </body>
+<script>
+    /*<![CDATA[*/
+        var isError = [[${error}]];
+        var errorMsg = '[[${exception}]]';
+
+        if (isError) {
+            alert(errorMsg);
+            history.back();
+        }
+    /*]]>*/
+</script>
 </html>
