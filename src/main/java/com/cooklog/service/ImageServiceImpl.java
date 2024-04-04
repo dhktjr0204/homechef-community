@@ -68,7 +68,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public String fileWrite(MultipartFile file, Long userId) {
+    public String fileWrite(MultipartFile file) {
         return saveS3(file);
     }
 

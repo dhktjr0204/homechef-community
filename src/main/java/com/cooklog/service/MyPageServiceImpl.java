@@ -33,24 +33,22 @@ public class MyPageServiceImpl implements MyPageService {
 
     @Transactional
     @Override
-    public void updateUserProfile(Long userId,
+    public void updateUserProfile(UserDTO loginUserDTO,
                                   MyPageUpdateRequestDTO request,
                                   MultipartFile newImageFile) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(NotValidateUserException::new);
 
         if (newImageFile != null) {
 
-            String saveS3FileName = imageService.fileWrite(newImageFile, userId);
+            String saveS3FileName = imageService.fileWrite(newImageFile);
 
             //s3에 등록된 기존 이미지 삭제, 기존 이미지가 기본이미지라면 삭제하지 않음
-            if (!user.getProfileImage().equals(BASIC_IMAGE)) {
-                imageService.deleteS3(user.getProfileImage());
+            if (!loginUserDTO.getProfileImageName().equals(BASIC_IMAGE)) {
+                imageService.deleteS3(loginUserDTO.getProfileImageName());
             }
 
-            user.update(request.getNickname(), request.getIntroduction(), saveS3FileName);
+            userRepository.updateProfile(loginUserDTO.getIdx(),request.getNickname(), request.getIntroduction(), saveS3FileName);
         } else {
-            user.update(request.getNickname(), request.getIntroduction(), request.getOriginalImage());
+            userRepository.updateProfile(loginUserDTO.getIdx() ,request.getNickname(), request.getIntroduction(), request.getOriginalImage());
         }
     }
 

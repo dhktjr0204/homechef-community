@@ -115,7 +115,7 @@ public class MyPageController {
         ProfileUpdateValidator profileUpdateValidator=new ProfileUpdateValidator();
         profileUpdateValidator.validate(myPageUpdateRequestDTO, result);
 
-        myPageService.updateUserProfile(userId, myPageUpdateRequestDTO, updateProfileImage);
+        myPageService.updateUserProfile(loginUserDTO, myPageUpdateRequestDTO, updateProfileImage);
 
         return ResponseEntity.ok("/myPage/main/" + userId);
     }
