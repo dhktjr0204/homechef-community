@@ -32,13 +32,13 @@
 
 		 // 접근 불가능한 페이지 들어가면 "/login" 으로 이동
  		http
- 			.formLogin((auth) -> auth.loginPage("/login")
+ 			.formLogin((auth) -> auth.loginPage("/login") // GET
 					// 로그인 form action 기본 설정
- 				.loginProcessingUrl("/loginProc")
+ 				.loginProcessingUrl("/loginProc") // POST
 					.defaultSuccessUrl("/")
  				.usernameParameter("email")
 				.passwordParameter("password")
-				.failureHandler(customFailureHandler())
+				.failureHandler(customFailureHandler()) // 로그인 실패 핸들링
  				.permitAll()
  			)
 			.logout(auth -> auth.logoutSuccessUrl("/login") // 로그아웃 설정

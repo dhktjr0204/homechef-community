@@ -1,4 +1,4 @@
-package com.cooklog.exception.user;
-
-public class NotIncludeSpecialCharException extends RuntimeException {
-}
+//package com.cooklog.exception.user;
+//
+//public class NotIncludeSpecialCharException extends RuntimeException {
+//}
