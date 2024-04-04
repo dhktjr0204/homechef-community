@@ -58,7 +58,8 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
         + "FROM Follow f "
         + "WHERE f.following.idx = :userIdx")
     Page<FollowDTO> findFollowerListByUserIdxWithFollowStatus(Long userIdx, Long currentUserIdx, Pageable pageable);
-
+    
+    //특정 유저의 following 수, follower 수, currentUser가 targetUser를 팔로우중인지 확인
     @Query(value = "SELECT " +
             "  (SELECT COUNT(*) FROM follow WHERE follower_id = :userId) AS followingCount, " +
             "  (SELECT COUNT(*) FROM follow WHERE following_id = :userId) AS followerCount,  " +
