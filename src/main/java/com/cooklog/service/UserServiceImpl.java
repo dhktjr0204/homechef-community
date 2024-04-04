@@ -16,6 +16,7 @@ import com.cooklog.repository.FollowRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import com.cooklog.model.User;
 import com.cooklog.repository.UserRepository;
 
 import java.io.FileNotFoundException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -191,6 +193,22 @@ class UserServiceImpl implements UserService {
             user.setReportCount(0); // 신고 횟수를 0으로 초기화
             userRepository.save(user); // 변경된 사용자 정보 저장
         });
+    }
+
+    @Scheduled(cron = "0 0 1 * * ?") // 매일 새벽 1시에 실행(초,분,시,일,월,요일)
+    @Transactional
+    public void removeExpiredBlacklists() {
+        LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
+        List<Blacklist> expiredBlacklists = blacklistRepository.findByCreatedAtBefore(thirtyDaysAgo);
+
+        for (Blacklist expiredBlacklist : expiredBlacklists) {
+            User user = expiredBlacklist.getUser();
+                    user.setRole(Role.USER); // 사용자 역할을 USER로 업데이트
+                    user.setReportCount(0); // 신고 횟수를 0으로 초기화
+                    userRepository.save(user); // 역할 업데이트를 위해 사용자 정보 저장
+
+            blacklistRepository.delete(expiredBlacklist);
+        }
     }
 }
 
