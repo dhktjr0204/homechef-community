@@ -41,3 +41,61 @@ ul, ol{
     color: black;
     text-decoration: none;
 }
+
+
+/*페이징 관련 css*/
+/* 페이지네이션 컨테이너 */
+.page {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination {
+    display: inline-block;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* 페이지 아이템 */
+.page-item {
+    display: inline;
+}
+
+.page-item.disabled a {
+    color: #ccc;
+    pointer-events: none;
+}
+
+.page-item.active a {
+    font-weight: bold;
+    background-color: #FFAA06;
+    color: white;
+}
+
+/* 페이지 링크 */
+.page-link {
+    color: #FFAA06;
+    text-align: center;
+    padding: 8px 16px;
+    margin-left: -1px;
+    border: 1px solid #ddd;
+    text-decoration: none;
+}
+
+.page-link:hover {
+    background-color: #f8f9fa;
+    border-color: #ddd;
+}
+
+/* '이전'과 '다음' 버튼의 특별한 스타일링 */
+.page-item:first-child .page-link {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.page-item:last-child .page-link {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}

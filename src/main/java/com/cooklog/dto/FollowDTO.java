@@ -8,13 +8,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 public class FollowDTO {
 	private Long followerId;
 	private String followerUserNickName;
+	private String followerUserProfileImage;
 	private Long followingId;
 	private String followingUserNickName;
+	private String followingUserProfileImage;
 	private boolean isFollowing; // 팔로우 상태
 
 	public FollowDTO(Follow follow) {
@@ -22,11 +23,13 @@ public class FollowDTO {
 		this.followingId = follow.getFollowing().getIdx();
 	}
 
-	public FollowDTO(Long followerId,String followerUserNickName,Long followingId,String followingUserNickName,boolean isFollowing) {
+	public FollowDTO(Long followerId,String followerUserNickName,String followerUserProfileImage,Long followingId,String followingUserNickName,String followingUserProfileImage,boolean isFollowing) {
 		this.followerId = followerId;
 		this.followerUserNickName = followerUserNickName;
+		this.followerUserProfileImage = followerUserProfileImage;
 		this.followingId = followingId;
 		this.followingUserNickName = followingUserNickName;
+		this.followingUserProfileImage = followingUserProfileImage;
 		this.isFollowing = isFollowing;
 	}
 }
