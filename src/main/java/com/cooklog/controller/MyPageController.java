@@ -46,7 +46,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/myPage")
 public class MyPageController {
 
-    private final UserService userService;
     private final ImageService imageService;
     private final MyPageService myPageService;
     private final CustomIUserDetailsService userDetailsService;

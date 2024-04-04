@@ -61,7 +61,6 @@ public class MyPageServiceImpl implements MyPageService {
         List<Object[]> boardList = boardRepository.findAllOrderByCreatedAtDesc(userIdx);
 
         for (Object[] board : boardList) {
-            System.out.println("=========================================================================imageservoce추가테스트");
             String boardImageUrl = imageService.fileLoad((String)board[1]);
 
             MyPageDTO myPageDTO = MyPageDTO.builder()
@@ -99,12 +98,10 @@ public class MyPageServiceImpl implements MyPageService {
     //로그인한 사용자의 북마크 게시물을 가져온다
     @Override
     public List<MyPageDTO> getBookmarkBoards(Long currentUserIdx) {
-        System.out.println("========================getBookmarkBoards 시작=====================================");
         List<Object[]> bookmarkBoards = bookmarkRepository.findAllBookmarkedBoardsByUserIdx(currentUserIdx);
         List<MyPageDTO> resultBoards = new ArrayList<>();
 
         for (Object[] board : bookmarkBoards) {
-            System.out.println("============================imageService 시작==========================");
             String boardImageUrl = imageService.fileLoad((String)board[1]);
 
             MyPageDTO myPageDTO = MyPageDTO.builder()
@@ -114,7 +111,7 @@ public class MyPageServiceImpl implements MyPageService {
 
             resultBoards.add(myPageDTO);
         }
-        System.out.println("=================================end======================");
+
         return resultBoards;
     }
 }
