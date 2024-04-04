@@ -1,6 +1,7 @@
 
  package com.cooklog.config;
 
+ import com.cooklog.exception.CustomFailureHandler;
  import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
  import org.springframework.context.annotation.Bean;
  import org.springframework.context.annotation.Configuration;
@@ -22,7 +23,7 @@
 		 // "/login", "/join", "/joinProc 에는 인증 없이 접근 가능하도록 - permitAll()
  		http
  			.authorizeHttpRequests((auth) -> auth
- 				.requestMatchers("/login","/join", "/joinProc").permitAll()
+ 				.requestMatchers("/login","/join", "/joinProc", "/loginProc").permitAll()
  				.requestMatchers("/admin").hasAuthority("ADMIN")
  				//                        .requestMatchers("/my/**").hasAnyRole("ADMIN", "USER")
 
@@ -36,6 +37,8 @@
  				.loginProcessingUrl("/loginProc")
 					.defaultSuccessUrl("/")
  				.usernameParameter("email")
+				.passwordParameter("password")
+				.failureHandler(customFailureHandler())
  				.permitAll()
  			)
 			.logout(auth -> auth.logoutSuccessUrl("/login") // 로그아웃 설정
@@ -59,6 +62,11 @@
  	public BCryptPasswordEncoder bCryptPasswordEncoder() {
  		return new BCryptPasswordEncoder();
  	}
+	 @Bean
+	 public CustomFailureHandler customFailureHandler() {
+		 return new CustomFailureHandler();
+	 }
+
 
  }
 

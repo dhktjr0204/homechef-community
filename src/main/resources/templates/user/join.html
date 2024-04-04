@@ -8,20 +8,19 @@
 <body>
 <div class="form-container">
     <h1 class="center-layout">Cook Log</h1>
-    <form action="/joinProc" method="post">
+    <form action="/joinProc" method="post" id="joinForm">
 
         <div class="center-layout">
-            <input type="text" name="nickname" placeholder="id" class="input-container"/>
+            <input type="text" name="nickname" id="nickname" placeholder="id" class="input-container"/>
         </div>
 
         <div class="center-layout">
-            <input type="email" name="email" placeholder="Email" class="input-container" />
+            <input type="email" name="email" id="email" placeholder="Email" class="input-container" />
         </div>
 
         <div class="center-layout">
-            <input type="password" name="password" placeholder="Password" class="input-container"/>
+            <input type="password" name="password" id="password" placeholder="Password" class="input-container"/>
         </div>
-
 
         <div class="height-size-box"></div>
         <hr class="line-layout">
@@ -29,7 +28,7 @@
 
         <div class="center-layout">
             <div class="block-layout">
-                <button type="submit" id="signup-button-container" >
+                <button type="button" id="signup-button-container" onclick="formSubmit();">
                     <p id="signup-button-text">
                         회원가입
                     </p>
@@ -39,4 +38,24 @@
     </form>
 </div>
 </body>
+<script>
+    function formSubmit() {
+        const formData = new FormData(document.querySelector('#joinForm'));
+        fetch('/joinProc', { method: 'POST', body: formData
+        }).then(response => {
+            if (!response.ok) {
+                return response.text().then(msg => {
+                    if (response.status === 400) {
+                        alert(msg);
+                        throw new Error(msg);
+                    }
+                });
+            } else {
+                location.href="/login";
+            }
+        }).catch(error => {
+            console.error(error);
+        });
+    }
+</script>
 </html>

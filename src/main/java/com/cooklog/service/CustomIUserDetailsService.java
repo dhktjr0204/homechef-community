@@ -6,6 +6,7 @@ import com.cooklog.exception.user.NotValidateUserException;
 import com.cooklog.model.User;
 import com.cooklog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,9 +24,7 @@ public class CustomIUserDetailsService implements UserDetailsService {
     private final ImageService imageService;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-//        return userRepository.findByEmail(email)
-//                .orElseThrow(() -> new IllegalArgumentException(email));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException, DisabledException {
 
         User userData = userRepository.findByEmail(email);
 
@@ -34,7 +33,8 @@ public class CustomIUserDetailsService implements UserDetailsService {
         }
 
         if (userData.isDeleted()) {
-            throw new UsernameNotFoundException("탈퇴한 회원: " + userData.getNickname());
+            // 탈퇴 회원 계정 비활성화
+            throw new DisabledException(userData.getNickname());
         }
 
         // 시큐리티 세션에 유저 정보 저장

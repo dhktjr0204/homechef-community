@@ -59,7 +59,6 @@ public class MyPageController {
         // 팔로우한 갯수 가져오기
         MyPageFollowCountDTO followCountDTO = userService.getFollowCountDTO(id, loginUserDTO.getIdx());
 
-
         // 사용자가 작성한 게시물 리스트 가져오기
         List<MyPageDTO> myPageDTOS = userService.getBoardByUserId(id);
         UserDTO userDTO = userService.getUserDTO(id);
@@ -117,16 +116,6 @@ public class MyPageController {
 
         return ResponseEntity.ok("/");
     }
-
-
-//    // 회원 정보 수정 폼
-//    @PutMapping("/edit")
-//    public ResponseEntity<String> edit(@RequestParam("userIdx") Long userIdx,
-//                                       @ResponseBody UserUpdateRequestDTO userUpdateRequestDTO) {
-//
-//        userService.updateUserProfile(userIdx, userUpdateRequestDTO);
-//        return ResponseEntity.ok("/myPage/edit");
-//    }
 
     @GetMapping("/bookmark")
     public ResponseEntity<?> getMyBookmarks() {

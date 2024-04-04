@@ -3,6 +3,7 @@ package com.cooklog.service;
 
 import com.cooklog.dto.*;
 
+import com.cooklog.exception.user.AlreadyExistsEmailException;
 import com.cooklog.exception.user.NotValidateUserException;
 import com.cooklog.repository.BoardRepository;
 
@@ -44,7 +45,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void joinSave(JoinDTO joinDTO) {
         if (userRepository.existsByEmail(joinDTO.getEmail())) {
-            return; // 이미 가입된 이메일인 경우 메서드 종료
+            throw new AlreadyExistsEmailException(); // 이메일이 존재하는 경우 예외 던짐
         }
 
         User user = User.builder()
@@ -139,7 +140,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUserDeleted(Long userIdx) {
         User user = userRepository.findById(userIdx)
-                .orElseThrow(() -> new IllegalArgumentException("해당 userId가 없습니다."));
+                .orElseThrow(() -> new UsernameNotFoundException("해당 사용자는 존재하지 않습니다."));
         user.deleted(userIdx);
 
         userRepository.save(user);
@@ -149,7 +150,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Long getNumberOfBoardByUserId(Long userIdx) {
 
-        User user = userRepository.findById(userIdx).orElseThrow(() -> new IllegalArgumentException("해당 게시글은 존재하지 않는 게시글입니다."));
+        User user = userRepository.findById(userIdx).orElseThrow(() -> new UsernameNotFoundException("해당 사용자는 존재하지 않습니다."));
 
         return boardRepository.countBoardByUserIdx(userIdx);
     }
