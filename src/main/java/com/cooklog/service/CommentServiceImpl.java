@@ -1,7 +1,6 @@
 package com.cooklog.service;
 
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,7 +13,7 @@ import com.cooklog.model.Comment;
 
 import jakarta.persistence.Version;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,15 +21,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.cooklog.dto.CommentDTO;
 import com.cooklog.model.User;
 import com.cooklog.repository.BoardRepository;
 import com.cooklog.repository.CommentRepository;
 import com.cooklog.repository.UserRepository;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -111,7 +107,7 @@ public class CommentServiceImpl implements CommentService {
 		User user = userRepository.findById(commentDTO.getUserId())
 			.orElseThrow(() -> new RuntimeException("User not found"));
 		// 대댓글인 경우 parentCommentId를 DTO에서 받아오고, 그렇지 않은 경우 0을 설정
-		Long parentCommentId = commentDTO.getParentCommentId() != null ? commentDTO.getParentCommentId() : null;
+		Long parentCommentId = commentDTO.getParentCommentId() != null ? commentDTO.getParentCommentId() : 0L;
 		Comment newComment = new Comment();
 		newComment.setBoard(board);
 		newComment.setUser(user);

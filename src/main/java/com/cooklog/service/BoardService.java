@@ -18,9 +18,9 @@ public interface BoardService {
     Page<BoardDTO> getAllBoard(Pageable pageable, Long userId, Long lastBoardId, String sortType);
     Page<BoardDTO> getAllBoardWithFollow(Pageable pageable, Long userId, Long lastBoardId);
 
-    Board save(Long userId, BoardCreateRequestDTO requestDTO, List<MultipartFile> images) throws IOException;
+    Board save(Long userId, BoardCreateRequestDTO requestDTO, List<MultipartFile> images);
 
-    Board updateBoard(Long boardId, BoardUpdateRequestDTO boardUpdateRequestDTO, List<String> originalFiles, List<MultipartFile> newFiles) throws IOException;
+    Board updateBoard(Long boardId, BoardUpdateRequestDTO boardUpdateRequestDTO, List<String> originalFiles, List<MultipartFile> newFiles);
 
     void updateReadCnt(Long boardId);
 
@@ -30,9 +30,9 @@ public interface BoardService {
 
     List<BoardDTO> findAllBoards();
 
-    Page<BoardDTO> getSearchByText(String keyword, Long userId, Pageable pageable);
+    Page<BoardDTO> getSearchByText(String keyword, Long userId, Long lastBoardId, Pageable pageable);
 
-    Page<BoardDTO> findBoardsByTags(String tags, Long userId, Pageable pageable);
+    Page<BoardDTO> findBoardsByTags(String tags, Long userId, Long lastBoardId, Pageable pageable);
 
     List<BoardDTO> findBoardsByUserId(Long userId);
 }

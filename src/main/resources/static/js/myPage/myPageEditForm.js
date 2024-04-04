@@ -51,6 +51,13 @@ function clickCancelButton() {
 function clickSubmitButton() {
     const userId = document.querySelector('.user-name-input').getAttribute("value");
 
+    const nickname=document.querySelector('.user-name-input').value.trim();
+
+    if(nickname.length===0){
+        alert("ID를 입력해주세요.");
+        return;
+    }
+
     const formData = new FormData(document.querySelector('.profile-edit-form'));
 
     const profileImage = document.querySelector('.profile-image img');

@@ -7,12 +7,15 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -43,5 +46,12 @@ public class BoardDTO {
     public BoardDTO(Board board,Long userIdx) {
         this.id = board.getId();
         //this.imageNames = ??
+    }
+
+    public BoardDTO(Long id, String content, String nickname, LocalDateTime createdAt) {
+        this.id = id;
+        this.content = content;
+        this.userNickname = nickname;
+        this.createdAt = createdAt;
     }
 }

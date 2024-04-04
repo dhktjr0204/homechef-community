@@ -24,6 +24,7 @@ function clickUserQuitButton(){
     }
 }
 
+
 function clickFollowButton(event) {
     let button = event.target; // 현재 클릭된 버튼
     let userInfo = button.closest('.follow-button-container'); // 버튼의 상위 컨테이너 찾기
@@ -106,5 +107,12 @@ function clickButton(event) {
     .catch(error => {
         console.error('Error:', error);
     });
+}
+
+
+
+function clickBoardImage(button){
+    const boardId=button.getAttribute("value");
+    location.href="/board/"+boardId;
 }
 

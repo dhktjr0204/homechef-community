@@ -69,7 +69,7 @@
     <section class="board-list-container">
         <ul class="board-list">
             <li th:each="board: ${boards}">
-                    <img th:value="${board.id}" th:src="${board.imageUrl}" href="게시물 미리보기 이미지" class="image-item">
+                    <img th:value="${board.id}" th:src="${board.imageUrl}" href="게시물 미리보기 이미지" class="image-item" onclick="clickBoardImage(this)">
             </li>
         </ul>
         <div th:if="${boards.isEmpty()}" class="no-content-container">

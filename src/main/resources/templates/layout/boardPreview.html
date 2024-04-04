@@ -14,7 +14,7 @@
         <div class="options-menu">
             <ul>
                 <li th:unless="${currentLoginUser.idx} eq ${board.userId}">
-                    <button class="report-button">신고</button>
+                    <button class="report-button" th:attr="data-board-id=${board.id}">신고</button>
                 </li>
                 <li>
                     <button class="go-to-board-button" onclick="clickGoToBoard(this)">게시물로 이동</button>
@@ -30,7 +30,7 @@
     </header>
     <section class="image-container">
         <button th:if="${board.imageUrls.size()}>1" class="prev-btn"
-                th:onclick="'prevSlide(' + ${board.id} + ', this)'">&#10094;</button>
+        th:onclick="'prevSlide(' + ${board.id} + ', this)'">&#10094;</button>
         <div class="slider-container">
             <ul class="image-list">
                 <li th:each="image: ${board.imageUrls}">
@@ -40,7 +40,7 @@
             </ul>
         </div>
         <button th:if="${board.imageUrls.size()}>1" class="next-btn"
-                th:onclick="'nextSlide(' + ${board.id} + ', this)'">&#10095;</button>
+        th:onclick="'nextSlide(' + ${board.id} + ', this)'">&#10095;</button>
     </section>
 
     <pre class="content" th:text="${board.content}"></pre>
@@ -69,16 +69,16 @@
         <section class="user-comment">
             <div>
                 <a class="comment-writer-name" th:text="${comments[__${boardIndex.index}__].userName}"
-                   th:value="${comments[__${boardIndex.index}__].userId}"></a>
+                th:value="${comments[__${boardIndex.index}__].userId}"></a>
                 <p class="comment-content" th:text="${comments[__${boardIndex.index}__].content}"></p>
             </div>
             <time class="comment-created-at"
-                  th:text="${#temporals.format(comments[__${boardIndex.index}__].createdAt,'yyyy-MM-dd')}"></time>
+            th:text="${#temporals.format(comments[__${boardIndex.index}__].createdAt,'yyyy-MM-dd')}"></time>
         </section>
         <nav>
             <a th:href="@{'/board/' + ${board.id}}">
                 <button class="view-comments"
-                        th:text="'댓글 '+${comments[__${boardIndex.index}__].contentCount}+'개 모두 보기'"></button>
+                th:text="'댓글 '+${comments[__${boardIndex.index}__].contentCount}+'개 모두 보기'"></button>
             </a>
         </nav>
     </article>

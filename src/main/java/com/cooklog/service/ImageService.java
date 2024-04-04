@@ -11,10 +11,10 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ImageService {
-	List<String> fileListWrite(List<MultipartFile> file, Board board) throws IOException;
-    List<String> fileListLoad(List<String> fileNames) throws FileNotFoundException;
-    String fileWrite(MultipartFile file, Long userId) throws IOException;
-    String fileLoad(String fileName) throws FileNotFoundException;
+	List<String> fileListWrite(List<MultipartFile> file, Board board);
+    List<String> fileListLoad(List<String> fileNames);
+    String fileWrite(MultipartFile file, Long userId);
+    String fileLoad(String fileName);
     void deleteS3(String fileName);
-    void updateFileList(Board board, List<String> originalFiles, List<MultipartFile> newFiles) throws IOException;
+    void updateFileList(Board board, List<String> originalFiles, List<MultipartFile> newFiles);
 }

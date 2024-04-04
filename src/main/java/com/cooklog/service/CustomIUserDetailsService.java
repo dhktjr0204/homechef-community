@@ -61,13 +61,7 @@ public class CustomIUserDetailsService implements UserDetailsService {
     public UserDTO getCurrentUserDTO() {
         User user = isValidCurrentUser();
 
-        String profileUrl = null;
-        try {
-            profileUrl = imageService.fileLoad(user.getProfileImage());
-        } catch (FileNotFoundException e) {
-            profileUrl="";
-        }
-
+        String profileUrl = imageService.fileLoad(user.getProfileImage());
 
         return UserDTO.builder()
                 .idx(user.getIdx())
