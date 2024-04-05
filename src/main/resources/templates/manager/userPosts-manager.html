@@ -30,7 +30,12 @@
             </thead>
             <tbody>
             <tr th:each="post : ${posts}">
-                <td th:text="${post.content}"></td>
+                <td>
+                    <!-- 게시물인 경우 -->
+                    <a th:if="${post.isBoard}" th:href="@{/board/{postId}(postId=${post.id})}" th:text="${post.content}"></a>
+                    <!-- 댓글인 경우 -->
+                    <span th:unless="${post.isBoard}" th:text="${post.content}"></span>
+                </td>
                 <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
                 <td th:text="${post.isBoard ? '게시물' : '댓글'}"></td>
             </tr>

@@ -35,8 +35,8 @@
                 <td th:text="${info.getReportCount()}"></td>
                 <td th:text="${info.isBlacklisted() ?'블랙 리스트' : '일반 유저'}"></td>
                 <td>
-                    <button class="block-btn" th:data-id="${info.userId}" onclick="addToBlacklist(this.getAttribute('data-id'))">등록</button>
-                    <button class="block-btn" th:data-id="${info.userId}" onclick="removeFromBlacklist(this.getAttribute('data-id'))">해제</button>
+                    <button class="block-btn add-to-blacklist" th:data-id="${info.userId}">등록</button>
+                    <button class="block-btn remove-from-blacklist" th:data-id="${info.userId}">해제</button>
                 </td>
             </tr>
             </tbody>
@@ -44,27 +44,5 @@
     </div>
 </div>
 </body>
-<script>
-    function addToBlacklist(userId) {
-        fetch('/manager/blacklist/add/' + userId, { method: 'POST' })
-            .then(response => {
-                if (response.ok) {
-                    alert('블랙리스트에 추가되었습니다.');
-                    window.location.reload();
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    }
-
-    function removeFromBlacklist(userId) {
-        fetch('/manager/blacklist/remove/' + userId, { method: 'POST' })
-            .then(response => {
-                if (response.ok) {
-                    alert('블랙리스트가 해제되었습니다.');
-                    window.location.reload();
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    }
-</script>
+<script th:src="@{/js/manager/manager.js}"></script>
 </html>

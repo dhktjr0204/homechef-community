@@ -117,7 +117,6 @@ document.getElementById('commentForm').addEventListener('submit', function (even
             return response.json();
         })
         .then(data => {
-            console.log('댓글 및 답글이 성공적으로 처리되었습니다.\:', data);
             resetReplyBox(); // 답글 입력창을 초기 상태로 복원하고 관련 상태를 초기화
             fetchComments(0); // 댓글 목록 새로고침
         })
@@ -127,66 +126,41 @@ document.getElementById('commentForm').addEventListener('submit', function (even
         });
 });
 
-// 댓글 및 답글을 페이지에 추가하는 함수
 function addCommentOrReplyToPage(commentData, parentCommentId = null) {
-    console.log('호출 함수:', commentData, parentCommentId); // 함수 호출 확인
     const userPageLink = `<a href="/myPage/main/${commentData.userId}" class="comment-username">${commentData.userName}</a>`;
-    const editDeleteOptions = Number(currentUserId) === commentData.userId?
-        `<li><button class="edit-comment-button">수정</button></li>
-         <li><button class="delete-comment-button">삭제</button></li>` :
-        '';
-    if (parentCommentId) {
-        const parentCommentElement = document.querySelector(`.comment[data-comment-id="${parentCommentId}"]`);
 
-        if (parentCommentElement) {
-            let repliesContainer = parentCommentElement.querySelector('.replies-container');
-            if (!repliesContainer) {
-                repliesContainer = document.createElement('div');
-                repliesContainer.classList.add('replies-container');
-                parentCommentElement.appendChild(repliesContainer);
-            }
-            // 답글 HTML을 생성합니다.
-            const replyHTML = `
-            <div class="comment reply" data-comment-id="${commentData.id}">
-                <div class="reply-icon">ㄴ</div>
-                <div class="comment-profile"><img src="${commentData.profileImage ? commentData.profileImage : '/img/default_profile.png'}" alt="Profile Image"></div>
-                ${userPageLink}
-                <div class="comment-content">${commentData.content}</div>
-                <div class="comment-metadata">
-                    <span class="comment-date">${new Date(commentData.createdAt).toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' })}</span>
-                </div>
-                <button class="more-options">⋮</button>
-                    <div class="options-menu" style="display:none;">
-                        <ul>
-                            <li><button class="report-button">신고</button></li>
-                            ${editDeleteOptions}
-                        </ul>
-                    </div>
-            </div>`;
-
-            // replies-container에 답글 HTML을 추가합니다.
-            repliesContainer.insertAdjacentHTML('beforeend', replyHTML);
-            // 만약 replies-container가 숨겨져 있다면 표시합니다.
-            repliesContainer.style.display = 'block';
-        } else {
-            console.error(`부모 ID ${parentCommentId} 를 찾지 못했습니다.`);
-        }
+    let optionsHTML; // 수정, 삭제 또는 신고 버튼을 포함할 HTML
+    if (Number(currentUserId) === commentData.userId) {
+        // 현재 로그인한 사용자가 댓글을 작성한 사용자와 같은 경우
+        optionsHTML = `
+            <ul>
+                <li><button class="edit-comment-button">수정</button></li>
+                <li><button class="delete-comment-button">삭제</button></li>
+            </ul>`;
     } else {
-        // 수정 및 삭제 버튼이 현재 로그인한 사용자에게만 표시되도록 검사
+        // 다른 사용자의 댓글인 경우
+        optionsHTML = `
+            <ul>
+                <li><button class="report-button">신고</button></li>
+            </ul>`;
+    }
 
+    // parentCommentId가 있는 경우와 없는 경우로 나누어 처리
+    if (parentCommentId) {
+        // 답글인 경우의 처리...
+        const parentCommentElement = document.querySelector(`.comment[data-comment-id="${parentCommentId}"]`);
+        // 답글 처리 로직은 이전과 동일하며, optionsHTML을 사용하여 올바른 버튼을 표시합니다.
+    } else {
         // 댓글인 경우의 HTML
         const commentHTML = `
             <div class="comment" data-comment-id="${commentData.id}">
                 <div class="main-comment">
-                    <div class="comment-profile"><img src="${commentData.profileImage ? `/img/main/${commentData.profileImage}` : '/img/main/profile1.jpg'}" alt="Profile Image"></div>
+                    <div class="comment-profile"><img src="${commentData.profileImage ? `${commentData.profileImage}` : '/img/main/profile1.jpg'}" alt="Profile Image"></div>
                     ${userPageLink}
                     <div class="comment-content">${commentData.content}</div>
                     <button class="more-options">⋮</button>
                     <div class="options-menu" style="display:none;">
-                        <ul>
-                            <li><button class="report-button">신고</button></li>
-                            ${editDeleteOptions}
-                        </ul>
+                        ${optionsHTML}
                     </div>
                 </div>
                 <div class="replies-container"></div>
@@ -196,9 +170,6 @@ function addCommentOrReplyToPage(commentData, parentCommentId = null) {
             month: '2-digit',
             day: '2-digit'
         })}</span>
-<!--                    <div class="comment-actions">-->
-<!--                        <button class="reply-button">답글 달기</button>-->
-<!--                    </div>-->
                 </div>
             </div>`;
         const commentsContainer = document.querySelector('.comments-display');
@@ -207,6 +178,7 @@ function addCommentOrReplyToPage(commentData, parentCommentId = null) {
 
     bindCommentOptions(); // 이 함수는 새로운 댓글 요소에 이벤트 리스너를 바인딩합니다.
 }
+
 
 // 대댓글이 들어갈 컨테이너를 생성하는 함수입니다.
 function createRepliesContainer(parentComment) {

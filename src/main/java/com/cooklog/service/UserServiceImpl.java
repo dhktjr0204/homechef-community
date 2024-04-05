@@ -15,7 +15,13 @@ import com.cooklog.repository.BookmarkRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Scheduled;
+
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,19 +30,24 @@ import com.cooklog.model.Role;
 import com.cooklog.model.User;
 import com.cooklog.repository.UserRepository;
 
+
+import java.io.FileNotFoundException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public
+class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final BoardRepository boardRepository;
     private final BookmarkRepository bookmarkRepository;
     private final BCryptPasswordEncoder encoder;
     private final BlacklistRepository blacklistRepository;
+    private final JavaMailSender mailSender;
 
     // JoinDTO 객체를 받아 사용자 정보를 추가(저장)하는 메서드
     @Override
@@ -84,13 +95,20 @@ public class UserServiceImpl implements UserService {
         user.setRole(role);
         userRepository.save(user);
 
-        // 사용자의 역할이 BLACK으로 변경되는 경우에만 Black 테이블에 추가
-        if (role == Role.BLACK) {
-            Blacklist black = new Blacklist();
-            black.setUser(user); // Black 엔터티에 User 설정
-            blacklistRepository.save(black); // Black 엔터티 저장
+        // 이미 블랙리스트에 등록된 상태인지 확인
+        boolean isAlreadyBlacklisted = blacklistRepository.existsByUser(user);
+        if (role == Role.BLACK && !isAlreadyBlacklisted) {
+            // 블랙리스트에 추가
+            Blacklist blacklist = new Blacklist();
+            blacklist.setUser(user);
+            blacklistRepository.save(blacklist);
+        } else if (role != Role.BLACK && isAlreadyBlacklisted) {
+            // 블랙리스트에서 제거
+            blacklistRepository.deleteByUser(user);
         }
     }
+
+
 
     // 사용자 탈퇴 유무 업데이트 후 저장
     @Override
@@ -118,5 +136,39 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user); // 변경된 사용자 정보 저장
         });
     }
+
+    @Scheduled(cron = "0 0 1 * * ?") // 매일 새벽 1시에 실행(초,분,시,일,월,요일)
+    @Transactional
+    public void removeExpiredBlacklists() {
+        LocalDateTime thirtyDaysAgo = LocalDateTime.now().minusDays(30);
+        List<Blacklist> expiredBlacklists = blacklistRepository.findByCreatedAtBefore(thirtyDaysAgo);
+
+        for (Blacklist expiredBlacklist : expiredBlacklists) {
+            User user = expiredBlacklist.getUser();
+            user.setRole(Role.USER); // 사용자 역할을 USER로 업데이트
+            user.setReportCount(0); // 신고 횟수를 0으로 초기화
+            userRepository.save(user); // 역할 업데이트를 위해 사용자 정보 저장
+
+            blacklistRepository.delete(expiredBlacklist);
+        }
+    }
+    // @Scheduled(fixedRate = 60000) // 매 1분마다 실행 // 시연용 테스트 코드
+    // public void removeExpiredBlacklistEntries() {
+    //     List<Blacklist> blacklists = blacklistRepository.findAll();
+    //     LocalDateTime now = LocalDateTime.now();
+    //
+    //     for (Blacklist blacklist : blacklists) {
+    //         // 블랙리스트에 추가된 후 1분이 지났는지 확인
+    //         if (Duration.between(blacklist.getCreatedAt(), now).toMinutes() >= 1) {
+    //             User user = blacklist.getUser();
+    //             user.setRole(Role.USER); // 사용자 역할을 USER로 업데이트
+    //             user.setReportCount(0); // 신고 횟수를 0으로 초기화
+    //             userRepository.save(user); // 역할 업데이트를 위해 사용자 정보 저장
+    //
+    //             blacklistRepository.delete(blacklist); // 블랙리스트에서 제거
+    //             System.out.println("블랙리스트에서 사용자가 해제되었습니다: " + blacklist.getUser().getNickname());
+    //         }
+    //     }
+    // }
 }
 
