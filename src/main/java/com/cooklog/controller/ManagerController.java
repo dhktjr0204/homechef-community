@@ -44,8 +44,8 @@ public class ManagerController {
 
 	@GetMapping("/main")
 	public String userProfile(Model model) {
-		// 예시로 1번 ID 사용자 정보를 조회
-		UserDTO userDto = userService.findUserById(1L);
+		// 예시로 11번 ID 사용자 정보를 조회. 나중에 다시 만들때 운영자부터 만들어 1번 한개만 사용.
+		UserDTO userDto = userService.findUserById(11L);
 
 		if (userDto != null) {
 			model.addAttribute("user", userDto);
