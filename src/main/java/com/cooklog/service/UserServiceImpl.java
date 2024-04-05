@@ -86,40 +86,82 @@ class UserServiceImpl implements UserService {
         List<UserDTO> userDTOs = new ArrayList<>();
 
         for (User user : users) {
-            int postCount = userRepository.countPostsByUserId(user.getIdx());
-            int likesCount = userRepository.sumLikesByUserId(user.getIdx());
-
-            Role currentRole = user.getRole();
-            boolean upgraded = false;
-
-            if (currentRole.equals(Role.USER) && postCount >= 5) {
-                currentRole = Role.USER2;
-                upgraded = true;
-            } else if (currentRole.equals(Role.USER2) && likesCount >= 30) {
-                currentRole = Role.USER3;
-                upgraded = true;
-            }
-
-            if (upgraded) {
-                user.setRole(currentRole);
-                userRepository.save(user); // 변경된 등급을 데이터베이스에 저장
-            }
-
-            userDTOs.add(new UserDTO(
+            // User 엔티티를 UserDTO로 변환
+            UserDTO userDTO = new UserDTO(
                 user.getIdx(),
                 user.getNickname(),
                 user.getEmail(),
                 user.getIntroduction(),
-                currentRole,
+                user.getRole(),
                 user.getReportCount(),
                 user.isDeleted(),
-                postCount,
-                likesCount
-            ));
+                userRepository.countPostsByUserId(user.getIdx()), // 게시글 수
+                userRepository.sumLikesByUserId(user.getIdx()) // 좋아요 수
+            );
+            userDTOs.add(userDTO);
         }
 
         return userDTOs;
     }
+    //등급 상승 조건에 만족하는 사람들 체크.
+    public void checkAndUpgradeUserRank(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        int postCount = userRepository.countPostsByUserId(user.getIdx());
+        int likesCount = userRepository.sumLikesByUserId(user.getIdx());
+
+        Role currentRole = user.getRole();
+        boolean upgraded = false;
+
+        if (currentRole.equals(Role.USER) && postCount >= 5) {
+            currentRole = Role.USER2;
+            upgraded = true;
+        } else if (currentRole.equals(Role.USER2) && likesCount >= 10) {
+            currentRole = Role.USER3;
+            upgraded = true;
+        }
+
+        if (upgraded) {
+            user.setRole(currentRole);
+            userRepository.save(user);
+        }
+    }
+
+    //등급 하락 조건에 맞는 사람들 체크
+    public void checkAndDowngradeUserRank(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        int postCount = userRepository.countPostsByUserId(user.getIdx());
+        int likesCount = userRepository.sumLikesByUserId(user.getIdx());
+
+        Role currentRole = user.getRole();
+        boolean downgraded = false;
+
+        // 강등 조건
+        if (currentRole.equals(Role.USER3) && (postCount < 5 || likesCount < 10)) {
+            currentRole = Role.USER2;
+            downgraded = true;
+        } else if (currentRole.equals(Role.USER2) && postCount < 5) {
+            currentRole = Role.USER;
+            downgraded = true;
+        }
+
+        if (downgraded) {
+            user.setRole(currentRole);
+            userRepository.save(user);
+        }
+    }
+    
+    // 매시 정각에(서버 시간대 기준)에 실행되는 스케줄러 메서드
+    @Scheduled(cron = "0 0 * * * ?")
+    public void upgradeUserRoles() {
+        List<User> users = userRepository.findAll();
+        for (User user : users) {
+            checkAndUpgradeUserRank(user.getIdx());
+            checkAndDowngradeUserRank(user.getIdx());
+        }
+    }
+
 
     @Override
     @Transactional
