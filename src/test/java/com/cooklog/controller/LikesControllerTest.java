@@ -33,9 +33,6 @@ class LikesControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @InjectMocks
-    private LikesController likesController;
-
     //WebMvcTest,SpringBootTest와 같이 Spring컨텍스트를 로드하는 테스트에서는 @MockBean사용
     @MockBean
     private LikesService likesService;
