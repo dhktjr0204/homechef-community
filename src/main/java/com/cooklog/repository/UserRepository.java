@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.cooklog.model.User;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,4 +29,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "set nickname = :nickname, introduction = :introduction, profile_image = :saveImagename " +
             "where idx = :userId", nativeQuery = true)
     void updateProfile(Long userId, String nickname, String introduction, String saveImagename);
+
+    @Query("SELECT COUNT(b) FROM Board b WHERE b.user.idx = :userId")
+    int countPostsByUserId(@Param("userId") Long userId);
+
+    @Query("SELECT COALESCE(SUM(b.likesCount), 0) FROM Board b WHERE b.user.idx = :userId")
+    int sumLikesByUserId(@Param("userId") Long userId);
 }
