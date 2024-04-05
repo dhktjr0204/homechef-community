@@ -22,19 +22,17 @@
                         <span th:text="${boards.size()}"></span>
                     </div>
                     <div class="follower-count">
-                        <a class="count-name" th:href="@{/api/users/{userIdx}/follower(userIdx=${user.idx})}">팔로워</a>
+                        <a class="count-name" th:href="@{/user/{targetUserIdx}/follower(targetUserIdx=${user.idx})}">팔로워</a>
                         <span th:text="${followCount.getFollowerCount()}">10</span>
                     </div>
                     <div class="following-count">
-                        <a class="count-name" th:href="@{/api/users/{userIdx}/following(userIdx=${user.idx})}">팔로잉</a>
+                        <a class="count-name" th:href="@{/user/{targetUserIdx}/following(targetUserIdx=${user.idx})}">팔로잉</a>
                         <span th:text="${followCount.getFollowingCount()}">10</span>
                     </div>
                 </div>
                 <div class="follow-button-container">
                     <!--만약 팔로우된 사람이면 언팔로우로 표시, 팔로우 안된 사람이면 팔로우로 표시-->
                     <th:block th:unless="${currentLoginUser.idx}==${user.idx}">
-<!--                        <button th:class="${followCount.isFollow eq 0} ? 'follow-button':'hidden'" class="follow-button" onclick="clickFollowButton(event)"  th:data-userid="${user.idx}" th:data-currentid="${currentLoginUser.idx}">팔로우</button>-->
-<!--                        <button th:class="${followCount.isFollow eq 0} ? 'hidden':'un-follow-button'" class="un-follow-button"  onclick="clickUnFollowButton(event)" th:data-userid="${user.idx}" th:data-currentid="${currentLoginUser.idx}">언팔로우</button>-->
                         <button th:class="${followCount.isFollow == 0 ? 'follow-button' : 'un-follow-button'}"
                                 onclick="clickButton(event)"
                                 th:data-userid="${user.idx}"

@@ -102,6 +102,10 @@ function clickButton(event) {
                 button.classList.add('un-follow-button');
                 button.textContent = '언팔로우';
             }
+        } else {
+            response.text().then(text => {
+                alert(text);
+            });
         }
     })
     .catch(error => {

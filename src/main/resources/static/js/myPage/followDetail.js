@@ -21,6 +21,10 @@ function clickButton(event) {
         button.classList.add('un-follow-button');
         button.textContent = '팔로잉';
       }
+    } else {
+      response.text().then(text => {
+        alert(text);
+      });
     }
   })
   .catch(error => {
