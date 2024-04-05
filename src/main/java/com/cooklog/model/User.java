@@ -67,13 +67,6 @@ public class User {
 		this.profileImage = profileImage;
 	}
 
-	public void update(String nickname, String introduction, String profileImage) {
-		this.nickname = nickname;
-		this.introduction = introduction;
-		this.profileImage=profileImage;
-	}
-
-
 	public void deleted(Long idx) {
 		this.idx = idx;
 		this.isDeleted = true; // tinyint 라서 true=1

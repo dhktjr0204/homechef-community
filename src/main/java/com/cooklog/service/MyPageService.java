@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface MyPageService {
-    void updateUserProfile(Long userId, MyPageUpdateRequestDTO myPageUpdateRequestDTO, MultipartFile newImageFile);
+    void updateUserProfile(UserDTO loginUserDTO, MyPageUpdateRequestDTO myPageUpdateRequestDTO, MultipartFile newImageFile);
     // 사용자가 작성한 게시물 리스트를 가져오는 메소드
     List<MyPageDTO> getBoardByUserId(Long userIdx);
 

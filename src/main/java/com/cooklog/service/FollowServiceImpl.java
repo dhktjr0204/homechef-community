@@ -10,7 +10,11 @@ import com.cooklog.exception.user.NotValidateUserException;
 import com.cooklog.model.Follow;
 import com.cooklog.model.User;
 import com.cooklog.repository.UserRepository;
+
+import java.io.FileNotFoundException;
+
 import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,9 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class FollowServiceImpl implements FollowService {
 
-	private final FollowRepository followRepository;
-	private final UserRepository userRepository;
-	private final ImageService imageService;
+    private final FollowRepository followRepository;
+    private final UserRepository userRepository;
+    private final ImageService imageService;
 
 	//팔로우
 	@Transactional
@@ -76,16 +80,6 @@ public class FollowServiceImpl implements FollowService {
 		return followPage.map(FollowDTO::new);
 	}
 
-	//targetUser의 followerList를 찾는다
-	@Override
-	public Page<FollowDTO> getFollowerListByUserIdx(Long targetUserIdx, Pageable pageable) {
-		User targetUser = validateUser(targetUserIdx);
-
-		Page<Follow> followingPage = followRepository.findByFollowingId(targetUser.getIdx(),pageable);
-
-		return followingPage.map(FollowDTO::new);
-	}
-
 	//targetUser의 followingList를 찾는데, currentUser가 이미 팔로우 한 사람들의 정보도 포함
 	@Override
 	public Page<FollowDTO> getFollowingListWithFollowStatus(Long targetUserIdx, UserDTO currentUser,Pageable pageable) {
@@ -99,16 +93,14 @@ public class FollowServiceImpl implements FollowService {
 
 			profileUrl = imageService.fileLoad(followDTO.getFollowingUserProfileImage());
 
-			followDTO.setFollowingUserProfileImage(profileUrl);
-		}
 
-		if(followingList.isEmpty()) {
-			return Page.empty();
-		}
+        if (followingList.isEmpty()) {
+            return Page.empty();
+        }
 
-		return followingList;
-	}
-
+        return followingList;
+    }
+  
 	//targetUser의 followerList를 찾는데, currentUser가 이미 팔로우 한 사람들의 정보도 포함
 	@Override
 	public Page<FollowDTO> getFollowerListWithFollowStatus(Long targetUserIdx,UserDTO currentUser, Pageable pageable) {
@@ -122,17 +114,18 @@ public class FollowServiceImpl implements FollowService {
 
 			profileUrl = imageService.fileLoad(followDTO.getFollowerUserProfileImage());
 
-			followDTO.setFollowerUserProfileImage(profileUrl);
-		}
 
-		if(followerList.isEmpty()) {
-			return Page.empty();
-		}
+            followDTO.setFollowerUserProfileImage(profileUrl);
+        }
 
-		return followerList;
-	}
+        if (followerList.isEmpty()) {
+            return Page.empty();
+        }
 
-	private User validateUser(Long userIdx) {
-		return userRepository.findById(userIdx).orElseThrow(NotValidateUserException::new);
-	}
+        return followerList;
+    }
+
+    private User validateUser(Long userIdx) {
+        return userRepository.findById(userIdx).orElseThrow(NotValidateUserException::new);
+    }
 }

@@ -168,6 +168,10 @@ public class BoardServiceImpl implements BoardService {
         User user = userRepository.findById(userId)
                 .orElseThrow(NotValidateUserException::new);
 
+        if (images == null || images.isEmpty()) {
+            throw new NoImageException();
+        }
+
         Board boardBuilder = Board.builder()
                 .user(user)
                 .content(requestDTO.getContent())
@@ -177,9 +181,6 @@ public class BoardServiceImpl implements BoardService {
 
         tagService.save(requestDTO.getTags(), board);
 
-        if (images == null || images.isEmpty()) {
-            throw new NoImageException();
-        }
 
         imageService.fileListWrite(images, board);
 
@@ -191,6 +192,11 @@ public class BoardServiceImpl implements BoardService {
     public Board updateBoard(Long boardId, BoardUpdateRequestDTO boardDTO, List<String> originalFiles, List<MultipartFile> newFiles) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(BoardNotFoundException::new);
+
+        //수정 시 이미지가 1장도 첨부 안돼있을 경우
+        if (originalFiles == null && newFiles == null) {
+            throw new NoImageException();
+        }
 
         board.update(boardDTO.getContent());
 
@@ -204,10 +210,6 @@ public class BoardServiceImpl implements BoardService {
             }
         }
 
-        //수정 시 이미지가 1장도 첨부 안돼있을 경우
-        if (originalFiles == null && newFiles == null) {
-            throw new NoImageException();
-        }
 
         imageService.updateFileList(board, originalFiles, newFiles);
 

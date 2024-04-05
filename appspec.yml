@@ -1,0 +1,39 @@
+# AppSpec 파일의 버전을 정의한다.
+version: 0.0
+#배포 대상 운영 체제 정의
+os: linux
+
+#배포 파일과 대상 디렉터리를 지정
+files:
+  # 원본 파일 또는 디렉터리의 경로를 정의한다.
+  - source:  /
+    # 대상 인스턴스에서 해당 파일/디렉터리의 위치를 지정한다.
+    destination: /home/ubuntu/app
+    # 기존의 파일 또는 디렉터리가 존재하는 경우 대체 여부 지정
+    overwrite: yes
+
+# 배포된 파일 또는 디렉터리의 권한 설정
+permissions:
+  # 권한 변경 대상 파일 또는 디렉터리를 정의한다.
+  - object: /
+    # 권한 적용 대상 패턴을 지정
+    pattern: "**"
+    # 파일 또는 디렉터리의 소유자를 정의한다.
+    owner: ec2-user
+    # 파일 또는 디렉터리의 그룹을 정의한다.
+    group: ec2-user
+
+#배포 프로세스 도중 실행될 스크리브를 정의한다.
+hooks:
+  # AfterInstall 이벤트 시 실행될 스크립트를 지정한다.
+  AfterInstall:
+    # 스크립트의 경로를 지정한다.
+    - location: scripts/stop.sh
+      #허용되는 최대 실행 시간을 초로 지정
+      timeout: 60
+
+  #ApplicationStart 이벤트 시 실행될 스크립트 지정
+  ApplicationStart:
+    - location: scripts/start.sh # 스크립트의 경로를 지정한다.
+      timeout: 60 # 허용되는 최대 실행 시간을 초로 지정한다.
+      runas: ec2-user # 스크립트 실행 사용자를 지정한다.

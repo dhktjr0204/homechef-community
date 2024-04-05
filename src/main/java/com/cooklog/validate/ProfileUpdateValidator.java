@@ -29,7 +29,7 @@ public class ProfileUpdateValidator implements Validator {
         }
     }
     private boolean isOverNicknameLengthLimit(String nickname){
-        return nickname.length()>50;
+        return nickname.length()>20;
     }
     private boolean isEmptyNickname(String nickname){
         return nickname.isEmpty();
