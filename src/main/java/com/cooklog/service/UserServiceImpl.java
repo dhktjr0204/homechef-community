@@ -47,7 +47,6 @@ class UserServiceImpl implements UserService {
     private final BookmarkRepository bookmarkRepository;
     private final BCryptPasswordEncoder encoder;
     private final BlacklistRepository blacklistRepository;
-    private final JavaMailSender mailSender;
 
     // JoinDTO 객체를 받아 사용자 정보를 추가(저장)하는 메서드
     @Override

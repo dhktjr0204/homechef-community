@@ -80,9 +80,14 @@ public class FollowServiceImpl implements FollowService {
 		return followPage.map(FollowDTO::new);
 	}
 
+	//targetUser의 followerList를 찾는다
 	@Override
 	public Page<FollowDTO> getFollowerListByUserIdx(Long targetUserIdx, Pageable pageable) {
-		return null;
+		User targetUser = validateUser(targetUserIdx);
+
+		Page<Follow> followingPage = followRepository.findByFollowingId(targetUser.getIdx(),pageable);
+
+		return followingPage.map(FollowDTO::new);
 	}
 
 	//targetUser의 followingList를 찾는데, currentUser가 이미 팔로우 한 사람들의 정보도 포함
@@ -97,6 +102,8 @@ public class FollowServiceImpl implements FollowService {
 			String profileUrl = null;
 
 			profileUrl = imageService.fileLoad(followDTO.getFollowingUserProfileImage());
+
+			followDTO.setFollowingUserProfileImage(profileUrl);
 		}
 
         if (followingList.isEmpty()) {
@@ -118,7 +125,6 @@ public class FollowServiceImpl implements FollowService {
 			String profileUrl = null;
 
 			profileUrl = imageService.fileLoad(followDTO.getFollowerUserProfileImage());
-
 
             followDTO.setFollowerUserProfileImage(profileUrl);
         }
