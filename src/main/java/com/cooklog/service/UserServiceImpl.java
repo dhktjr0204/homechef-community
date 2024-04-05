@@ -16,6 +16,8 @@ import com.cooklog.repository.FollowRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -45,6 +47,7 @@ class UserServiceImpl implements UserService {
     private final BookmarkRepository bookmarkRepository;
     private final BCryptPasswordEncoder encoder;
     private final BlacklistRepository blacklistRepository;
+    private final JavaMailSender mailSender;
 
     // JoinDTO 객체를 받아 사용자 정보를 추가(저장)하는 메서드
     @Override
@@ -203,12 +206,30 @@ class UserServiceImpl implements UserService {
 
         for (Blacklist expiredBlacklist : expiredBlacklists) {
             User user = expiredBlacklist.getUser();
-                    user.setRole(Role.USER); // 사용자 역할을 USER로 업데이트
-                    user.setReportCount(0); // 신고 횟수를 0으로 초기화
-                    userRepository.save(user); // 역할 업데이트를 위해 사용자 정보 저장
+            user.setRole(Role.USER); // 사용자 역할을 USER로 업데이트
+            user.setReportCount(0); // 신고 횟수를 0으로 초기화
+            userRepository.save(user); // 역할 업데이트를 위해 사용자 정보 저장
 
             blacklistRepository.delete(expiredBlacklist);
         }
     }
+    // @Scheduled(fixedRate = 60000) // 매 1분마다 실행 // 시연용 테스트 코드
+    // public void removeExpiredBlacklistEntries() {
+    //     List<Blacklist> blacklists = blacklistRepository.findAll();
+    //     LocalDateTime now = LocalDateTime.now();
+    //
+    //     for (Blacklist blacklist : blacklists) {
+    //         // 블랙리스트에 추가된 후 1분이 지났는지 확인
+    //         if (Duration.between(blacklist.getCreatedAt(), now).toMinutes() >= 1) {
+    //             User user = blacklist.getUser();
+    //             user.setRole(Role.USER); // 사용자 역할을 USER로 업데이트
+    //             user.setReportCount(0); // 신고 횟수를 0으로 초기화
+    //             userRepository.save(user); // 역할 업데이트를 위해 사용자 정보 저장
+    //
+    //             blacklistRepository.delete(blacklist); // 블랙리스트에서 제거
+    //             System.out.println("블랙리스트에서 사용자가 해제되었습니다: " + blacklist.getUser().getNickname());
+    //         }
+    //     }
+    // }
 }
 
