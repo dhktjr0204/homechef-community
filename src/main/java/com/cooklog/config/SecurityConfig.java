@@ -16,7 +16,7 @@
  @EnableWebSecurity
  public class SecurityConfig{
 
-	 // 특정 HTTP 요청에 대한 웹 기반 보안 구성
+     // 특정 HTTP 요청에 대한 웹 기반 보안 구성
  	@Bean
  	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
 
@@ -32,13 +32,13 @@
 
 		 // 접근 불가능한 페이지 들어가면 "/login" 으로 이동
  		http
- 			.formLogin((auth) -> auth.loginPage("/login")
+ 			.formLogin((auth) -> auth.loginPage("/login") // GET
 					// 로그인 form action 기본 설정
- 				.loginProcessingUrl("/loginProc")
-					.defaultSuccessUrl("/")
+ 				.loginProcessingUrl("/loginProc") // POST
+				.defaultSuccessUrl("/")
  				.usernameParameter("email")
 				.passwordParameter("password")
-				.failureHandler(customFailureHandler())
+				.failureHandler(customFailureHandler()) // 로그인 실패 핸들링
  				.permitAll()
  			)
 			.logout(auth -> auth.logoutSuccessUrl("/login") // 로그아웃 설정

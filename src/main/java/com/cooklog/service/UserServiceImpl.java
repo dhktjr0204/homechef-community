@@ -12,25 +12,21 @@ import com.cooklog.repository.BoardRepository;
 import com.cooklog.model.Bookmark;
 import com.cooklog.repository.BookmarkRepository;
 
-import com.cooklog.repository.FollowRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.cooklog.model.Board;
 import com.cooklog.model.Role;
 import com.cooklog.model.User;
 import com.cooklog.repository.UserRepository;
 
-import java.io.FileNotFoundException;
 import java.util.*;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import javax.validation.Valid;
 
 @Service
 @RequiredArgsConstructor
@@ -56,58 +52,8 @@ public class UserServiceImpl implements UserService {
                 .build();
 
         userRepository.save(user);
-    }
 
-    // 회원가입 유효성 검사
-//        @Override
-//        public void join(@Valid UserDTO userDTO) {
-//            if (userRepository.existsByEmail(userDTO.getEmail())) {
-//                throw new IllegalArgumentException("이미 존재하는 회원입니다: " + userDTO.getEmail());
-//            }
-//            //비밀번호 유효성 검사
-//            isValidPassword(userDTO.getPassword());
-//
-//            //이메일 유효성 검사
-//            if (!isValidEmail(userDTO.getEmail())) {
-//                throw new IllegalArgumentException("유효하지 않은 이메일 주소입니다: " + userDTO.getEmail());
-//            }
-//
-//            User user = new User(userDTO.getNickname(), userDTO.getEmail(), userDTO.getPassword(), userDTO.getRole());
-//            userRepository.save(user);
-//        }
-//
-//       // 이메일 중복 검사
-//        public boolean emailExists(String email) {
-//            return userRepository.findByEmail(email).isPresent();
-//        }
-//
-//        // 비밀번호 유효성 검사
-//        @Override
-//        public boolean isValidPassword(String password) {
-//            if (password.length() < 8) {
-//                throw new IllegalArgumentException("비밀번호는 최소 8자 이상이어야 합니다.");
-//            }
-//            if (!password.matches(".*[a-zA-Z].*")) {
-//                throw new IllegalArgumentException("비밀번호는 영문자를 포함해야 합니다.");
-//            }
-//            if (!password.matches(".*\\d.*")) {
-//                throw new IllegalArgumentException("비밀번호는 숫자를 포함해야 합니다.");
-//            }
-//            if (!password.matches(".*[!@#$%^&*()].*")) {
-//                throw new IllegalArgumentException("비밀번호는 특수문자를 포함해야 합니다.");
-//            }
-//            return true;
-//        }
-//
-//        // 이메일 유효성 검사
-//        public boolean isValidEmail(String email) {
-//            // 이메일 정규 표현식
-//            String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-//            // 패턴을 컴파일한 Pattern 객체 생성
-//            Pattern pattern = Pattern.compile(emailRegex);
-//            // 주어진 이메일이 패턴과 일치하는지 검사하여 반환
-//            return pattern.matcher(email).matches();
-//        }
+    }
 
     @Override
     public UserDTO findUserById(Long id) {
