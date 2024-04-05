@@ -117,7 +117,6 @@ document.getElementById('commentForm').addEventListener('submit', function (even
             return response.json();
         })
         .then(data => {
-            console.log('댓글 및 답글이 성공적으로 처리되었습니다.\:', data);
             resetReplyBox(); // 답글 입력창을 초기 상태로 복원하고 관련 상태를 초기화
             fetchComments(0); // 댓글 목록 새로고침
         })
@@ -128,7 +127,6 @@ document.getElementById('commentForm').addEventListener('submit', function (even
 });
 
 function addCommentOrReplyToPage(commentData, parentCommentId = null) {
-    console.log('호출 함수:', commentData, parentCommentId); // 함수 호출 확인
     const userPageLink = `<a href="/myPage/main/${commentData.userId}" class="comment-username">${commentData.userName}</a>`;
 
     let optionsHTML; // 수정, 삭제 또는 신고 버튼을 포함할 HTML

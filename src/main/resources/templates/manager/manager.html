@@ -12,10 +12,9 @@
 <header>
     <img th:src="@{/img/main/CookLog.png}" alt="Log" class="logo-img">
     <div class="user-info">
-        <figure class="profile-picture" aria-label="프로필">
-<!--            <img th:src="@{/img/main/{filename}(filename=${user.profileImage})}" alt="프로필 사진">-->
             <span class="username" th:text="${user.nickname}"></span>
-        </figure>
+            <a th:href="@{/logout}" class="logout-button">로그아웃</a>
+    </div>
     </div>
 </header>
     <div class="button-group">
