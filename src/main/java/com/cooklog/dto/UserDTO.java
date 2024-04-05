@@ -25,17 +25,9 @@ public class UserDTO {
 	private String profileImageUrl;
 	private int reportCount;
 	private boolean isDeleted;
+	private int postCount; // 사용자가 작성한 게시글 수
+	private int likesCount; // 사용자가 받은 좋아요 수
 //	private List<BoardDTO> myPageList;
-
-	public UserDTO(Long idx, String nickname, String email, String introduction, Role role, int reportCount, boolean isDeleted) {
-		this.idx = idx;
-		this.nickname = nickname;
-		this.email = email;
-		this.introduction = introduction;
-		this.role = role;
-		this.reportCount = reportCount;
-		this.isDeleted = isDeleted;
-	}
 
 	@Builder
 	public UserDTO(Long idx, String nickname, String introduction, String profileImageName, String profileImageUrl, Role role, boolean isDeleted) {
@@ -51,5 +43,17 @@ public class UserDTO {
 
 	public UserDTO() {
 
+	}
+
+	public UserDTO(Long idx, String nickname, String email, String introduction, Role role, int reportCount, boolean deleted, int postCount, int likesCount) {
+		this.idx = idx;
+		this.nickname = nickname;
+		this.email = email;
+		this.introduction = introduction;
+		this.role = role;
+		this.reportCount = reportCount;
+		this.isDeleted = deleted;
+		this.postCount = postCount;
+		this.likesCount = likesCount;
 	}
 }

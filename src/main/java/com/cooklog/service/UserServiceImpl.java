@@ -81,9 +81,43 @@ class UserServiceImpl implements UserService {
     // 모든 유저의 정보를 UserDTO 리스트로 변환하여 반환
     @Override
     public List<UserDTO> findAllUsers() {
-        return userRepository.findAll().stream()
-            .map(user -> new UserDTO(user.getIdx(), user.getNickname(), user.getEmail(), user.getIntroduction(), user.getRole(), user.getReportCount(),user.isDeleted())
-            ).collect(Collectors.toList());
+        List<User> users = userRepository.findAll();
+        List<UserDTO> userDTOs = new ArrayList<>();
+
+        for (User user : users) {
+            int postCount = userRepository.countPostsByUserId(user.getIdx());
+            int likesCount = userRepository.sumLikesByUserId(user.getIdx());
+
+            Role currentRole = user.getRole();
+            boolean upgraded = false;
+
+            if (currentRole.equals(Role.USER) && postCount >= 5) {
+                currentRole = Role.USER2;
+                upgraded = true;
+            } else if (currentRole.equals(Role.USER2) && likesCount >= 30) {
+                currentRole = Role.USER3;
+                upgraded = true;
+            }
+
+            if (upgraded) {
+                user.setRole(currentRole);
+                userRepository.save(user); // 변경된 등급을 데이터베이스에 저장
+            }
+
+            userDTOs.add(new UserDTO(
+                user.getIdx(),
+                user.getNickname(),
+                user.getEmail(),
+                user.getIntroduction(),
+                currentRole,
+                user.getReportCount(),
+                user.isDeleted(),
+                postCount,
+                likesCount
+            ));
+        }
+
+        return userDTOs;
     }
 
     @Override
