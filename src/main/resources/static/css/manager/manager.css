@@ -70,4 +70,16 @@ header img {
     text-align: center;
     text-decoration: none;
 }
+.home-button {
+    background-color: #FFA500;
+    border: none;
+    color: #ffffff;
+    padding: 0rem 1rem;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+}
 /* manager.html 끝 */
