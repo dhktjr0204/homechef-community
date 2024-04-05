@@ -1,12 +1,12 @@
 package com.cooklog.service;
 
+import com.cooklog.model.User;
+
 public interface LikesService {
 
     Long getNumberOfLikesByBoardId(Long boardId);
 
-    boolean existsByUserIdAndBoardId(Long userIdx,Long boardId);
+    void addLike(User currentUser,Long boardId);
 
-    void addLike(Long userIdx,Long boardId);
-
-    void cancelLike(Long userIdx,Long boardId);
+    void cancelLike(User currentUser,Long boardId);
 }

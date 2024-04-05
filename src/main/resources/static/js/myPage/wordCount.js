@@ -1,7 +1,7 @@
 const nameInput = document.querySelector('.user-name-input');
 const introductionInput = document.querySelector('.profile-introduction-input');
 
-const nameLimit=50;
+const nameLimit=20;
 const introductionLimit=300;
 
 //새로고침되면서 글자수 세기 작동(수정폼일 경우 필요)

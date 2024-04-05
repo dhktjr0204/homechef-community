@@ -9,23 +9,13 @@ import com.cooklog.model.Role;
 import com.cooklog.model.User;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.Valid;
-
 @Validated
 public interface UserService {
 
 	//회원 가입 정보 저장
 	void joinSave(JoinDTO joinDTO);
 
-//	void join(@Valid UserDTO userDTO);
-
-//	//이메일 중복 검색
-//	boolean emailExists(String email);
-
 	UserDTO findUserById(Long id);
-
-//	//비밀번호 유효성 검사
-//	boolean isValidPassword(String password);
 
 	// 모든 유저의 정보를 가져오는 메소드
 	List<UserDTO> findAllUsers();
@@ -38,9 +28,6 @@ public interface UserService {
 
 	// 사용자가 올린 게시물 갯수 가져오는 메소드
 	Long getNumberOfBoardByUserId(Long userIdx);
-
-	// 사용자의 북마크 리스트를 가져오는 메소드
-	List<BoardDTO> getBookmarkBoards(Long userIdx);
 
 	void resetReportCount(Long userId);
 

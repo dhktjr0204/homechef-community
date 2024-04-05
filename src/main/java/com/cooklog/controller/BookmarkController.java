@@ -1,12 +1,10 @@
 package com.cooklog.controller;
 
-import com.cooklog.dto.CustomUserDetails;
+import com.cooklog.model.User;
 import com.cooklog.service.BookmarkService;
 import com.cooklog.service.CustomIUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,16 +21,16 @@ public class BookmarkController {
 
     @PostMapping("/add")
     public ResponseEntity<?> addMark(@RequestParam("boardId") Long boardId) {
-        Long currentUserIdx = userDetailsService.getUserIdx();
-        bookmarkService.addMark(currentUserIdx,boardId);
+        User currentUser = userDetailsService.isValidCurrentUser();
+        bookmarkService.addMark(currentUser,boardId);
 
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/cancel")
     public ResponseEntity<?> cancelMark(@RequestParam("boardId") Long boardId) {
-        Long currentUserIdx = userDetailsService.getUserIdx();
-        bookmarkService.cancelMark(currentUserIdx,boardId);
+        User currentUser = userDetailsService.isValidCurrentUser();
+        bookmarkService.cancelMark(currentUser,boardId);
 
         return ResponseEntity.ok().build();
     }

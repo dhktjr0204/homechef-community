@@ -102,6 +102,10 @@ function clickButton(event) {
                 button.classList.add('un-follow-button');
                 button.textContent = '언팔로우';
             }
+        } else {
+            response.text().then(text => {
+                alert(text);
+            });
         }
     })
     .catch(error => {
@@ -115,4 +119,67 @@ function clickBoardImage(button){
     const boardId=button.getAttribute("value");
     location.href="/board/"+boardId;
 }
+
+function clickBookmarkImage(boardId) {
+    location.href="/board/"+boardId;
+}
+
+//탭 버튼을 바꾸는 함수
+function switchTab(tabName) {
+    // 모든 탭 컨텐츠를 숨긴다
+    const allTabsContent = document.querySelectorAll('.board-list-container');
+    allTabsContent.forEach(tabContent => {
+        tabContent.style.display = 'none';
+    });
+
+    // 모든 탭 버튼의 active 클래스를 숨긴다
+    const allTabButtons = document.querySelectorAll('.tab-button');
+    allTabButtons.forEach(tabButton => {
+        tabButton.classList.remove('active');
+    });
+
+    // 선택된 탭과 관련된 내용을 표시
+    if (tabName === 'Posts') {
+        document.querySelector('.board-list-container:not(#bookmarkContainer)').style.display = 'block';
+        document.querySelector('.tab-button:first-child').classList.add('active');
+    } else if (tabName === 'Bookmarks') {
+        document.getElementById('bookmarkContainer').style.display = 'block';
+        document.querySelector('.tab-button:nth-child(2)').classList.add('active');
+    }
+}
+
+
+function loadMyBookmarks() {
+
+    fetch('/myPage/myBookmarks')
+    .then(response => response.json()) // 응답을 JSON 형태로 파싱
+    .then(data => {
+        const bookmarkList = document.getElementById('bookmarkList');
+        const noContentContainer = document.getElementById('noContentContainer');
+        bookmarkList.innerHTML = '';
+
+        if(data.length > 0) {
+            noContentContainer.style.display = 'none';
+            data.forEach(bookmark => {
+                const listItem = document.createElement('li');
+                const image = document.createElement('img');
+                image.src = bookmark.imageUrl;
+                image.className = 'image-item';
+                image.setAttribute('onclick',`clickBookmarkImage(${bookmark.id})`)
+                listItem.appendChild(image);
+                bookmarkList.appendChild(listItem);
+            });
+        } else {
+            bookmarkList.innerHTML = '';
+            noContentContainer.style.display = 'block';
+        }
+
+    })
+    .catch(error => {
+        console.error('Error loading bookmarks:', error);
+    });
+}
+
+
+
 

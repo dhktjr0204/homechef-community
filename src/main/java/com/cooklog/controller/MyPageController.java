@@ -46,7 +46,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/myPage")
 public class MyPageController {
 
-    private final UserService userService;
     private final ImageService imageService;
     private final MyPageService myPageService;
     private final CustomIUserDetailsService userDetailsService;
@@ -72,12 +71,6 @@ public class MyPageController {
         model.addAttribute("followCount", followCountDTO);
 
         return "myPage/myPage";
-    }
-
-    // 팔로워 페이지
-    @GetMapping("/follower")
-    public String getFollower() {
-        return "myPage/followerPage";
     }
 
     // 회원 정보 수정 페이지
@@ -115,17 +108,17 @@ public class MyPageController {
         ProfileUpdateValidator profileUpdateValidator=new ProfileUpdateValidator();
         profileUpdateValidator.validate(myPageUpdateRequestDTO, result);
 
-        myPageService.updateUserProfile(userId, myPageUpdateRequestDTO, updateProfileImage);
+        myPageService.updateUserProfile(loginUserDTO, myPageUpdateRequestDTO, updateProfileImage);
 
         return ResponseEntity.ok("/myPage/main/" + userId);
     }
 
-    @GetMapping("/bookmark")
+    @GetMapping("/myBookmarks")
     public ResponseEntity<?> getMyBookmarks() {
         Long currentUserIdx = userDetailsService.getUserIdx();
-        List<BoardDTO> boardDTOList = userService.getBookmarkBoards(currentUserIdx);
+        List<MyPageDTO> bookmarkBoards = myPageService.getBookmarkBoards(currentUserIdx);
 
-        return ResponseEntity.ok(boardDTOList);
+        return ResponseEntity.ok(bookmarkBoards);
     }
 }
 

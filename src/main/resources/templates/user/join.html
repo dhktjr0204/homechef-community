@@ -39,19 +39,42 @@
 </div>
 </body>
 <script>
+    // function formSubmit() {
+    //     const formData = new FormData(document.querySelector('#joinForm'));
+    //     fetch('/joinProc', { method: 'POST', body: formData
+    //     }).then(response => {
+    //         if (!response.ok) {
+    //             return response.text().then(msg => {
+    //                 if (response.status === 400) {
+    //                     alert(msg);
+    //                     throw new Error(msg);
+    //                 }
+    //             });
+    //         } else {
+    //             location.href="/login";
+    //         }
+    //     }).catch(error => {
+    //         console.error(error);
+    //     });
+    // }
+
     function formSubmit() {
+
         const formData = new FormData(document.querySelector('#joinForm'));
-        fetch('/joinProc', { method: 'POST', body: formData
+        fetch('/joinProc', {
+            method: 'POST',
+            body: formData
         }).then(response => {
-            if (!response.ok) {
+            if (response.ok) {
+                alert("가입 되었습니다! 로그인 후 서비스를 이용해 주세요.");
+                location.href="/login";
+            } else {
                 return response.text().then(msg => {
                     if (response.status === 400) {
                         alert(msg);
                         throw new Error(msg);
                     }
                 });
-            } else {
-                location.href="/login";
             }
         }).catch(error => {
             console.error(error);

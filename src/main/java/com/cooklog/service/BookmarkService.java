@@ -1,9 +1,11 @@
 package com.cooklog.service;
 
+import com.cooklog.model.User;
+
 public interface BookmarkService {
 
-    void addMark(Long userIdx,Long boardId);
+    void addMark(User currentUser,Long boardId);
 
-    void cancelMark(Long userIdx,Long boardId);
+    void cancelMark(User currentUser,Long boardId);
 
 }

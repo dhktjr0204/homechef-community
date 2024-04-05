@@ -14,10 +14,20 @@ function handleFileUpload(event) {
 
         reader.onload = function (e) {
             const newImageUrl = e.target.result;
-            const profileImage = document.querySelector('.profile-image img');
 
-            profileImage.src = newImageUrl;
-            profileImage.file = file;
+            //기존 이미지 삭제
+            const profileImage = document.querySelector('.profile-image img');
+            if(profileImage){
+                profileImage.remove();
+            }
+
+           //새로운 요소 추가
+            const newImage=document.createElement('img');
+            newImage.src = newImageUrl;
+            newImage.file = file;
+
+            const profileImageContainer=document.querySelector('.profile-image');
+            profileImageContainer.insertBefore(newImage, profileImageContainer.firstChild);
         };
 
         // FileReader를 사용하여 파일을 읽습니다.
@@ -35,10 +45,23 @@ function clickEditBasicProfileButton() {
             return response.text();
         }
     }).then(profileImageUrl => {
+
+        //기존 이미지 삭제
         const profileImage = document.querySelector('.profile-image img');
+        if(profileImage){
+            profileImage.remove();
+        }
+
+        //이미지 새로 추가
+        const newImage=document.createElement('img');
         const profileImageName = "images/db181dbe-7139-4f6c-912f-a53f12de6789_기본프로필.png";
-        profileImage.src = profileImageUrl;
-        profileImage.setAttribute("value", profileImageName);
+        newImage.src = profileImageUrl;
+        newImage.setAttribute("value", profileImageName);
+
+        //추가된 이미지 넣기
+        const profileImageContainer=document.querySelector('.profile-image');
+        profileImageContainer.insertBefore(newImage, profileImageContainer.firstChild);
+
     }).catch(error => {
         console.error(error);
     });
@@ -56,6 +79,9 @@ function clickSubmitButton() {
     if(nickname.length===0){
         alert("ID를 입력해주세요.");
         return;
+    } else if (nickname.length > 20) {
+        alert("ID가 길이를 초과하였습니다. 20자 이하로 입력해 주세요.");
+        return;
     }
 
     const formData = new FormData(document.querySelector('.profile-edit-form'));
@@ -68,7 +94,6 @@ function clickSubmitButton() {
     } else {
         formData.append('originalImage', profileImage.getAttribute("value"));
     }
-
 
     fetch("/myPage/edit/" + userId, {
         method: "PUT",

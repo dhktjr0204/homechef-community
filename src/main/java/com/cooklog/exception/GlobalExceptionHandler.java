@@ -7,6 +7,10 @@ import com.cooklog.exception.board.OverTagCountLimitException;
 import com.cooklog.exception.board.OverTagLengthLimitException;
 import com.cooklog.exception.bookmark.AlreadyBookmarkedException;
 import com.cooklog.exception.bookmark.NotBookmarkedYetException;
+import com.cooklog.exception.follow.AlreadyFollowingException;
+import com.cooklog.exception.follow.AlreadyUnfollowedException;
+import com.cooklog.exception.follow.SelfFollowNotAllowedException;
+import com.cooklog.exception.follow.SelfUnfollowNotAllowedException;
 import com.cooklog.exception.likes.AlreadyLikedException;
 import com.cooklog.exception.likes.NotLikedYetException;
 import com.cooklog.exception.myPage.EmptyNicknameException;
@@ -29,26 +33,23 @@ public class GlobalExceptionHandler {
 
     // 회원가입 관련 예외처리
     @ExceptionHandler(AlreadyExistsEmailException.class)
-    public ResponseEntity<String> AlreadyExistsEmailException(
-            AlreadyExistsEmailException ex) {
-        return new ResponseEntity<>("이미 존재하는 이메일입니다.", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> AlreadyExistsEmailException(AlreadyExistsEmailException ex) {
+        return new ResponseEntity<>("이미 가입된 이메일 주소입니다. 다른 이메일 주소를 사용하세요.", HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(LengthPasswordException.class)
-    public ResponseEntity<String> LengthPasswordException(LengthPasswordException ex){
-        return new ResponseEntity<>("비밀번호는 최소 8자 이상이어야 합니다.", HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(EmptyEmailException.class)
+    public ResponseEntity<String> EmptyEmailException(EmptyEmailException ex) {
+        return new ResponseEntity<>("이메일을 입력해주세요.", HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler(NotIncludeEngilshPasswordException.class)
-    public ResponseEntity<String> NotIncludeEngilshPasswordException(NotIncludeEngilshPasswordException ex){
-        return new ResponseEntity<>("비밀번호는 영문자를 포함해야 합니다.", HttpStatus.BAD_REQUEST);
+
+    @ExceptionHandler(NotValidEmailException.class)
+    public ResponseEntity<String> NotValidEmailException(NotValidEmailException ex) {
+        return new ResponseEntity<>("이메일 형식이 올바르지 않습니다.", HttpStatus.BAD_REQUEST);
     }
-    @ExceptionHandler(NotIncludeNumPasswordException.class)
-    public ResponseEntity<String> NotIncludeNumPasswordException(NotIncludeNumPasswordException ex){
-        return new ResponseEntity<>("비밀번호는 숫자를 포함해야 합니다.", HttpStatus.BAD_REQUEST);
-    }
-    @ExceptionHandler(NotIncludeSpecialCharException.class)
-    public ResponseEntity<String> NotIncludeSpecialCharException(NotIncludeSpecialCharException ex){
-        return new ResponseEntity<>("비밀번호는 특수문자를 포함해야 합니다.", HttpStatus.BAD_REQUEST);
+
+    @ExceptionHandler(NotValidPasswordException.class)
+    public ResponseEntity<String> NotValidPasswordException(NotValidPasswordException ex) {
+        return new ResponseEntity<>("비밀번호는 영문 대,소문자와 숫자, 특수기호가 적어도 1개 이상씩 포함된 8자 ~ 20자의 비밀번호여야 합니다.", HttpStatus.BAD_REQUEST);
     }
 
     //게시글 관련 예외처리
@@ -105,7 +106,7 @@ public class GlobalExceptionHandler {
     //마이페이지 예외 처리
     @ExceptionHandler(OverNicknameLengthLimitException.class)
     public ResponseEntity<String> OverNicknameLengthLimitException(OverNicknameLengthLimitException ex) {
-        return new ResponseEntity<>("ID가 길이를 초과하였습니다.", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("ID가 길이를 초과하였습니다. 20자 이하로 입력해 주세요.", HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(OverIntroductionLengthLimitException.class)
@@ -117,4 +118,27 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> EmptyNicknameException(EmptyNicknameException ex){
         return new ResponseEntity<>("ID를 입력해주세요.", HttpStatus.BAD_REQUEST);
     }
+
+    //팔로우,팔로잉 관련 예외처리
+    @ExceptionHandler(SelfFollowNotAllowedException.class)
+    public ResponseEntity<String> SelfFollowNotAllowed(SelfFollowNotAllowedException ex) {
+        return new ResponseEntity<>("자기 자신을 팔로우 할 수 없습니다.",HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SelfUnfollowNotAllowedException.class)
+    public ResponseEntity<String> SelfUnfollowNotAllowedException(SelfUnfollowNotAllowedException ex) {
+        return new ResponseEntity<>("자기 자신을 언팔로우 할 수 없습니다.",HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AlreadyFollowingException.class)
+    public ResponseEntity<String> AlreadyFollowingException(AlreadyFollowingException ex) {
+        return new ResponseEntity<>("이미 팔로우 중인 유저입니다.",HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AlreadyUnfollowedException.class)
+    public ResponseEntity<String> AlreadyUnfollowedException(AlreadyUnfollowedException ex) {
+        return new ResponseEntity<>("이미 언팔로우 중인 유저입니다.",HttpStatus.BAD_REQUEST);
+    }
+
+
 }

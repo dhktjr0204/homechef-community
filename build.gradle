@@ -5,10 +5,13 @@ plugins {
 }
 
 group = 'com.cooklog'
-version = '0.0.1-SNAPSHOT'
 
 java {
 	sourceCompatibility = '17'
+}
+
+jar {
+	enabled = false
 }
 
 configurations {

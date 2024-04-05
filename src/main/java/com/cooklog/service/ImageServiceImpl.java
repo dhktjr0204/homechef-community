@@ -45,7 +45,6 @@ public class ImageServiceImpl implements ImageService {
             saveImageInDB(board, fileName, i + 1);
 
         }
-
         return fileNameList;
     }
 
@@ -59,7 +58,7 @@ public class ImageServiceImpl implements ImageService {
             try {
                 urlText = loadS3(imageName);
             } catch (FileNotFoundException e) {
-                urlText="";
+                urlText = "";
             }
 
             urlList.add(urlText);
@@ -69,7 +68,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public String fileWrite(MultipartFile file, Long userId) {
+    public String fileWrite(MultipartFile file) {
         return saveS3(file);
     }
 
@@ -82,8 +81,9 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
+    @Transactional
     @Override
-    public void updateFileList(Board board, List<String> originalFiles, List<MultipartFile> newFiles){
+    public void updateFileList(Board board, List<String> originalFiles, List<MultipartFile> newFiles) {
 
         List<Image> images = imageRepository.findAllByBoard_IdOrderByOrder(board.getId())
                 .orElseThrow(BoardNotFoundException::new);
@@ -92,12 +92,12 @@ public class ImageServiceImpl implements ImageService {
         int orderIndex = 0;
 
         //만약 기존 이미지가 모두 지워졌다면 DB에 저장된 이미지들 모두 삭제
-        if(originalFiles==null){
-            for(Image image:images){
+        if (originalFiles == null) {
+            for (Image image : images) {
                 imageRepository.delete(image);
                 deleteS3(image.getName());
             }
-        }else{
+        } else {
             // 이미 저장된 사진들의 순서를 바꿔준다.
             orderIndex = originalFiles.size();
 
@@ -167,7 +167,7 @@ public class ImageServiceImpl implements ImageService {
         try {
             amazonS3.deleteObject(bucket, fileName);
             System.out.println("삭제 완료");
-        }catch (AmazonServiceException e){
+        } catch (AmazonServiceException e) {
             System.out.println("Amazon 서비스 예외 발생");
             System.out.println(e.getErrorMessage());
         }

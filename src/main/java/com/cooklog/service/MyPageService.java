@@ -9,7 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface MyPageService {
-    void updateUserProfile(Long userId, MyPageUpdateRequestDTO myPageUpdateRequestDTO, MultipartFile newImageFile);
+    void updateUserProfile(UserDTO loginUserDTO, MyPageUpdateRequestDTO myPageUpdateRequestDTO, MultipartFile newImageFile);
     // 사용자가 작성한 게시물 리스트를 가져오는 메소드
     List<MyPageDTO> getBoardByUserId(Long userIdx);
 
@@ -18,4 +18,7 @@ public interface MyPageService {
 
     // 로그인 한 사용자의 팔로우 팔로워 수 가져오는 메소드
     MyPageFollowCountDTO getFollowCountDTO(Long userIdx, Long loginUserId);
+
+    // 사용자의 북마크 리스트를 가져오는 메소드
+    List<MyPageDTO> getBookmarkBoards(Long currentUserIdx);
 }

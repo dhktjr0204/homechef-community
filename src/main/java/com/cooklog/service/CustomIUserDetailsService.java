@@ -14,8 +14,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.io.FileNotFoundException;
-
 // 시큐리티에서 사용자 정보를 가져오는 서비스 로직
 @Service
 @RequiredArgsConstructor
@@ -25,14 +23,11 @@ public class CustomIUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException, DisabledException {
-
         User userData = userRepository.findByEmail(email);
 
         if(userData == null) {
             throw new UsernameNotFoundException(email);
-        }
-
-        if (userData.isDeleted()) {
+        } else if (userData.isDeleted()) {
             // 탈퇴 회원 계정 비활성화
             throw new DisabledException(userData.getNickname());
         }
