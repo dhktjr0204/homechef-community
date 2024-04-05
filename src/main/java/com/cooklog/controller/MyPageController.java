@@ -46,7 +46,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/myPage")
 public class MyPageController {
 
-    private final UserService userService;
     private final ImageService imageService;
     private final MyPageService myPageService;
     private final CustomIUserDetailsService userDetailsService;
@@ -114,12 +113,12 @@ public class MyPageController {
         return ResponseEntity.ok("/myPage/main/" + userId);
     }
 
-    @GetMapping("/bookmark")
+    @GetMapping("/myBookmarks")
     public ResponseEntity<?> getMyBookmarks() {
         Long currentUserIdx = userDetailsService.getUserIdx();
-        List<BoardDTO> boardDTOList = userService.getBookmarkBoards(currentUserIdx);
+        List<MyPageDTO> bookmarkBoards = myPageService.getBookmarkBoards(currentUserIdx);
 
-        return ResponseEntity.ok(boardDTOList);
+        return ResponseEntity.ok(bookmarkBoards);
     }
 }
 
