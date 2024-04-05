@@ -29,9 +29,10 @@ public class ReportServiceImpl implements ReportService {
 	private final BoardRepository boardRepository;
 
 
+	//4번이상 신고 당할시 신고 유저 관리 페이지에 표시.
 	public List<ReportedContentDTO> findReportedContents() {
 		List<ReportedContentDTO> reportedContents = new ArrayList<>();
-		List<User> reportedUsers = userRepository.findByReportCountGreaterThan(4);
+		List<User> reportedUsers = userRepository.findByReportCountGreaterThan(3);
 
 		for (User user : reportedUsers) {
 			// 사용자가 블랙리스트에 있는지 여부를 확인
