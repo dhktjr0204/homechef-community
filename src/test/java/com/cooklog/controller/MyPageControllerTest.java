@@ -197,7 +197,7 @@ class MyPageControllerTest {
                 .accept(MediaType.APPLICATION_JSON_UTF8));
 
         //then
-        String expectedMessage="ID가 길이를 초과하였습니다.";
+        String expectedMessage="ID가 길이를 초과하였습니다. 20자 이하로 입력해 주세요.";
 
         resultActions.andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.content().string(expectedMessage));
