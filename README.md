@@ -10,12 +10,12 @@ CookLog를 통해 자신의 요리를 업로드하고, 다른 사용자들의 �
 
 # 👩‍👧‍👦 개발 인원 및 역할
 
-<table>
+<table style="width: 100%;">
  <tr>
-    <td align="center"><a href="https://github.com/HuiGyun-kim"><img src="src/main/resources/static/img/readMe/kimhuigyun.png" width="130px" alt=""></a></td>
-    <td align="center"><a href="https://github.com/dhktjr0204"><img src="src/main/resources/static/img/readMe/jeongjiwon.jpg" width="130px;" alt=""></a></td>
-    <td align="center"><a href="https://github.com/hongju1234"><img src="src/main/resources/static/img/readMe/namhongju.jpg" width="130px;" alt=""></a></td>
-    <td align="center"><a href="https://github.com/kanghanju"><img src="src/main/resources/static/img/readMe/kanghanju.png" width="130px;" alt=""></a></td>
+    <td align="center" style="width: 25%;"><a href="https://github.com/HuiGyun-kim"><img src="src/main/resources/static/img/readMe/kimhuigyun.png" width="130px" alt=""></a></td>
+    <td align="center" style="width: 25%;"><a href="https://github.com/dhktjr0204"><img src="src/main/resources/static/img/readMe/jeongjiwon.jpg" width="130px;" alt=""></a></td>
+    <td align="center" style="width: 25%;"><a href="https://github.com/hongju1234"><img src="src/main/resources/static/img/readMe/namhongju.jpg" width="130px;" alt=""></a></td>
+    <td align="center" style="width: 25%;"><a href="https://github.com/kanghanju"><img src="src/main/resources/static/img/readMe/kanghanju.png" width="130px;" alt=""></a></td>
   </tr>
   <tr>
     <td align="center"><a href="https://github.com/HuiGyun-kim"><b>kimhuigyun</b></a></td>
@@ -24,19 +24,16 @@ CookLog를 통해 자신의 요리를 업로드하고, 다른 사용자들의 �
     <td align="center"><a href="https://github.com/kanghanju"><b>kanghanju</b></a></td>
   </tr>
   <tr> 
-    <td align="center">Backend,Front</td>
-    <td align="center">Backend,Front</td>
-    <td align="center">Backend,Front</td>
-    <td align="center">Backend,Front</td>
+    <td align="center">Backend, Front</td>
+    <td align="center">Backend, Front</td>
+    <td align="center">Backend, Front</td>
+    <td align="center">Backend, Front</td>
   </tr> 
   <tr> 
-    <td align="center">ERD 설계<br>댓글 API 개발<br>관리자 API 개발<br>신고 API 개발<br>Spring Security<br>UI 개발(메인페이지,게시물,댓글,관리자페이지)<br>JavaScript 개발(댓글, 신고)
-    </td>
-    <td align="center">화면 설계<br>ERD 설계<br>메인페이지 API 개발<br>게시물 API 개발<br>텍스트 및 태그 검색 API 개발<br>
-    S3를 이용한 사진 업로드 및 사진 삭제<br>프로필 수정 API 개발<br>UI 개발(게시물,마이페이지)<br>JavaScript 개발(글자 수 세기, 무한 스크롤, 검색, 게시물, 메인 페이지, 마이페이지 수정 기능)<br>프로젝트 배포
-    </td>
+    <td align="center">ERD 설계<br>댓글 API 개발<br>관리자 API 개발<br>신고 API 개발<br>Spring Security<br>UI 개발(메인페이지, 게시물, 댓글, 관리자페이지)<br>JavaScript 개발(댓글, 신고)</td>
+    <td align="center">화면 설계<br>ERD 설계<br>메인페이지 API 개발<br>게시물 API 개발<br>텍스트 및 태그 검색 API 개발<br>S3를 이용한 사진 업로드 및 사진 삭제<br>프로필 수정 API 개발<br>UI 개발(게시물)<br>JavaScript 개발(글자 수 세기,무한 스크롤, 검색, 게시물, 메인 페이지, 마이페이지 수정)<br>프로젝트 배포</td>
     <td align="center">요구사항 및 기능 명세<br>Spring Security<br>로그인 API 개발<br>마이페이지 API 개발<br>UI 개발(마이페이지)<br>JavaScript 개발(마이페이지)</td>
-    <td align="center">ERD 설계<br>좋아요 API 개발<br>북마크 API 개발<br>메인페이지 API 개발<br>UI 개발(북마크)<br>JavaScript 개발(좋아요, 북마크, 메인 페이지)
+    <td align="center">ERD 설계<br>좋아요 API 개발<br>북마크 API 개발<br>팔로우 API 개발<br>메인페이지 API 개발<br>UI 개발(북마크, 팔로우)<br>JavaScript 개발(좋아요, 북마크, 팔로우, 메인 페이지)
     </td>
   </tr> 
 </table>
