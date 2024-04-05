@@ -36,7 +36,7 @@
  			.formLogin((auth) -> auth.loginPage("/login")
 					// 로그인 form action 기본 설정
  				.loginProcessingUrl("/loginProc") // POST
-				.defaultSuccessUrl("/")
+				.defaultSuccessUrl("/",true)
  				.usernameParameter("email")
 				.passwordParameter("password")
 				.failureHandler(customFailureHandler()) // 로그인 실패 핸들링
