@@ -320,6 +320,19 @@ main img{
     color: blue;
     cursor: pointer;
 }
+/*로그아웃버튼*/
+.logout-button {
+    background-color: #FFA500;
+    border: none;
+    color: #ffffff;
+    padding: 0rem 1rem;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+}
 /* 메인 끝 */
 
 /* 푸터 시작 */
