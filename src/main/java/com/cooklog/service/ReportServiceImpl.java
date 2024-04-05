@@ -31,7 +31,7 @@ public class ReportServiceImpl implements ReportService {
 
 	public List<ReportedContentDTO> findReportedContents() {
 		List<ReportedContentDTO> reportedContents = new ArrayList<>();
-		List<User> reportedUsers = userRepository.findByReportCountGreaterThan(0);
+		List<User> reportedUsers = userRepository.findByReportCountGreaterThan(4);
 
 		for (User user : reportedUsers) {
 			// 사용자가 블랙리스트에 있는지 여부를 확인
