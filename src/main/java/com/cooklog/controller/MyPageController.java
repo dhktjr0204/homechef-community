@@ -74,12 +74,6 @@ public class MyPageController {
         return "myPage/myPage";
     }
 
-    // 팔로워 페이지
-    @GetMapping("/follower")
-    public String getFollower() {
-        return "myPage/followerPage";
-    }
-
     // 회원 정보 수정 페이지
     @GetMapping("/basicProfile")
     public ResponseEntity<?> getBasicProfileUrl() {

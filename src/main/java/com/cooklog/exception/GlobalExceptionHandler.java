@@ -7,6 +7,10 @@ import com.cooklog.exception.board.OverTagCountLimitException;
 import com.cooklog.exception.board.OverTagLengthLimitException;
 import com.cooklog.exception.bookmark.AlreadyBookmarkedException;
 import com.cooklog.exception.bookmark.NotBookmarkedYetException;
+import com.cooklog.exception.follow.AlreadyFollowingException;
+import com.cooklog.exception.follow.AlreadyUnfollowedException;
+import com.cooklog.exception.follow.SelfFollowNotAllowedException;
+import com.cooklog.exception.follow.SelfUnfollowNotAllowedException;
 import com.cooklog.exception.likes.AlreadyLikedException;
 import com.cooklog.exception.likes.NotLikedYetException;
 import com.cooklog.exception.myPage.EmptyNicknameException;
@@ -117,4 +121,27 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> EmptyNicknameException(EmptyNicknameException ex){
         return new ResponseEntity<>("ID를 입력해주세요.", HttpStatus.BAD_REQUEST);
     }
+
+    //팔로우,팔로잉 관련 예외처리
+    @ExceptionHandler(SelfFollowNotAllowedException.class)
+    public ResponseEntity<String> SelfFollowNotAllowed(SelfFollowNotAllowedException ex) {
+        return new ResponseEntity<>("자기 자신을 팔로우 할 수 없습니다.",HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(SelfUnfollowNotAllowedException.class)
+    public ResponseEntity<String> SelfUnfollowNotAllowedException(SelfUnfollowNotAllowedException ex) {
+        return new ResponseEntity<>("자기 자신을 언팔로우 할 수 없습니다.",HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AlreadyFollowingException.class)
+    public ResponseEntity<String> AlreadyFollowingException(AlreadyFollowingException ex) {
+        return new ResponseEntity<>("이미 팔로우 중인 유저입니다.",HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AlreadyUnfollowedException.class)
+    public ResponseEntity<String> AlreadyUnfollowedException(AlreadyUnfollowedException ex) {
+        return new ResponseEntity<>("이미 언팔로우 중인 유저입니다.",HttpStatus.BAD_REQUEST);
+    }
+
+
 }

@@ -24,6 +24,7 @@ public class LikesServiceImpl implements LikesService {
 	private final UserRepository userRepository;
 	private final BoardRepository boardRepository;
 
+	//특정 게시물의 총 좋아요수를 반환하는 메서드
 	@Override
 	public Long getNumberOfLikesByBoardId(Long boardId) {
 		Board validBoard = validateBoard(boardId);
@@ -31,42 +32,29 @@ public class LikesServiceImpl implements LikesService {
 		return likesRepository.countByBoardId(validBoard.getId());
 	}
 
-	//특정 사용자가 특정 게시물에 좋아요를 누른 상태인지 아닌지를 검사하는 메소드
-	@Override
-	public boolean existsByUserIdAndBoardId(Long userIdx, Long boardId) {
-		Board validBoard = validateBoard(boardId);
-
-		Optional<Likes> like = likesRepository.findByUserIdxAndBoardId(userIdx,validBoard.getId());
-
-		if(like.isPresent()) {//사용자가 특정 게시물에 좋아요를 누른 상태라면
-			return true;
-		}
-
-		return false;
-	}
-
+	//좋아요를 저장하는 메서드
 	@Transactional
 	@Override
-	public void addLike(Long userIdx, Long boardId) {
-		User validUser = validateUser(userIdx);
+	public void addLike(User currentUser, Long boardId) {
 		Board validBoard = validateBoard(boardId);
-		Optional<Likes> like = likesRepository.findByUserIdxAndBoardId(validUser.getIdx(),validBoard.getId());
+
+		Optional<Likes> like = likesRepository.findByUserIdxAndBoardId(currentUser.getIdx(), validBoard.getId());
 
 		if(like.isPresent()) {
 			throw new AlreadyLikedException();
 		}
 
-		Likes newLike = new Likes(validUser,validBoard);
+		Likes newLike = new Likes(currentUser,validBoard);
 		likesRepository.save(newLike);
-
 	}
 
+	//좋아요를 취소하는 메서드
 	@Transactional
 	@Override
-	public void cancelLike(Long userIdx, Long boardId) {
-		User validUser = validateUser(userIdx);
+	public void cancelLike(User currentUser, Long boardId) {
 		Board validBoard = validateBoard(boardId);
-		Optional<Likes> like = likesRepository.findByUserIdxAndBoardId(validUser.getIdx(),validBoard.getId());
+
+		Optional<Likes> like = likesRepository.findByUserIdxAndBoardId(currentUser.getIdx(), validBoard.getId());
 
 		if(like.isEmpty()) {
 			throw new NotLikedYetException();
@@ -75,10 +63,7 @@ public class LikesServiceImpl implements LikesService {
 		likesRepository.delete(like.get());
 	}
 
-	private User validateUser(Long userIdx) {
-		return userRepository.findById(userIdx).orElseThrow(NotValidateUserException::new);
-	}
-
+	//유효한 boardId인지 검증하는 메서드
 	private Board validateBoard(Long boardId) {
 		return boardRepository.findById(boardId).orElseThrow(BoardNotFoundException::new);
 	}

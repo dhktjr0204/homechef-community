@@ -1,17 +1,19 @@
 package com.cooklog.service;
 
 import com.cooklog.dto.FollowDTO;
+import com.cooklog.dto.UserDTO;
+import com.cooklog.exception.follow.AlreadyFollowingException;
+import com.cooklog.exception.follow.AlreadyUnfollowedException;
+import com.cooklog.exception.follow.SelfFollowNotAllowedException;
+import com.cooklog.exception.follow.SelfUnfollowNotAllowedException;
 import com.cooklog.exception.user.NotValidateUserException;
 import com.cooklog.model.Follow;
 import com.cooklog.model.User;
 import com.cooklog.repository.UserRepository;
-import java.io.FileNotFoundException;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import com.cooklog.repository.FollowRepository;
@@ -25,82 +27,77 @@ public class FollowServiceImpl implements FollowService {
 	private final UserRepository userRepository;
 	private final ImageService imageService;
 
+	//팔로우
 	@Transactional
 	@Override
-	public void follow(Long followerId, Long followingId) {
-		User follower = validateUser(followerId);
-		User following = validateUser(followingId);
+	public void follow(User currentUser, Long followingUserIdx) {
+		User followingUser = validateUser(followingUserIdx);
 
-		if(follower.getIdx() == following.getIdx()) {//자기 자신을 팔로우하면 안된다
-			throw new IllegalArgumentException("자기 자신을 팔로우 할 수 없습니다.");
+		if(currentUser.getIdx() == followingUser.getIdx()) {//자기 자신을 팔로우하면 안된다
+			throw new SelfFollowNotAllowedException();
 		}
 
-		Optional<Follow> isExist = followRepository.findByFollowerIdAndFollowingId(follower.getIdx(),following.getIdx());
+		Optional<Follow> isExist = followRepository.findByFollowerIdAndFollowingId(currentUser.getIdx(), followingUser.getIdx());
 
 		if(isExist.isPresent()) {//팔로우를 눌렀는데 이미 팔로우 관계라면?
-			throw new IllegalArgumentException("이미 팔로우 중인 유저입니다.");
+			throw new AlreadyFollowingException();
 		}
 
-		Follow follow = new Follow(follower,following);
+		Follow follow = new Follow(currentUser,followingUser);
 		followRepository.save(follow);
 	}
 
+	//언팔로우
 	@Transactional
 	@Override
-	public void unfollow(Long followerId, Long followingId) {
-		User follower = validateUser(followerId);
-		User following = validateUser(followingId);
+	public void unfollow(User currentUser, Long unfollowingUserIdx) {
+		User unfollowingUser = validateUser(unfollowingUserIdx);
 
-		if(follower.getIdx() == following.getIdx()) {//자기 자신을 언팔로우하면 안된다
-			throw new IllegalArgumentException("자기 자신을 언팔로우 할 수 없습니다.");
+		if(currentUser.getIdx() == unfollowingUser.getIdx()) {//자기 자신을 언팔로우하면 안된다
+			throw new SelfUnfollowNotAllowedException();
 		}
 
-		Optional<Follow> isExist = followRepository.findByFollowerIdAndFollowingId(follower.getIdx(),following.getIdx());
+		Optional<Follow> isExist = followRepository.findByFollowerIdAndFollowingId(currentUser.getIdx(),unfollowingUser.getIdx());
 
 		if(isExist.isEmpty()) {//언팔로우를 눌렀는데 이미 언팔로우 관계라면?
-			throw new IllegalArgumentException("이미 언팔로우 중인 유저입니다.");
+			throw new AlreadyUnfollowedException();
 		}
 
-		followRepository.deleteByFollowerIdAndFollowingId(follower.getIdx(),following.getIdx());
+		followRepository.deleteByFollowerIdAndFollowingId(currentUser.getIdx(), unfollowingUser.getIdx());
 	}
 
+	//targetUser의 followingList를 찾는다
 	@Override
-	public Page<FollowDTO> findFollowingListByUserIdx(Long userIdx, Pageable pageable) {
-		User user = validateUser(userIdx);
+	public Page<FollowDTO> getFollowingListByUserIdx(Long targetUserIdx, Pageable pageable) {
+		User targetUser = validateUser(targetUserIdx);
 
-		Page<Follow> followPage = followRepository.findByFollowerId(userIdx,pageable);
+		Page<Follow> followPage = followRepository.findByFollowerId(targetUser.getIdx(),pageable);
+
 		return followPage.map(FollowDTO::new);
-
 	}
 
+	//targetUser의 followerList를 찾는다
 	@Override
-	public Page<FollowDTO> findFollowerListByUserIdx(Long userIdx, Pageable pageable) {
-		User user = validateUser(userIdx);
+	public Page<FollowDTO> getFollowerListByUserIdx(Long targetUserIdx, Pageable pageable) {
+		User targetUser = validateUser(targetUserIdx);
 
-		Page<Follow> followingPage = followRepository.findByFollowingId(userIdx,pageable);
-
-		if(followingPage.isEmpty()) {
-			return Page.empty();
-		}
+		Page<Follow> followingPage = followRepository.findByFollowingId(targetUser.getIdx(),pageable);
 
 		return followingPage.map(FollowDTO::new);
 	}
 
+	//targetUser의 followingList를 찾는데, currentUser가 이미 팔로우 한 사람들의 정보도 포함
 	@Override
-	public Page<FollowDTO> getFollowingListWithFollowStatus(Long userIdx,Long currentUserIdx,Pageable pageable) {
-		User user = validateUser(userIdx);
-		User currentUser = validateUser(currentUserIdx);
+	public Page<FollowDTO> getFollowingListWithFollowStatus(Long targetUserIdx, UserDTO currentUser,Pageable pageable) {
+		User targetUser = validateUser(targetUserIdx);
 
-		Page<FollowDTO> followingList = followRepository.findFollowingListByUserIdxWithFollowStatus(userIdx,currentUserIdx,pageable);
+		Page<FollowDTO> followingList = followRepository.findFollowingListByUserIdxWithFollowStatus(targetUser.getIdx(), currentUser.getIdx(), pageable);
 
+		//profileUrl을 넣어주는 작업
 		for(FollowDTO followDTO : followingList) {
 			String profileUrl = null;
 
-			try {
-				profileUrl = imageService.fileLoad(followDTO.getFollowingUserProfileImage());
-			} catch (FileNotFoundException e) {
-				profileUrl = "";
-			}
+			profileUrl = imageService.fileLoad(followDTO.getFollowingUserProfileImage());
 
 			followDTO.setFollowingUserProfileImage(profileUrl);
 		}
@@ -112,21 +109,18 @@ public class FollowServiceImpl implements FollowService {
 		return followingList;
 	}
 
+	//targetUser의 followerList를 찾는데, currentUser가 이미 팔로우 한 사람들의 정보도 포함
 	@Override
-	public Page<FollowDTO> getFollowerListWithFollowStatus(Long userIdx,Long currentUserIdx, Pageable pageable) {
-		User user = validateUser(userIdx);
-		User currentUser = validateUser(currentUserIdx);
+	public Page<FollowDTO> getFollowerListWithFollowStatus(Long targetUserIdx,UserDTO currentUser, Pageable pageable) {
+		User targetUser = validateUser(targetUserIdx);
 
-		Page<FollowDTO> followerList = followRepository.findFollowerListByUserIdxWithFollowStatus(userIdx,currentUserIdx,pageable);
+		Page<FollowDTO> followerList = followRepository.findFollowerListByUserIdxWithFollowStatus(targetUser.getIdx(), currentUser.getIdx(), pageable);
 
+		//profileUrl을 넣어주는 작업
 		for(FollowDTO followDTO : followerList) {
 			String profileUrl = null;
 
-			try {
-				profileUrl = imageService.fileLoad(followDTO.getFollowerUserProfileImage());
-			} catch (FileNotFoundException e) {
-				profileUrl = "";
-			}
+			profileUrl = imageService.fileLoad(followDTO.getFollowerUserProfileImage());
 
 			followDTO.setFollowerUserProfileImage(profileUrl);
 		}
