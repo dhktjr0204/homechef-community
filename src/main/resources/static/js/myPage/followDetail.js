@@ -19,7 +19,7 @@ function clickButton(event) {
       } else {
         button.classList.remove('follow-button');
         button.classList.add('un-follow-button');
-        button.textContent = '팔로잉';
+        button.textContent = '언팔로우';
       }
     } else {
       response.text().then(text => {

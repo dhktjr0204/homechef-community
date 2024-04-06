@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class LikesServiceImpl implements LikesService {
 
 	private final LikesRepository likesRepository;
-	private final UserRepository userRepository;
 	private final BoardRepository boardRepository;
 
 	//특정 게시물의 총 좋아요수를 반환하는 메서드
@@ -41,7 +40,7 @@ public class LikesServiceImpl implements LikesService {
 		Optional<Likes> like = likesRepository.findByUserIdxAndBoardId(currentUser.getIdx(), validBoard.getId());
 
 		if(like.isPresent()) {
-			throw new AlreadyLikedException();
+			throw new AlreadyLikedException("해당 게시물은 이미 좋아요가 눌러져 있습니다.");
 		}
 
 		Likes newLike = new Likes(currentUser,validBoard);
@@ -57,7 +56,7 @@ public class LikesServiceImpl implements LikesService {
 		Optional<Likes> like = likesRepository.findByUserIdxAndBoardId(currentUser.getIdx(), validBoard.getId());
 
 		if(like.isEmpty()) {
-			throw new NotLikedYetException();
+			throw new NotLikedYetException("해당 게시물은 이미 좋아요가 눌러져 있지 않습니다.");
 		}
 
 		likesRepository.delete(like.get());

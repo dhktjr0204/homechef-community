@@ -29,7 +29,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         Optional<Bookmark> bookmark =  bookmarkRepository.findByUserIdxAndBoardId(currentUser.getIdx(),validBoard.getId());
 
         if(bookmark.isPresent()) {//이미 사용자가 해당 게시물을 북마크로 등록해놓았다면
-            throw new AlreadyBookmarkedException();
+            throw new AlreadyBookmarkedException("해당 게시물은 이미 북마크로 등록이 되어있습니다.");
         }
 
         Bookmark newBookmark = new Bookmark(currentUser,validBoard);
@@ -45,7 +45,7 @@ public class BookmarkServiceImpl implements BookmarkService {
         Optional<Bookmark> bookmark =  bookmarkRepository.findByUserIdxAndBoardId(currentUser.getIdx(),validBoard.getId());
 
         if(bookmark.isEmpty()) {//이미 사용자가 북마크로 등록해놓지 않았다면
-            throw new NotBookmarkedYetException();
+            throw new NotBookmarkedYetException("해당 게시물은 이미 북마크로 등록이 되어있지 않습니다.");
         }
 
         bookmarkRepository.delete(bookmark.get());
