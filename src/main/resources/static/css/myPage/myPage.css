@@ -69,6 +69,10 @@
     white-space: pre-wrap;
 }
 
+.logout-button{
+    color: black;
+}
+
 /*탭 */
 .tabs {
     border-bottom: 1px solid #c4c4c4;

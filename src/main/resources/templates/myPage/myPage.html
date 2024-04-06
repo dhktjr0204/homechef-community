@@ -42,20 +42,16 @@
                     </th:block>
                 </div>
             </div>
-            <button class="more-options">⋮</button>
-            <div class="options-menu">
+            <button class="more-options" th:if="${currentLoginUser.idx}==${user.idx}">⋮</button>
+            <div class="options-menu" th:if="${currentLoginUser.idx}==${user.idx}">
                 <ul>
-
-                    <li th:if="${currentLoginUser.idx}==${user.idx}">
+                    <li>
                         <button class="update-board-button" onclick="clickEditProfileButton()">프로필 수정</button>
                     </li>
-                    <li th:unless="${currentLoginUser.idx}==${user.idx}">
-                        <button class="report-button">신고</button>
-                    </li>
-                    <li th:if="${currentLoginUser.idx}==${user.idx}">
+                    <li>
                         <button class="logout-button" onclick="clickLogoutButton()">로그아웃</button>
                     </li>
-                    <li th:if="${currentLoginUser.idx}==${user.idx}">
+                    <li>
                         <button class="user-quit-button" onclick="clickUserQuitButton()">회원 탈퇴</button>
                     </li>
                 </ul>
