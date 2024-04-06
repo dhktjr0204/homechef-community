@@ -1,11 +1,5 @@
 package com.cooklog.model;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -17,24 +11,27 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.Formula;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@EntityListeners(AuditingEntityListener.class)
 @Table(name = "board")
 public class Board {
 
@@ -48,11 +45,9 @@ public class Board {
 
 	private String content;
 
-	@CreatedDate
 	@Column(name = "created_at")
 	private LocalDateTime createdAt;
 
-	@LastModifiedDate
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
 
@@ -73,12 +68,16 @@ public class Board {
 	@OrderBy("id ASC")
 	private List<Tag> tags=new ArrayList<>();
 
-
 	@OneToMany(mappedBy = "board")
 	@OrderBy("id DESC") //최근에 등록된 게시물부터 보여주기 위함
 	private List<Bookmark> bookmarks = new ArrayList<>();
 
-	public void update(String content){
+	public void update(String content, LocalDateTime updatedAt){
 		this.content=content;
+		this.updatedAt=updatedAt;
+	}
+
+	public void updateReadCnt(int readCount){
+		this.readCount=readCount;
 	}
 }

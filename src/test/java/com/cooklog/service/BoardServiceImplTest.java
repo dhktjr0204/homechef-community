@@ -299,7 +299,7 @@ class BoardServiceImplTest {
         boardService.updateBoard(boardId, requestDTO, requestDTO.getImageUrls(), images);
 
         //then
-        verify(board, times(1)).update(requestDTO.getContent());
+        verify(board, times(1)).update(any(),any());
         verify(tagRepository,times(1)).deleteByBoard_Id(boardId);
         verify(tagRepository,times(2)).save(any());
         verify(imageService,times(1)).updateFileList(any(),anyList(),anyList());

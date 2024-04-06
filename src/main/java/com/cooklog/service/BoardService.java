@@ -22,11 +22,13 @@ public interface BoardService {
 
     Board updateBoard(Long boardId, BoardUpdateRequestDTO boardUpdateRequestDTO, List<String> originalFiles, List<MultipartFile> newFiles);
 
-    void updateReadCnt(Long boardId);
+    void updateReadCnt(Board board);
 
     void deleteBoard(Long boardId);
 
-    BoardDTO getBoard(Long boardId, Long userId);
+    Board getBoard(Long boardId, Long userId);
+
+    BoardDTO convertBoardToDTO(Board board, Long userId);
 
     List<BoardDTO> findAllBoards();
 

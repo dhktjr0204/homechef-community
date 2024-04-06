@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,9 +16,9 @@ import java.util.Optional;
 @Repository
 public interface BoardRepository extends JpaRepository<Board, Long> {
 
-    @Modifying
-    @Query(value = "update board set readcnt = readcnt+1 where id = :id", nativeQuery = true)
-    void updateReadCnt(Long id);
+//    @Modifying(clearAutomatically = true)
+//    @Query(value = "update Board b set b.readCount = b.readCount+1 where b.id = :id")
+//    void updateReadCnt(Long id);
 
     List<Board> findByUserIdx(Long userId);
 

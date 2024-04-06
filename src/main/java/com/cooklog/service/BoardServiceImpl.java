@@ -14,6 +14,7 @@ import com.cooklog.repository.BoardRepository;
 import com.cooklog.repository.TagRepository;
 import com.cooklog.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.sql.ast.tree.expression.Over;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -70,13 +72,14 @@ public class BoardServiceImpl implements BoardService {
         return boardPage.map(board -> convertBoardToDTO(board, userId));
     }
 
+    @Transactional
     @Override
-    public BoardDTO getBoard(Long boardId, Long userId) {
+    public Board getBoard(Long boardId, Long userId) {
 
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(BoardNotFoundException::new);
 
-        return convertBoardToDTO(board, userId);
+        return board;
     }
 
     // @Override
@@ -145,7 +148,8 @@ public class BoardServiceImpl implements BoardService {
         return boardPage.map(board -> convertBoardToDTO(board, userId));
     }
 
-    private BoardDTO convertBoardToDTO(Board board, Long userId) {
+    @Override
+    public BoardDTO convertBoardToDTO(Board board, Long userId) {
 
         //게시글에 연결된 사진들 가져오기
         List<String> fileUrls = imageService.fileListLoad(board.getImages().stream()
@@ -160,6 +164,7 @@ public class BoardServiceImpl implements BoardService {
                 .id(board.getId())
                 .content(board.getContent())
                 .createdAt(board.getCreatedAt())
+                .updatedAt(board.getUpdatedAt())
                 .readCount(board.getReadCount())
                 .userId(board.getUser().getIdx())
                 .userNickname(board.getUser().getNickname())
@@ -192,13 +197,15 @@ public class BoardServiceImpl implements BoardService {
         Board boardBuilder = Board.builder()
                 .user(user)
                 .content(requestDTO.getContent())
-                .readCount(0).build();
+                .readCount(0)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
 
         Board board = boardRepository.save(boardBuilder);
 
         tagService.save(requestDTO.getTags(), board);
-
-
+        
         imageService.fileListWrite(images, board);
 
         return board;
@@ -215,7 +222,7 @@ public class BoardServiceImpl implements BoardService {
             throw new NoImageException();
         }
 
-        board.update(boardDTO.getContent());
+        board.update(boardDTO.getContent(),LocalDateTime.now());
 
         //기존 태그 모두 삭제
         tagRepository.deleteByBoard_Id(boardId);
@@ -226,8 +233,6 @@ public class BoardServiceImpl implements BoardService {
                 tagRepository.save(Tag.builder().board(board).name(tag).build());
             }
         }
-
-
         imageService.updateFileList(board, originalFiles, newFiles);
 
         return board;
@@ -236,9 +241,8 @@ public class BoardServiceImpl implements BoardService {
 
     @Transactional
     @Override
-    public void updateReadCnt(Long boardId) {
-
-        boardRepository.updateReadCnt(boardId);
+    public void updateReadCnt(Board board) {
+        board.updateReadCnt(board.getReadCount()+1);
 
     }
 
