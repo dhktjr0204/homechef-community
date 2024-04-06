@@ -9,7 +9,7 @@
     <link rel="stylesheet" th:href="@{/css/manager/board.css}"/>
 </head>
 <body>
-<div class="container">
+<div id="users-management-page" class="container">
     <div class="header">
         <a th:href="@{/manager/main}">
             <img th:src="@{/img/main/CookLog.png}" alt="Logo" class="logo-img">
@@ -18,12 +18,12 @@
     </div>
     <div class="search-container">
         <div class="selectBox">
-            <select name="dropdown" class="select">
+            <select name="dropdown" class="select users-search-select">
                 <option value="nickname">닉네임</option>
                 <option value="email">이메일</option>
                 <option value="role">등급</option>
             </select>
-            <input type="search" class="search-box" placeholder="검색어를 입력해주세요.">
+            <input type="search" class="search-box users-search-box" placeholder="검색어를 입력해주세요.">
         </div>
         <table class="content-table">
             <thead>
@@ -57,26 +57,10 @@
             </tr>
             </tbody>
         </table>
+        <div id="usersContainer"></div>
+        <ul id="users-pagination"></ul>
     </div>
 </div>
 </body>
-<script>
-    function openRoleManagerWindow(userIdx) {
-        // 새 창의 위치를 화면 중앙으로 조정하기 위한 계산
-        const width = 485;
-        const height = 180;
-        const left = (window.screen.width / 2) - (width / 2);
-        const top = (window.screen.height / 2) - (height / 2);
-
-        // window.open을 사용하여 새 창 열기
-        const roleManagerWindow = window.open('/manager/role-manager/' +userIdx, 'Role Manager', `width=${width},height=${height},top=${top},left=${left}`);
-        // 팝업 창이 닫히는 것을 감지하고 새로고침
-        const checkClosed = setInterval(function() {
-            if (roleManagerWindow.closed) {
-                clearInterval(checkClosed);
-                window.location.reload(); // 현재 페이지 새로고침
-            }
-        }, 1000);
-    }
-</script>
+<script th:src="@{/js/manager/search-manager.js}"></script>
 </html>

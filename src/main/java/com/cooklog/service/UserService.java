@@ -7,6 +7,9 @@ import java.util.List;
 import com.cooklog.model.Role;
 
 import com.cooklog.model.User;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.validation.annotation.Validated;
 
 @Validated
@@ -31,4 +34,5 @@ public interface UserService {
 
 	void resetReportCount(Long userId);
 
+	Page<UserDTO> searchUsers(String category, String term, Pageable pageable);
 }
