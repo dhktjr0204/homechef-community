@@ -48,10 +48,11 @@ public class BoardController {
     public String getBoard(@PathVariable Long id, Model model) {
         UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
 
-        //조회수 업데이트
-        boardService.updateReadCnt(id);
+        Board findBoard = boardService.getBoard(id, loginUserDTO.getIdx());
 
-        BoardDTO board = boardService.getBoard(id, loginUserDTO.getIdx());
+        //조회수 업데이트
+        boardService.updateReadCnt(findBoard);
+        BoardDTO board=boardService.convertBoardToDTO(findBoard,loginUserDTO.getIdx());
 
         model.addAttribute("currentLoginUser", loginUserDTO);
         model.addAttribute("board", board);
@@ -96,7 +97,8 @@ public class BoardController {
 
         UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
 
-        BoardDTO board = boardService.getBoard(id, loginUserDTO.getIdx());
+        Board findBoard = boardService.getBoard(id, loginUserDTO.getIdx());
+        BoardDTO board=boardService.convertBoardToDTO(findBoard,loginUserDTO.getIdx());
 
         //만약 인증되지 않은 사용자라면 404페이지 리턴
         if (!board.getUserId().equals(loginUserDTO.getIdx()) || loginUserDTO.isDeleted()) {

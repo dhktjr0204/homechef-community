@@ -23,6 +23,7 @@ public class BoardDTO {
     private Long id;
     private String content;
     private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private Integer readCount;
     private String profileImageName;
     private String profileImageUrl;

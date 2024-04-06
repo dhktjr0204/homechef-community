@@ -36,7 +36,10 @@
             </div>
         </header>
         <section class="content-info">
-            <p class="content-createdAt" th:text="${#temporals.format(board.createdAt,'yyyy-MM-dd HH:mm')}"></p>
+            <p th:if="${board.createdAt} eq ${board.updatedAt}"
+               class="content-createdAt" th:text="${#temporals.format(board.createdAt,'yyyy-MM-dd HH:mm')}"></p>
+            <p th:unless="${board.createdAt} eq ${board.updatedAt}"
+               class="content-createdAt" th:text="${#temporals.format(board.createdAt,'yyyy-MM-dd HH:mm')}+ ' | '+${#temporals.format(board.updatedAt,'yyyy-MM-dd HH:mm')}+' (수정됨)'"></p>
             <p class="content-read-count" th:text="'조회수: '+${board.readCount}"></p>
         </section>
         <section class="image-container">
