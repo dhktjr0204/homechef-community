@@ -164,12 +164,11 @@ document.addEventListener('DOMContentLoaded', function () {
     } else if (document.getElementById('report-management-page')) {
         setupReportSearch();
         fetchReports(0); // 초기 페이지 로드
-    } else if (document.getElementById('users-management-page')) {
+    } else {document.getElementById('users-management-page')
         setupUserSearch();
         fetchUsers(0); // 초기 유저 목록 로드
     }
 });
-
 // 게시글 관리 페이지 검색 설정
 function setupBoardSearch() {
     const searchBox = document.querySelector('.board-search-box');
@@ -230,7 +229,7 @@ function updateBoardTableWithSearchResults(data) {
                 <td>${item.content}</td>
                 <td>${item.userNickname}</td>
                 <td>${formatDate(item.createdAt)}</td>
-                <td><button class="delete-btn" data-id="${item.id}">삭제</button></td>
+                <td><button class="board-delete-btn" data-id="${item.id}">삭제</button></td>
             `;
         tableBody.appendChild(tr);
     });
@@ -248,7 +247,7 @@ function updateCommentTableWithSearchResults(comments) {
             <td>${comment.content}</td>
             <td>${comment.userName}</td>
             <td>${formatDate(comment.createdAt)}</td>
-            <td><button class="delete-btn" data-id="${comment.id}">삭제</button></td>
+            <td><button class="comment-delete-btn" data-id="${comment.id}">삭제</button></td>
         `;
         tableBody.appendChild(tr);
     });
@@ -265,6 +264,7 @@ function updateReportTableWithSearchResults(data) {
             <td>${info.isBlacklisted ? '블랙 리스트' : '일반 유저'}</td>
             <td><button class="block-btn ${info.isBlacklisted ? 'remove-from-blacklist' : 'add-to-blacklist'}" data-id="${info.userId}">${info.isBlacklisted ? '해제' : '등록'}</button></td>
         `;
+        console.log(info.isBlacklisted);
         tableBody.appendChild(tr);
     });
 }
@@ -329,4 +329,84 @@ function openRoleManagerWindow(userIdx) {
             window.location.reload(); // 현재 페이지 새로고침
         }
     }, 1000);
+}
+
+document.body.addEventListener('click', function(event) {
+    // 클릭된 요소가 게시글 삭제 버튼인지 확인
+    if (event.target.classList.contains('board-delete-btn')) {
+        const boardId = event.target.getAttribute('data-id');
+        if (confirm('정말 삭제하시겠습니까?')) {
+            fetch(`/manager/board/delete/${boardId}`, {
+                method: 'DELETE',
+            }).then(response => {
+                if (response.ok) {
+                    alert('게시글이 삭제되었습니다.');
+                    window.location.reload(); // 페이지 새로고침
+                } else {
+                    alert('게시글 삭제에 실패했습니다.');
+                }
+            }).catch(error => console.error('Error:', error));
+        }
+    }
+    // 클릭된 요소가 댓글 삭제 버튼인지 확인
+    if (event.target.classList.contains('comment-delete-btn')) {
+        const commentId = event.target.getAttribute('data-id');
+        if (confirm('댓글을 삭제하시겠습니까?')) {
+            fetch(`/manager/comment/delete/${commentId}`, {
+                method: 'DELETE',
+            }).then(response => {
+                if (response.ok) {
+                    alert('댓글이 삭제되었습니다.');
+                    window.location.reload(); // 페이지 새로고침
+                } else {
+                    alert('댓글 삭제에 실패했습니다.');
+                }
+            }).catch(error => console.error('Error:', error));
+        }
+    }
+});
+
+document.body.addEventListener('click', function(event) {
+    // 클릭된 요소가 블랙리스트 추가 버튼인지 확인
+    if (event.target.classList.contains('add-to-blacklist')) {
+        const userId = event.target.getAttribute('data-id');
+        console.log("블랙리스트 추가 버튼 클릭:", userId);
+        addToBlacklist(userId);
+    }
+    // 클릭된 요소가 블랙리스트 제거 버튼인지 확인
+    else if (event.target.classList.contains('remove-from-blacklist')) {
+        const userId = event.target.getAttribute('data-id');
+        console.log("블랙리스트 제거 버튼 클릭:", userId);
+        removeFromBlacklist(userId);
+    }
+});
+
+function addToBlacklist(userId) {
+    updateBlacklistStatus(`/manager/blacklist/add/${userId}`, '블랙리스트 추가 중 오류가 발생했습니다.');
+}
+
+function removeFromBlacklist(userId) {
+    updateBlacklistStatus(`/manager/blacklist/remove/${userId}`, '블랙리스트 제거 중 오류가 발생했습니다.');
+}
+
+function updateBlacklistStatus(url, errorMessage) {
+    fetch(url, { method: 'POST' })
+        .then(response => {
+            console.log('Response:', response);
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            if (data.isBlacklisted !== undefined) {
+                console.log('isBlacklisted:', data.isBlacklisted);
+                document.getElementById('blacklist-status-' + data.userId).textContent =
+                    data.isBlacklisted ? '블랙 리스트' : '일반 유저';
+                alert('상태가 업데이트 되었습니다.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert(errorMessage);
+        });
 }
