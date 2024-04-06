@@ -84,7 +84,7 @@ public class ManagerController {
 	public String listBoards(Model model) {
 		List<BoardDTO> boards = boardService.findAllBoards();
 		model.addAttribute("boards", boards);
-		return "/manager/board-manager";
+		return "manager/board-manager";
 	}
 	@DeleteMapping("/board/delete/{id}")
 	public ResponseEntity<?> deleteBoard(@PathVariable Long id) {
