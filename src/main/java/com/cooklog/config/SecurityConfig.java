@@ -1,9 +1,11 @@
 
  package com.cooklog.config;
 
+ import jakarta.persistence.Access;
  import java.io.IOException;
 
  import com.cooklog.exception.CustomFailureHandler;
+ import lombok.RequiredArgsConstructor;
  import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
  import org.springframework.context.annotation.Bean;
  import org.springframework.context.annotation.Configuration;
@@ -15,6 +17,7 @@
  import org.springframework.security.core.authority.AuthorityUtils;
  import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  import org.springframework.security.web.SecurityFilterChain;
+ import org.springframework.security.web.access.AccessDeniedHandler;
  import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
  import jakarta.servlet.ServletException;
@@ -23,7 +26,10 @@
 
  @Configuration
  @EnableWebSecurity
+ @RequiredArgsConstructor
  public class SecurityConfig{
+
+	 private final AccessDeniedHandler customAccessDeniedHandler;
 
      // 특정 HTTP 요청에 대한 웹 기반 보안 구성
  	@Bean
@@ -52,7 +58,7 @@
  			)
 			.logout(auth -> auth.logoutSuccessUrl("/login") // 로그아웃 설정
 					.invalidateHttpSession(true))
-			.csrf(auth -> auth.disable());
+			.csrf(auth -> auth.disable()).exceptionHandling((exceptionConfig) ->    exceptionConfig.accessDeniedHandler(customAccessDeniedHandler));
 
  		return http.build();
  	}
