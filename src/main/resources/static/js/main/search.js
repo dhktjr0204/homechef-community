@@ -26,3 +26,14 @@ function submitForm() {
         return true; // 검색어가 있을 경우 폼 제출
     }
 }
+
+function clickLogoutButton() {
+    const confirmation = confirm("로그아웃 하시겠습니까?");
+
+    if (confirmation) {
+        alert("로그아웃 되었습니다.");
+        location.href = "/logout";
+    } else {
+        // 아무 처리도 안함
+    }
+}

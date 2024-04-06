@@ -15,7 +15,7 @@
         <figure class="profile-picture" aria-label="프로필">
             <img  th:src="${currentLoginUser.profileImageUrl}" alt="프로필 사진">
         </figure>
-        <a class="username" th:href="'/myPage/main/' + ${currentLoginUser.idx}" th:text="${currentLoginUser.nickname}"></a>
-        <a th:href="@{/logout}" class="logout-button">로그아웃</a>
+        <a class="username" th:href="'/myPage/main/' + ${currentLoginUser.idx}" th:text="${currentLoginUser.nickname}">dhktjr0204</a>
+        <button class="header-logout-button" onclick="clickLogoutButton()">로그아웃</button>
     </div>
 </header>
