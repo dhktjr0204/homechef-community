@@ -7,6 +7,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
 import com.cooklog.model.Role;
+import com.cooklog.model.User;
 
 @Getter
 @Setter
@@ -55,5 +56,14 @@ public class UserDTO {
 		this.isDeleted = deleted;
 		this.postCount = postCount;
 		this.likesCount = likesCount;
+	}
+
+	public UserDTO(User user) {
+		this.idx = user.getIdx();
+		this.nickname = user.getNickname();
+		this.email = user.getEmail();
+		this.role = user.getRole();
+		this.reportCount = user.getReportCount();
+		this.isDeleted = user.isDeleted();
 	}
 }

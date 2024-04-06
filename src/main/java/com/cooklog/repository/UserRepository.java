@@ -1,7 +1,11 @@
 package com.cooklog.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.cooklog.dto.ReportedContentDTO;
+import com.cooklog.model.Role;
 import com.cooklog.model.User;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -36,6 +40,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT COALESCE(SUM(b.likesCount), 0) FROM Board b WHERE b.user.idx = :userId")
     int sumLikesByUserId(@Param("userId") Long userId);
 
-    // 닉네임에 특정 키워드가 포함된 사용자를 찾는 메서드
-    List<User> findByNicknameContaining(String term);
+    // 닉네임을 포함하고 reportCount가 4 이상인 사용자 검색 쿼리
+    Page<User> findByNicknameContainingAndReportCountGreaterThanEqual(String nickname, int reportCount, Pageable pageable);
+    // 역할(Role)에 따른 사용자 조회
+    Page<User> findByRole(Role role, Pageable pageable);
+
+    // 이메일을 포함하는 사용자 조회 (LIKE 쿼리)
+    Page<User> findByEmailContaining(String email, Pageable pageable);
+
+    // 닉네임을 포함하는 사용자 조회 (LIKE 쿼리)
+    Page<User> findByNicknameContaining(String nickname, Pageable pageable);
 }

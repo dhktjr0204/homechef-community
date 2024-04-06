@@ -40,34 +40,13 @@
             <td th:text="${board.content}"></td>
             <td th:text="${board.userNickname}"></td>
             <td th:text="${#temporals.format(board.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></td>
-            <td><button class="delete-btn" th:attr="data-id=${board.id}">삭제</button></td>
+            <td><button class="board-delete-btn" th:attr="data-id=${board.id}">삭제</button></td>
         </tr>
         </tbody>
     </table>
         <div id="commentsContainer"></div>
         <ul id="board-pagination"></ul>
 </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    const boardId = this.getAttribute('data-id');
-                    if (confirm('정말 삭제하시겠습니까?')) {
-                        fetch('/manager/board/delete/' + boardId, {
-                            method: 'DELETE',
-                        }).then(response => {
-                            if (response.ok) {
-                                alert('게시글이 삭제되었습니다.');
-                                window.location.reload(); // 페이지 새로고침
-                            } else {
-                                alert('게시글 삭제에 실패했습니다.');
-                            }
-                        }).catch(error => console.error('Error:', error));
-                    }
-                });
-            });
-        });
-    </script>
 </div>
 </body>
 <script th:src="@{/js/manager/search-manager.js}"></script>

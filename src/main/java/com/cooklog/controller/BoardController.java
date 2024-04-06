@@ -14,6 +14,9 @@ import com.cooklog.service.ReportService;
 import com.cooklog.validate.BoardCreateValidator;
 import com.cooklog.validate.BoardUpdateValidator;
 import lombok.RequiredArgsConstructor;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -38,7 +41,7 @@ import java.util.List;
 @RequestMapping("/board")
 @RequiredArgsConstructor
 public class BoardController {
-
+    private static final Logger logger = LoggerFactory.getLogger(BoardController.class);
     private final BoardService boardService;
     private final CommentService commentService;
     private final CustomIUserDetailsService userDetailsService;
@@ -190,6 +193,7 @@ public class BoardController {
     }
     @PostMapping("/reportBoard/{boardId}")
     public ResponseEntity<?> reportBoard(@PathVariable Long boardId) {
+        logger.info("Reporting board with ID: " + boardId);
         reportService.reportBoard(boardId);
         return ResponseEntity.ok().build();
     }

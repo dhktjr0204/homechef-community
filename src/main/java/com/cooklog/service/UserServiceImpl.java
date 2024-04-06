@@ -6,6 +6,7 @@ import com.cooklog.dto.*;
 import com.cooklog.exception.user.AlreadyExistsEmailException;
 import com.cooklog.exception.user.NotValidateUserException;
 import com.cooklog.model.Blacklist;
+import com.cooklog.model.Comment;
 import com.cooklog.repository.BlacklistRepository;
 import com.cooklog.repository.BoardRepository;
 
@@ -15,7 +16,8 @@ import com.cooklog.repository.BookmarkRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -245,5 +247,29 @@ class UserServiceImpl implements UserService {
     //         }
     //     }
     // }
+
+    @Override
+    public Page<UserDTO> searchUsers(String category, String term, Pageable pageable) {
+        Page<User> users;
+            if ("nickname".equals(category)) {
+                users = userRepository.findByNicknameContaining(term, pageable);
+            } else if ("email".equals(category)) {
+                users = userRepository.findByEmailContaining(term, pageable);
+            } else if ("role".equals(category)) {
+                try {
+                    Role role = Role.valueOf(term.toUpperCase()); // 여기서 예외가 발생할 수 있음
+                    users = userRepository.findByRole(role, pageable);
+                } catch (IllegalArgumentException e) {
+                    // 유효하지 않은 역할 값이 입력된 경우 처리
+                    return Page.empty(pageable);
+                }
+            }else {
+                users = Page.empty(pageable); // 또는 적절한 기본 처리
+            }
+        return users.map(this::convertToUserDTO);
+    }
+    private UserDTO convertToUserDTO(User user) {
+        return new UserDTO(user);
+    }
 }
 

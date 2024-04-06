@@ -79,7 +79,17 @@ public class ReportServiceImpl implements ReportService {
 	}
 
 	@Override
-	public List<ReportedContentDTO> searchReported(String term) {
-		return null;
+	public Page<ReportedContentDTO> searchReported(String term, Pageable pageable) {
+		return userRepository.findByNicknameContainingAndReportCountGreaterThanEqual(term, 4, pageable)
+			.map(this::convertToReportedContentDTO);
+	}
+	private ReportedContentDTO convertToReportedContentDTO(User user) {
+		boolean isBlacklisted = blacklistRepository.existsByUserIdx(user.getIdx());
+		return new ReportedContentDTO(
+			user.getNickname(),
+			user.getReportCount(),
+			user.getIdx(),
+			isBlacklisted
+		);
 	}
 }

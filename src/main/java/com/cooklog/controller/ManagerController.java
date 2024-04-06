@@ -180,9 +180,20 @@ public class ManagerController {
 	}
 
 	@GetMapping("/reports/search")
-	public ResponseEntity<List<ReportedContentDTO>> searchReported(
-		@RequestParam("term") String term) {
-		List<ReportedContentDTO> searchResults = reportService.searchReported(term);
+	public ResponseEntity<Page<ReportedContentDTO>> searchReported(
+		@RequestParam(value = "term", required = false, defaultValue = "") String term,
+		Pageable pageable) {
+		Page<ReportedContentDTO> searchResults = reportService.searchReported(term, pageable);
 		return ResponseEntity.ok(searchResults);
+	}
+	@GetMapping("/users/search")
+	public ResponseEntity<Page<UserDTO>> searchUsers(
+		@RequestParam(value = "category", required = false, defaultValue = "nickname") String category,
+		@RequestParam(value = "term", required = false, defaultValue = "") String term,
+		@RequestParam(value = "page", defaultValue = "0") int page,
+		@RequestParam(value = "size", defaultValue = "5") int size){
+		Pageable pageable = PageRequest.of(page, size, Sort.by("role").descending());
+		Page<UserDTO> users = userService.searchUsers(category, term, pageable);
+		return ResponseEntity.ok(users);
 	}
 }

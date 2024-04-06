@@ -75,7 +75,7 @@ header img{
 .update-btn:hover .block-btn:hover {
     background-color: darkred;
 }
-.delete-btn {
+.comment-delete-btn, .board-delete-btn {
     padding: 5px 10px;
     background-color: red;
     color: white;
@@ -84,17 +84,35 @@ header img{
     cursor: pointer;
 }
 
-.delete-btn:hover {
+.comment-delete-btn:hover, .board-delete-btn:hover {
     background-color: darkred;
 }
- .pagination {
-     display: flex;
-     list-style: none;
- }
-.pagination li {
-    margin: 0 5px;
-    cursor: pointer;
+#pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    justify-content: center;
+    margin-top: 20px;
 }
-.pagination .active {
-    font-weight: bold;
+
+#pagination button {
+    border: none;
+    padding: 8px 16px;
+    margin: 0 4px;
+    border-radius: 20px; /* 동그란 버튼 */
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    background-color: #007bff;
+    color: white;
+}
+
+#pagination button:hover:not([disabled]),
+#pagination button:active:not([disabled]) {
+    background-color: #005bff; /* 버튼 호버 시 색상 */
+    color: white;
+}
+
+#pagination button[disabled] {
+    cursor: default;
+    opacity: 0.7;
 }
