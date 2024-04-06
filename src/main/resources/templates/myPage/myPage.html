@@ -23,7 +23,7 @@
                     </div>
                     <div class="follower-count">
                         <a class="count-name" th:href="@{/user/{targetUserIdx}/follower(targetUserIdx=${user.idx})}">팔로워</a>
-                        <span th:text="${followCount.getFollowerCount()}">10</span>
+                        <span th:text="${followCount.getFollowerCount()}" class = "follower-number">10</span>
                     </div>
                     <div class="following-count">
                         <a class="count-name" th:href="@{/user/{targetUserIdx}/following(targetUserIdx=${user.idx})}">팔로잉</a>

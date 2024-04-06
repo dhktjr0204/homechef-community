@@ -83,6 +83,7 @@ function clickButton(event) {
     const button = event.target;
     const userIdx = button.getAttribute('data-userid');
     const isFollow = button.classList.contains('un-follow-button');
+    const followerNum = document.querySelector(".follower-number");
 
     const url = isFollow ? `/api/unfollow/${userIdx}` : `/api/follow/${userIdx}`;
     const method = isFollow ? 'DELETE' : 'POST';
@@ -96,10 +97,12 @@ function clickButton(event) {
             if (isFollow) {
                 button.classList.remove('un-follow-button');
                 button.classList.add('follow-button');
+                followerNum.textContent = parseInt(followerNum.textContent) - 1;
                 button.textContent = '팔로우';
             } else {
                 button.classList.remove('follow-button');
                 button.classList.add('un-follow-button');
+                followerNum.textContent = parseInt(followerNum.textContent) + 1;
                 button.textContent = '언팔로우';
             }
         } else {
