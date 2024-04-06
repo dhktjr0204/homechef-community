@@ -9,7 +9,7 @@
     <link rel="stylesheet" th:href="@{/css/manager/board.css}"/>
 </head>
 <body>
-<div class="container">
+<div id="comment-management-page" class="container">
     <div class="header">
         <a th:href="@{/manager/main}">
             <img th:src="@{/img/main/CookLog.png}" alt="Log" class="logo-img">
@@ -18,11 +18,11 @@
     </div>
     <div class="search-container">
         <div class="selectBox">
-            <select name="dropdown" class="select">
+            <select name="dropdown" class="select comment-search-select">
                 <option value="writer">작성자</option>
                 <option value="content">내용</option>
             </select>
-            <input type="search" class="search-box" placeholder="검색어를 입력해주세요.">
+            <input type="search" class="search-box comment-search-box" placeholder="검색어를 입력해주세요.">
         </div>
         <table class="content-table">
             <thead>
@@ -46,6 +46,8 @@
             </tr>
             </tbody>
         </table>
+        <div id="commentsContainer"></div>
+        <ul id="comment-pagination"></ul>
     </div>
 </div>
 </body>
@@ -70,4 +72,5 @@
         });
     });
 </script>
+<script th:src="@{/js/manager/search-manager.js}"></script>
 </html>

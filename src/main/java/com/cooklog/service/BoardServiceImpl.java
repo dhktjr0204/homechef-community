@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -78,19 +79,35 @@ public class BoardServiceImpl implements BoardService {
         return convertBoardToDTO(board, userId);
     }
 
+    // @Override
+    // public Page<BoardDTO> getSearchByText(String keyword, Long userId, Long lastBoardId, Pageable pageable) {
+    //     Page<Board> boardPage;
+    //
+    //     if (lastBoardId == 0) {
+    //         boardPage = boardRepository.findByContentContaining(keyword, pageable)
+    //                 .orElse(Page.empty());
+    //         ;
+    //     } else {
+    //         boardPage = boardRepository.findByContentContainingAndIdLessThanEqual(keyword, lastBoardId, pageable)
+    //                 .orElse(Page.empty());
+    //     }
+    //
+    //
+    //     if (boardPage.isEmpty()) {
+    //         return Page.empty();
+    //     }
+    //
+    //     return boardPage.map(board -> convertBoardToDTO(board, userId));
+    // }
     @Override
     public Page<BoardDTO> getSearchByText(String keyword, Long userId, Long lastBoardId, Pageable pageable) {
         Page<Board> boardPage;
 
         if (lastBoardId == 0) {
-            boardPage = boardRepository.findByContentContaining(keyword, pageable)
-                    .orElse(Page.empty());
-            ;
+            boardPage = boardRepository.findByContentContaining(keyword, pageable);
         } else {
-            boardPage = boardRepository.findByContentContainingAndIdLessThanEqual(keyword, lastBoardId, pageable)
-                    .orElse(Page.empty());
+            boardPage = boardRepository.findByContentContainingAndIdLessThanEqual(keyword, lastBoardId, pageable);
         }
-
 
         if (boardPage.isEmpty()) {
             return Page.empty();
@@ -259,6 +276,32 @@ public class BoardServiceImpl implements BoardService {
         return boardRepository.findByUserIdx(userId).stream()
                 .map(board -> new BoardDTO(board.getId(), board.getContent(), board.getCreatedAt()))
                 .collect(Collectors.toList());
+    }
+    @Override
+    public Page<BoardDTO> searchBoards(String category, String term, Pageable pageable) {
+        Page<Board> boards;
+
+        if ("content".equals(category)) {
+            boards = boardRepository.findByContentContaining(term, pageable);
+        } else if ("writer".equals(category)) {
+            boards = boardRepository.findByUserNicknameContaining(term, pageable);
+        } else {
+            boards = Page.empty(pageable);
+        }
+
+        return boards.map(this::convertToDto);
+    }
+
+
+
+    private BoardDTO convertToDto(Board board) {
+        return new BoardDTO(
+            board.getId(),
+            board.getContent(),
+            board.getUser().getNickname(),
+            board.getCreatedAt(),
+            board.getReadCount()
+        );
     }
 }
 

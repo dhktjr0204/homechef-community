@@ -2,8 +2,12 @@ package com.cooklog.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.cooklog.dto.ReportedContentDTO;
@@ -72,5 +76,10 @@ public class ReportServiceImpl implements ReportService {
 
 		user.increaseReportCount();
 		userRepository.save(user);
+	}
+
+	@Override
+	public List<ReportedContentDTO> searchReported(String term) {
+		return null;
 	}
 }

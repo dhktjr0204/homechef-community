@@ -6,6 +6,7 @@ import com.cooklog.dto.CommentDTO;
 import com.cooklog.model.Comment;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface CommentService {
 
@@ -30,4 +31,6 @@ public interface CommentService {
 
 	// 게시판 ID에 따른 페이징 처리된 대댓글 목록 가져오기
 	List<CommentDTO> getRepliesByCommentId(Long parentId, int page, int size);
+
+	Page<CommentDTO> searchComments(String category, String term,  Pageable pageable);
 }
