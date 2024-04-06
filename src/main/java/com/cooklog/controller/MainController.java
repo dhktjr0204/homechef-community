@@ -6,6 +6,7 @@ import com.cooklog.dto.UserDTO;
 import com.cooklog.service.BoardService;
 import com.cooklog.service.CommentService;
 import com.cooklog.service.CustomIUserDetailsService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -118,4 +119,6 @@ public class MainController {
             return "layout/boardPreview";
         }
     }
+
+    @GetMapping("/access-denied")public String showAccessDenied(HttpServletRequest request) {    return "error/401";}
 }
