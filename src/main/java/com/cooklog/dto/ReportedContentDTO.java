@@ -19,6 +19,7 @@ public class ReportedContentDTO {
 		this.userId = userId;
 		this.isBlacklisted = isBlacklisted;
 	}
+
 	public boolean isBlacklisted() {
 		return isBlacklisted;
 	}

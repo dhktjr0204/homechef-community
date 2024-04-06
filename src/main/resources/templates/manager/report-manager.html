@@ -9,7 +9,7 @@
     <link rel="stylesheet" th:href="@{/css/manager/board.css}"/>
 </head>
 <body>
-<div class="container">
+<div id="report-management-page" class="container">
     <div class="header">
         <a th:href="@{/manager/main}">
             <img th:src="@{/img/main/CookLog.png}" alt="Log" class="logo-img">
@@ -18,7 +18,7 @@
     </div>
     <div class="search-container">
         <div class="selectBox">
-            <input type="search" class="search-box" placeholder="조회할 닉네임을 입력하세요.">
+            <input type="search" class="search-box report-search-box" placeholder="조회할 닉네임을 입력하세요.">
         </div>
         <table class="content-table">
             <thead>
@@ -35,8 +35,7 @@
                 <td th:text="${info.getReportCount()}"></td>
                 <td th:text="${info.isBlacklisted() ?'블랙 리스트' : '일반 유저'}"></td>
                 <td>
-                    <button class="block-btn add-to-blacklist" th:data-id="${info.userId}">등록</button>
-                    <button class="block-btn remove-from-blacklist" th:data-id="${info.userId}">해제</button>
+                    <button class="block-btn" th:classappend="${info.isBlacklisted() ? 'remove-from-blacklist' : 'add-to-blacklist'}" th:data-id="${info.userId}" th:text="${info.isBlacklisted() ? '해제' : '등록'}"></button>
                 </td>
             </tr>
             </tbody>
@@ -45,4 +44,5 @@
 </div>
 </body>
 <script th:src="@{/js/manager/manager.js}"></script>
+<script th:src="@{/js/manager/search-manager.js}"></script>
 </html>

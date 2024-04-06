@@ -48,9 +48,9 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     Page<Board> findAllBoardWithFollow(Long userId, Long boardId, Pageable pageable);
 
     //첫 요청일 경우
-    Optional<Page<Board>> findByContentContaining(String keyword, Pageable pageable);
+    Page<Board> findByContentContaining(String keyword, Pageable pageable);
     //스크롤 내린 뒤 두 번째 요청일 경우
-    Optional<Page<Board>> findByContentContainingAndIdLessThanEqual(String keyword, Long id, Pageable pageable);
+    Page<Board> findByContentContainingAndIdLessThanEqual(String keyword, Long id, Pageable pageable);
 
 
     //해당 태그가 하나라도 포함된 게시물 return, 첫요청일 경우
@@ -71,4 +71,6 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     //select count(*) from board where user_idx = userIdx
     Long countBoardByUserIdx(Long userIdx);
+
+    Page<Board> findByUserNicknameContaining(String nickname, Pageable pageable);
 }

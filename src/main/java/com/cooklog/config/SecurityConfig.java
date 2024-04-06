@@ -1,6 +1,8 @@
 
  package com.cooklog.config;
 
+ import java.io.IOException;
+
  import com.cooklog.exception.CustomFailureHandler;
  import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
  import org.springframework.context.annotation.Bean;
@@ -9,9 +11,15 @@
  import org.springframework.security.config.annotation.web.builders.HttpSecurity;
  import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
  import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+ import org.springframework.security.core.Authentication;
+ import org.springframework.security.core.authority.AuthorityUtils;
  import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  import org.springframework.security.web.SecurityFilterChain;
+ import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
+ import jakarta.servlet.ServletException;
+ import jakarta.servlet.http.HttpServletRequest;
+ import jakarta.servlet.http.HttpServletResponse;
 
  @Configuration
  @EnableWebSecurity
@@ -36,7 +44,7 @@
  			.formLogin((auth) -> auth.loginPage("/login")
 					// 로그인 form action 기본 설정
  				.loginProcessingUrl("/loginProc") // POST
-				.defaultSuccessUrl("/",true)
+				.successHandler(successHandler()) // 사용자 정의 핸들러 사용
  				.usernameParameter("email")
 				.passwordParameter("password")
 				.failureHandler(customFailureHandler()) // 로그인 실패 핸들링
@@ -49,6 +57,17 @@
  		return http.build();
  	}
 
+	 // 로그인 성공 핸들러
+	 @Bean
+	 public AuthenticationSuccessHandler successHandler() {
+		 return (request, response, authentication) -> {
+			 if (AuthorityUtils.authorityListToSet(authentication.getAuthorities()).contains("ADMIN")) {
+				 response.sendRedirect("/manager/main"); // 관리자 페이지로 리다이렉트
+			 } else {
+				 response.sendRedirect("/"); // 일반 사용자 페이지로 리다이렉트
+			 }
+		 };
+	 }
 	 @Bean
 	 public WebSecurityCustomizer webSecurityCustomizer() {
 		 // 스프링 시큐리티 비활성화 (모든 정적 파일에 ignoring 적용)

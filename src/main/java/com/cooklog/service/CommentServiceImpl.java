@@ -165,4 +165,17 @@ public class CommentServiceImpl implements CommentService {
 			.map(this::convertToDto)
 			.collect(Collectors.toList());
 	}
+
+	@Override
+	public Page<CommentDTO> searchComments(String category, String term, Pageable pageable) {
+		Page<Comment> commentsPage;
+		if ("writer".equals(category)) {
+			commentsPage = commentRepository.findByUserNicknameContaining(term, pageable);
+		} else if ("content".equals(category)) {
+			commentsPage = commentRepository.findByContentContaining(term, pageable);
+		} else {
+			commentsPage = Page.empty(pageable); // 또는 적절한 기본 처리
+		}
+		return commentsPage.map(this::convertToDto);
+	}
 }

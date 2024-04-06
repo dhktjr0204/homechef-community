@@ -54,4 +54,12 @@ public class BoardDTO {
         this.userNickname = nickname;
         this.createdAt = createdAt;
     }
+
+	public BoardDTO(Long id, String content, String nickname, LocalDateTime createdAt, Integer readCount) {
+        this.id = id;
+        this.content = content;
+        this.userNickname = nickname;
+        this.createdAt = createdAt;
+        this.readCount = readCount;
+	}
 }

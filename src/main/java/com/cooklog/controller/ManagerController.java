@@ -2,6 +2,10 @@ package com.cooklog.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,6 +23,7 @@ import com.cooklog.dto.CommentDTO;
 import com.cooklog.dto.ReportedContentDTO;
 import com.cooklog.dto.UserDTO;
 import com.cooklog.dto.UserPostDTO;
+import com.cooklog.model.Board;
 import com.cooklog.model.Role;
 import com.cooklog.service.BlacklistService;
 import com.cooklog.service.BoardService;
@@ -41,11 +46,10 @@ public class ManagerController {
 	private final BlacklistService blacklistService;
 	private final PostCombinationService postCombinationService;
 
-
 	@GetMapping("/main")
 	public String userProfile(Model model) {
-		// 예시로 1번 ID 사용자 정보를 조회
-		UserDTO userDto = userService.findUserById(1L);
+		// 예시로 11번 ID 사용자 정보를 조회. 나중에 다시 만들때 운영자부터 만들어 1번 한개만 사용.
+		UserDTO userDto = userService.findUserById(11L);
 
 		if (userDto != null) {
 			model.addAttribute("user", userDto);
@@ -68,7 +72,7 @@ public class ManagerController {
 			model.addAttribute("user", userDto);
 		} else {
 			// 사용자이 없는 경우
-			}
+		}
 		return "manager/role-manager";
 	}
 
@@ -79,13 +83,13 @@ public class ManagerController {
 		return "redirect:/manager/user"; // 업데이트 후에는 역할 관리 페이지로 리다이렉트
 	}
 
-
 	@GetMapping("/board")
 	public String listBoards(Model model) {
 		List<BoardDTO> boards = boardService.findAllBoards();
 		model.addAttribute("boards", boards);
 		return "manager/board-manager";
 	}
+
 	@DeleteMapping("/board/delete/{id}")
 	public ResponseEntity<?> deleteBoard(@PathVariable Long id) {
 		try {
@@ -103,17 +107,20 @@ public class ManagerController {
 		model.addAttribute("comments", comments);
 		return "manager/comment-manager";
 	}
+
 	@DeleteMapping("/comment/delete/{id}")
 	public ResponseEntity<?> deleteComment(@PathVariable Long id) {
 		commentService.deleteComment(id);
 		return ResponseEntity.ok().build();
 	}
+
 	@GetMapping("/report")
 	public String showReportedContents(Model model) {
 		List<ReportedContentDTO> reportedInfo = reportService.findReportedContents();
 		model.addAttribute("reportedInfo", reportedInfo);
 		return "manager/report-manager";
 	}
+
 	@PostMapping("/blacklist/add/{userId}")
 	public ResponseEntity<String> addToBlacklist(@PathVariable Long userId) {
 		try {
@@ -143,9 +150,39 @@ public class ManagerController {
 		model.addAttribute("posts", posts);
 		return "manager/userPosts-manager";
 	}
+
 	@PostMapping("/comment/{commentId}")
 	public ResponseEntity<?> reportComment(@PathVariable Long commentId) {
 		reportService.reportComment(commentId);
 		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/boards/search")
+	public ResponseEntity<Page<BoardDTO>> searchBoards(
+		@RequestParam(value = "category", required = false, defaultValue = "content") String category,
+		@RequestParam(value = "term", required = false, defaultValue = "") String term,
+		@RequestParam(value = "page", defaultValue = "0") int page,
+		@RequestParam(value = "size", defaultValue = "5") int size) {
+		Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+		Page<BoardDTO> boards = boardService.searchBoards(category, term, pageable);
+		return ResponseEntity.ok(boards);
+	}
+
+	@GetMapping("/comments/search")
+	public ResponseEntity<Page<CommentDTO>> searchComments(
+		@RequestParam(value = "category", required = false, defaultValue = "content") String category,
+		@RequestParam(value = "term", required = false, defaultValue = "") String term,
+		@RequestParam(value = "page", defaultValue = "0") int page,
+		@RequestParam(value = "size", defaultValue = "5") int size) {
+		Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+		Page<CommentDTO> comments = commentService.searchComments(category, term, pageable);
+		return ResponseEntity.ok(comments);
+	}
+
+	@GetMapping("/reports/search")
+	public ResponseEntity<List<ReportedContentDTO>> searchReported(
+		@RequestParam("term") String term) {
+		List<ReportedContentDTO> searchResults = reportService.searchReported(term);
+		return ResponseEntity.ok(searchResults);
 	}
 }

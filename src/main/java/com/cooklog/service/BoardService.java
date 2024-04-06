@@ -35,4 +35,5 @@ public interface BoardService {
     Page<BoardDTO> findBoardsByTags(String tags, Long userId, Long lastBoardId, Pageable pageable);
 
     List<BoardDTO> findBoardsByUserId(Long userId);
+    Page<BoardDTO> searchBoards(String category, String term, Pageable pageable);
 }

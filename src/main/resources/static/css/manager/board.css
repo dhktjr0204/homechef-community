@@ -87,3 +87,14 @@ header img{
 .delete-btn:hover {
     background-color: darkred;
 }
+ .pagination {
+     display: flex;
+     list-style: none;
+ }
+.pagination li {
+    margin: 0 5px;
+    cursor: pointer;
+}
+.pagination .active {
+    font-weight: bold;
+}

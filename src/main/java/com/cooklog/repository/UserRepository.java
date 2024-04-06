@@ -35,4 +35,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT COALESCE(SUM(b.likesCount), 0) FROM Board b WHERE b.user.idx = :userId")
     int sumLikesByUserId(@Param("userId") Long userId);
+
+    // 닉네임에 특정 키워드가 포함된 사용자를 찾는 메서드
+    List<User> findByNicknameContaining(String term);
 }
