@@ -60,8 +60,9 @@ public class MyPageController {
         // 팔로우한 갯수 가져오기
         MyPageFollowCountDTO followCountDTO = myPageService.getFollowCountDTO(id, loginUserDTO.getIdx());
 
-        // 사용자가 작성한 게시물 리스트 가져오기
+        // 마이페이지 소유자가 작성한 게시물 리스트 가져오기
         List<MyPageDTO> myPageDTOS = myPageService.getBoardByUserId(id);
+        // 마이페이지 소유자 정보
         UserDTO userDTO = myPageService.getUserDTO(id);
 
         // 모델에 사용자 정보 추가
