@@ -21,7 +21,7 @@
                     onclick="clickButton(event)"
                     th:data-userid="${follower.followerId}"
                     th:data-currentid="${currentLoginUser.idx}"
-                    th:text="${follower.isFollowing() == false ? '팔로우' : '팔로잉'}">
+                    th:text="${follower.isFollowing() == false ? '팔로우' : '언팔로우'}">
             </button>
         </li>
     </ul>
