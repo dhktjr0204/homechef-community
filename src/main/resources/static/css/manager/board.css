@@ -62,7 +62,7 @@ header img{
     padding: 12px;
     border-bottom: 1px solid #ddd;
 }
-.update-btn, .update-btn a, .block-btn, .block-btn a {
+.update-btn, .update-btn a, .block-btn, .block-btn a, .btn-blacklist{
     padding: 5px 10px;
     background-color: red;
     color: white;
@@ -72,7 +72,7 @@ header img{
     text-decoration: none;
 }
 
-.update-btn:hover .block-btn:hover {
+.update-btn:hover .block-btn:hover, .btn-blacklist:hover {
     background-color: darkred;
 }
 .comment-delete-btn, .board-delete-btn {

@@ -41,24 +41,6 @@ function fetchComments(page = 0, category = 'content', term = '') {
         .catch(error => console.error('Error:', error));
 }
 
-// 페이지네이션 버튼 클릭 시 해당 페이지로 검색 조건을 유지하며 데이터를 불러오는 함수
-function fetchReports(page = 0, term = '') {
-    const url = `/manager/reports/search?term=${encodeURIComponent(term)}&page=${page}&size=5`; // size를 5로 설정
-    fetch(url, {
-        method: 'GET',
-        headers: {'Accept': 'application/json'}
-    })
-        .then(response => {
-            if (!response.ok) throw new Error('Network response was not ok');
-            return response.json();
-        })
-        .then(data => {
-            updateReportTableWithSearchResults(data.content);
-            updateReportPagination(data.totalPages, page, term); // 페이지네이션 업데이트 시 현재 검색 조건을 전달
-        })
-        .catch(error => console.error('Error:', error));
-}
-
 // 유저 정보 가져오기 및 업데이트 함수
 function fetchUsers(page = 0, category = 'nickname', term = '') {
     const url = `/manager/users/search?category=${encodeURIComponent(category)}&term=${encodeURIComponent(term)}&page=${page}&size=5`;
@@ -66,10 +48,10 @@ function fetchUsers(page = 0, category = 'nickname', term = '') {
     fetch(url, {
         method: 'GET',
         headers: {'Accept': 'application/json'}
-         })
+    })
         .then(response => {
-        if (!response.ok) throw new Error('Network response was not ok');
-        return response.json();
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
         })
         .then(data => {
             updateUsersTableWithSearchResults(data.content);
@@ -116,25 +98,6 @@ function updateCommentPagination(totalPages, currentPage, category, term) {
     }
 }
 
-// 페이지네이션 업데이트 함수에 검색 조건을 포함하여 수정
-function updateReportPagination(totalPages, currentPage, term) {
-    const reportPagination = document.getElementById('report-pagination');
-    reportPagination.innerHTML = ''; // 기존 페이지네이션 초기화
-
-    for (let i = 0; i < totalPages; i++) {
-        const button = document.createElement('button');
-        button.innerText = i + 1;
-        // 검색 조건을 유지하며 해당 페이지를 불러오는 함수를 버튼의 클릭 이벤트에 연결
-        button.onclick = function () {
-            fetchReports(i, term);
-        };
-        if (i === currentPage) {
-            button.classList.add('active');
-        }
-        reportPagination.appendChild(button);
-    }
-}
-
 // 유저 페이지네이션 업데이트 함수
 function updateUsersPagination(totalPages, currentPage, category, term) {
     const usersPagination = document.getElementById('users-pagination');
@@ -161,14 +124,12 @@ document.addEventListener('DOMContentLoaded', function () {
     } else if (document.getElementById('comment-management-page')) {
         setupCommentSearch();
         fetchComments(0); // 초기 페이지 로드
-    } else if (document.getElementById('report-management-page')) {
-        setupReportSearch();
-        fetchReports(0); // 초기 페이지 로드
-    } else {document.getElementById('users-management-page')
+    } else if (document.getElementById('users-management-page')) {
         setupUserSearch();
         fetchUsers(0); // 초기 유저 목록 로드
     }
 });
+
 // 게시글 관리 페이지 검색 설정
 function setupBoardSearch() {
     const searchBox = document.querySelector('.board-search-box');
@@ -191,17 +152,6 @@ function setupCommentSearch() {
             const searchTerm = searchBox.value;
             const searchCategory = searchSelect.value;
             fetchComments(0, searchCategory, searchTerm); // 검색 실행
-        }
-    });
-}
-
-// 댓글 검색 설정 함수
-function setupReportSearch() {
-    const searchBox = document.querySelector('.report-search-box');
-    searchBox.addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            const searchTerm = searchBox.value;
-            fetchReports(0, searchTerm); // 검색 실행
         }
     });
 }
@@ -253,22 +203,6 @@ function updateCommentTableWithSearchResults(comments) {
     });
 }
 
-function updateReportTableWithSearchResults(data) {
-    const tableBody = document.querySelector('.content-table tbody');
-    tableBody.innerHTML = '';
-    data.forEach(info => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-            <td><a href="/manager/userPosts/${info.userId}">${info.userNickname}</a></td>
-            <td>${info.reportCount}</td>
-            <td>${info.isBlacklisted ? '블랙 리스트' : '일반 유저'}</td>
-            <td><button class="block-btn ${info.isBlacklisted ? 'remove-from-blacklist' : 'add-to-blacklist'}" data-id="${info.userId}">${info.isBlacklisted ? '해제' : '등록'}</button></td>
-        `;
-        console.log(info.isBlacklisted);
-        tableBody.appendChild(tr);
-    });
-}
-
 // 유저 테이블 업데이트 함수
 function updateUsersTableWithSearchResults(users) {
     const tableBody = document.querySelector('.content-table tbody');
@@ -278,7 +212,7 @@ function updateUsersTableWithSearchResults(users) {
 
         // 사용자 역할에 따른 텍스트 설정
         let roleDescription = '';
-        switch(user.role) {
+        switch (user.role) {
             case 'USER':
                 roleDescription = '미식 초보';
                 break;
@@ -321,9 +255,9 @@ function openRoleManagerWindow(userIdx) {
     const top = (window.screen.height / 2) - (height / 2);
 
 // window.open을 사용하여 새 창 열기
-    const roleManagerWindow = window.open('/manager/role-manager/' +userIdx, 'Role Manager', `width=${width},height=${height},top=${top},left=${left}`);
+    const roleManagerWindow = window.open('/manager/role-manager/' + userIdx, 'Role Manager', `width=${width},height=${height},top=${top},left=${left}`);
 // 팝업 창이 닫히는 것을 감지하고 새로고침
-    const checkClosed = setInterval(function() {
+    const checkClosed = setInterval(function () {
         if (roleManagerWindow.closed) {
             clearInterval(checkClosed);
             window.location.reload(); // 현재 페이지 새로고침
@@ -331,7 +265,7 @@ function openRoleManagerWindow(userIdx) {
     }, 1000);
 }
 
-document.body.addEventListener('click', function(event) {
+document.body.addEventListener('click', function (event) {
     // 클릭된 요소가 게시글 삭제 버튼인지 확인
     if (event.target.classList.contains('board-delete-btn')) {
         const boardId = event.target.getAttribute('data-id');
@@ -366,47 +300,38 @@ document.body.addEventListener('click', function(event) {
     }
 });
 
-document.body.addEventListener('click', function(event) {
-    // 클릭된 요소가 블랙리스트 추가 버튼인지 확인
-    if (event.target.classList.contains('add-to-blacklist')) {
-        const userId = event.target.getAttribute('data-id');
-        console.log("블랙리스트 추가 버튼 클릭:", userId);
-        addToBlacklist(userId);
-    }
-    // 클릭된 요소가 블랙리스트 제거 버튼인지 확인
-    else if (event.target.classList.contains('remove-from-blacklist')) {
-        const userId = event.target.getAttribute('data-id');
-        console.log("블랙리스트 제거 버튼 클릭:", userId);
-        removeFromBlacklist(userId);
-    }
-});
-
-function addToBlacklist(userId) {
-    updateBlacklistStatus(`/manager/blacklist/add/${userId}`, '블랙리스트 추가 중 오류가 발생했습니다.');
-}
-
-function removeFromBlacklist(userId) {
-    updateBlacklistStatus(`/manager/blacklist/remove/${userId}`, '블랙리스트 제거 중 오류가 발생했습니다.');
-}
-
-function updateBlacklistStatus(url, errorMessage) {
-    fetch(url, { method: 'POST' })
+function updateBlacklistStatus(url, userId, isBlacklisted, errorMessage) {
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        },
+    })
         .then(response => {
-            console.log('Response:', response);
             if (!response.ok) throw new Error('Network response was not ok');
             return response.json();
         })
         .then(data => {
-            console.log('Response data:', data);
-            if (data.isBlacklisted !== undefined) {
-                console.log('isBlacklisted:', data.isBlacklisted);
-                document.getElementById('blacklist-status-' + data.userId).textContent =
-                    data.isBlacklisted ? '블랙 리스트' : '일반 유저';
-                alert('상태가 업데이트 되었습니다.');
-            }
+            alert(data.message);
+            window.location.reload(); // 응답을 받은 후 페이지 새로고침
         })
         .catch(error => {
             console.error('Error:', error);
             alert(errorMessage);
         });
 }
+
+
+document.addEventListener('click', function(event) {
+    if (event.target.classList.contains('btn-blacklist')) {
+        const button = event.target;
+        const userId = button.dataset.userid; // 데이터 속성에서 userId 읽기
+        const isBlacklisted = button.dataset.blacklisted === 'true'; // 데이터 속성에서 블랙리스트 여부 읽기
+        const actionUrl = isBlacklisted ?
+            `/manager/blacklist/remove/${userId}` :
+            `/manager/blacklist/add/${userId}`;
+
+        updateBlacklistStatus(actionUrl, userId, isBlacklisted ? '블랙리스트에서 해제 중 오류가 발생했습니다.' : '블랙리스트에 추가 중 오류가 발생했습니다.');
+    }
+});

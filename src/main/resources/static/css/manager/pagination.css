@@ -1,0 +1,51 @@
+.pagination-container{
+    align-self: center;
+}
+#commentContainer, #boardsContainer, #usersContainer {
+    align-self: center;
+}
+#report-pagination {
+    justify-content: center;
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+    align-items: baseline;
+}
+#users-pagination, #comment-pagination, #board-pagination{
+    align-self: center;
+}
+
+#report-pagination a{
+    display: inline-block;
+    text-decoration: none;
+    border: none;
+    padding: 8px 16px;
+    margin: 0 4px;
+    border-radius: 20px; /* 동그란 버튼 */
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    background-color: #007bff;
+    color: white;
+}
+#users-pagination button, #comment-pagination button, #board-pagination button {
+    border: none;
+    padding: 8px 16px;
+    margin: 0 4px;
+    border-radius: 20px; /* 동그란 버튼 */
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    background-color: #007bff;
+    color: white;
+}
+
+#report-pagination a:hover:not([disabled]), #users-pagination button:hover:not([disabled]), #comment-pagination button:hover:not([disabled]), #board-pagination button:hover:not([disabled]),
+#report-pagination a:active:not([disabled]), #users-pagination button:active:not([disabled]), #comment-pagination button:active:not([disabled]), #board-pagination button:active:not([disabled]) {
+    background-color: #005bff; /* 버튼 호버 시 색상 */
+    color: white;
+}
+
+#report-pagination a[disabled], #users-pagination button[disabled], #comment-pagination button[disabled], #board-pagination button[disabled] {
+    cursor: default;
+    opacity: 0.7;
+}

@@ -20,7 +20,4 @@ public class ReportedContentDTO {
 		this.isBlacklisted = isBlacklisted;
 	}
 
-	public boolean isBlacklisted() {
-		return isBlacklisted;
-	}
 }

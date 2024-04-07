@@ -1,12 +1,15 @@
 package com.cooklog.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,14 +19,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cooklog.dto.BoardDTO;
 import com.cooklog.dto.CommentDTO;
 import com.cooklog.dto.ReportedContentDTO;
 import com.cooklog.dto.UserDTO;
 import com.cooklog.dto.UserPostDTO;
-import com.cooklog.model.Board;
 import com.cooklog.model.Role;
 import com.cooklog.service.BlacklistService;
 import com.cooklog.service.BoardService;
@@ -115,32 +116,27 @@ public class ManagerController {
 	}
 
 	@GetMapping("/report")
-	public String showReportedContents(Model model) {
-		List<ReportedContentDTO> reportedInfo = reportService.findReportedContents();
-		model.addAttribute("reportedInfo", reportedInfo);
+	public String showReportedContents(@PageableDefault(size = 5) Pageable pageable, Model model) {
+		Page<ReportedContentDTO> reportedContentsPage = reportService.findReportedContentsPageable(pageable);
+		// 통일성을 위해 reportedInfo를 사용
+		model.addAttribute("reportedInfo", reportedContentsPage.getContent());
+		model.addAttribute("currentPage", reportedContentsPage.getNumber() + 1);
+		model.addAttribute("totalPages", reportedContentsPage.getTotalPages());
 		return "manager/report-manager";
 	}
 
 	@PostMapping("/blacklist/add/{userId}")
-	public ResponseEntity<String> addToBlacklist(@PathVariable Long userId) {
-		try {
-			blacklistService.addToBlacklist(userId);
-			return ResponseEntity.ok("유저를 블랙리스트에 추가하였습니다.");
-		} catch (Exception e) {
-			// 에러 처리
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("블랙리스트 추가에 실패하였습니다: " + e.getMessage());
-		}
+	public ResponseEntity<?> addToBlacklist(@PathVariable Long userId) {
+		blacklistService.addToBlacklist(userId);
+		boolean isBlacklisted = true; // 실제 로직에 따라 결정됩니다.
+		return ResponseEntity.ok(Map.of("message", "유저를 블랙리스트에 추가하였습니다.", "isBlacklisted", isBlacklisted));
 	}
 
 	@PostMapping("/blacklist/remove/{userId}")
-	public ResponseEntity<String> removeFromBlacklist(@PathVariable Long userId) {
-		try {
-			blacklistService.removeFromBlacklist(userId);
-			return ResponseEntity.ok("유저를 블랙리스트에서 해제하였습니다.");
-		} catch (Exception e) {
-			// 에러 처리
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("블랙리스트 해제에 실패하였습니다: " + e.getMessage());
-		}
+	public ResponseEntity<?> removeFromBlacklist(@PathVariable Long userId) {
+		blacklistService.removeFromBlacklist(userId);
+		boolean isBlacklisted = false; // 실제 로직에 따라 결정됩니다.
+		return ResponseEntity.ok(Map.of("message", "유저를 블랙리스트에서 해제하였습니다.", "isBlacklisted", isBlacklisted));
 	}
 
 	@GetMapping("/userPosts/{userId}")
@@ -179,19 +175,33 @@ public class ManagerController {
 		return ResponseEntity.ok(comments);
 	}
 
-	@GetMapping("/reports/search")
-	public ResponseEntity<Page<ReportedContentDTO>> searchReported(
-		@RequestParam(value = "term", required = false, defaultValue = "") String term,
-		Pageable pageable) {
-		Page<ReportedContentDTO> searchResults = reportService.searchReported(term, pageable);
-		return ResponseEntity.ok(searchResults);
+	// 신고된 유저 검색 기능
+	@GetMapping("/report-management/search")
+	public String searchReportedUsers(@RequestParam("nickname") String nickname,
+		@RequestParam(value = "page", defaultValue = "0") int page,
+		@RequestParam(value = "size", defaultValue = "5") int size, // 기본 페이지 크기를 5로 설정
+		Model model) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<ReportedContentDTO> reportedUsers = reportService.searchReported(nickname, pageable);
+		model.addAttribute("reportedInfo", reportedUsers.getContent());
+		model.addAttribute("currentPage", reportedUsers.getNumber() + 1);
+		model.addAttribute("totalPages", reportedUsers.getTotalPages());
+		model.addAttribute("nickname", nickname); // 검색어를 모델에 추가
+
+		// 콘솔 로깅
+		System.out.println("Searching reported users for nickname: " + nickname);
+		System.out.println("Page: " + pageable.getPageNumber() + ", Size: " + pageable.getPageSize());
+		System.out.println("Total pages: " + reportedUsers.getTotalPages() + ", Current page: " + (reportedUsers.getNumber() + 1));
+
+		return "manager/report-manager";
 	}
+
 	@GetMapping("/users/search")
 	public ResponseEntity<Page<UserDTO>> searchUsers(
 		@RequestParam(value = "category", required = false, defaultValue = "nickname") String category,
 		@RequestParam(value = "term", required = false, defaultValue = "") String term,
 		@RequestParam(value = "page", defaultValue = "0") int page,
-		@RequestParam(value = "size", defaultValue = "5") int size){
+		@RequestParam(value = "size", defaultValue = "5") int size) {
 		Pageable pageable = PageRequest.of(page, size, Sort.by("role").descending());
 		Page<UserDTO> users = userService.searchUsers(category, term, pageable);
 		return ResponseEntity.ok(users);

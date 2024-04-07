@@ -35,4 +35,5 @@ public interface UserService {
 	void resetReportCount(Long userId);
 
 	Page<UserDTO> searchUsers(String category, String term, Pageable pageable);
+
 }
