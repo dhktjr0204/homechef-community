@@ -82,8 +82,8 @@ public class MyPageServiceImpl implements MyPageService {
                 .idx(user.getIdx())
                 .nickname(user.getNickname())
                 .introduction(user.getIntroduction())
-                .profileImageUrl(profileImageUrl).build();
-
+                .profileImageUrl(profileImageUrl)
+                .role(user.getRole()).build();
         return userDTO;
     }
 

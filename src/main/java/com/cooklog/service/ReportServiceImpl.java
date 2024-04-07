@@ -35,7 +35,7 @@ public class ReportServiceImpl implements ReportService {
 
 	//4번이상 신고 당할시 신고 유저 관리 페이지에 표시.
 	public Page<ReportedContentDTO> findReportedContentsPageable(Pageable pageable) {
-		int reportThreshold = 0; // 신고 횟수 기준
+		int reportThreshold = 4; // 신고 횟수 기준
 		Page<User> reportedUsersPage = userRepository.findByReportCountGreaterThanEqual(reportThreshold, pageable);
 
 		// 조회된 User 엔티티를 ReportedContentDTO로 변환
@@ -79,7 +79,7 @@ public class ReportServiceImpl implements ReportService {
 
 	@Override
 	public Page<ReportedContentDTO> searchReported(String term, Pageable pageable) {
-		return userRepository.findByNicknameContainingAndReportCountGreaterThanEqual(term, 0, pageable)
+		return userRepository.findByNicknameContainingAndReportCountGreaterThanEqual(term, 4, pageable)
 			.map(this::convertToReportedContentDTO);
 	}
 	private ReportedContentDTO convertToReportedContentDTO(User user) {

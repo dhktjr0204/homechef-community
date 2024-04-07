@@ -1,0 +1,62 @@
+/* 공통 스타일 */
+.user-nickname {
+    padding: 5px;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: bold;
+    display: inline-block;
+    margin: 2px;
+}
+.user-nickname-and-badge span {
+    font-size: medium;
+    font-weight: bolder;
+}
+/* 미식 초보 스타일 */
+.user-nickname.user-role-USER {
+    background-color: #76CD26; /* 녹색 계열 */
+
+}
+
+/* 요리 연습생 스타일 */
+.user-nickname.user-role-USER2 {
+    background-color: #4F97FF; /* 파란색 계열 */
+    box-shadow: 0px 0px 10px #4F97FF; /* 금색 발광 효과 */
+}
+
+/* 요리 전문가 스타일 */
+.user-nickname.user-role-USER3 {
+    background-color: #FFD700; /* 금색 */
+    box-shadow: 0px 0px 10px #FFD700; /* 금색 발광 효과 */
+}
+/* 배지 아이콘 스타일 */
+.user-badge {
+    display: contents;
+}
+
+.user-badge.user-role-USER::before {
+    content: '★'; /* 별표 문자 */
+    display: inline-block;
+    font-size: 1.2em;
+}
+.user-badge.user-role-USER2::before {
+    content: '★★★'; /* 별표 문자 */
+    display: inline-block;
+    font-size: 1.2em;
+}
+.user-badge.user-role-USER3::before {
+    content: '★★★★★'; /* 별표 문자 */
+    display: inline-block;
+    font-size: 1.2em;
+}
+
+.user-badge.user-role-USER {
+    color: #76CD26; /* 녹색 계열 */
+}
+
+.user-badge.user-role-USER2 {
+    color: #4F97FF; /* 파란색 계열 */
+}
+
+.user-badge.user-role-USER3 {
+    color: #FFD700; /* 금색 */
+}

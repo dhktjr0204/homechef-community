@@ -60,50 +60,110 @@ function fetchUsers(page = 0, category = 'nickname', term = '') {
         .catch(error => console.error('Error:', error));
 }
 
-// 페이지네이션 업데이트 함수에 검색 조건을 포함하여 수정
-function updateBoardPagination(totalPages, currentPage, category, term) {
-    const boardPagination = document.getElementById('board-pagination'); // 페이지네이션을 위한 요소의 ID를 boardPagination로 가정
-    boardPagination.innerHTML = ''; // 기존 페이지네이션 초기화
+// 유저 페이지네이션 업데이트 함수, windowSize를 추가하여 유연성을 높임
+function updateBoardPagination(totalPages, currentPage, category, term, windowSize = 1) {
+    const boardPagination = document.getElementById('board-pagination');
+    boardPagination.innerHTML = '';
 
-    for (let i = 0; i < totalPages; i++) {
+    // '이전' 버튼 생성 및 추가
+    if (currentPage > 0) {
+        const prevButton = document.createElement('button');
+        prevButton.innerText = '<';
+        prevButton.addEventListener('click', function () {
+            fetchBoards(currentPage - 1, category, term);
+        });
+        boardPagination.appendChild(prevButton);
+    }
+
+    // 페이지 번호 버튼 생성 및 추가 (윈도우 범위 계산)
+    const startPage = Math.max(currentPage - windowSize, 0);
+    const endPage = Math.min(currentPage + windowSize + 1, totalPages);
+
+    for (let i = startPage; i < endPage; i++) {
         const button = document.createElement('button');
         button.innerText = i + 1;
-        // 검색 조건을 유지하며 해당 페이지를 불러오는 함수를 버튼의 클릭 이벤트에 연결
-        button.onclick = function () {
+        button.addEventListener('click', function () {
             fetchBoards(i, category, term);
-        };
+        });
         if (i === currentPage) {
             button.classList.add('active');
         }
         boardPagination.appendChild(button);
     }
+
+    // '다음' 버튼 생성 및 추가
+    if (currentPage < totalPages - 1) {
+        const nextButton = document.createElement('button');
+        nextButton.innerText = '>';
+        nextButton.addEventListener('click', function () {
+            fetchBoards(currentPage + 1, category, term);
+        });
+        boardPagination.appendChild(nextButton);
+    }
 }
 
-// 페이지네이션 업데이트 함수에 검색 조건을 포함하여 수정
-function updateCommentPagination(totalPages, currentPage, category, term) {
+// 유저 페이지네이션 업데이트 함수, windowSize를 추가하여 유연성을 높임
+function updateCommentPagination(totalPages, currentPage, category, term, windowSize = 1) {
     const commentPagination = document.getElementById('comment-pagination');
-    commentPagination.innerHTML = ''; // 기존 페이지네이션 초기화
+    commentPagination.innerHTML = '';
 
-    for (let i = 0; i < totalPages; i++) {
+    // '이전' 버튼 생성 및 추가
+    if (currentPage > 0) {
+        const prevButton = document.createElement('button');
+        prevButton.innerText = '<';
+        prevButton.addEventListener('click', function () {
+            fetchComments(currentPage - 1, category, term);
+        });
+        commentPagination.appendChild(prevButton);
+    }
+
+    // 페이지 번호 버튼 생성 및 추가 (윈도우 범위 계산)
+    const startPage = Math.max(currentPage - windowSize, 0);
+    const endPage = Math.min(currentPage + windowSize + 1, totalPages);
+
+    for (let i = startPage; i < endPage; i++) {
         const button = document.createElement('button');
         button.innerText = i + 1;
-        // 검색 조건을 유지하며 해당 페이지를 불러오는 함수를 버튼의 클릭 이벤트에 연결
-        button.onclick = function () {
+        button.addEventListener('click', function () {
             fetchComments(i, category, term);
-        };
+        });
         if (i === currentPage) {
             button.classList.add('active');
         }
         commentPagination.appendChild(button);
     }
+
+    // '다음' 버튼 생성 및 추가
+    if (currentPage < totalPages - 1) {
+        const nextButton = document.createElement('button');
+        nextButton.innerText = '>';
+        nextButton.addEventListener('click', function () {
+            fetchComments(currentPage + 1, category, term);
+        });
+        commentPagination.appendChild(nextButton);
+    }
 }
 
-// 유저 페이지네이션 업데이트 함수
-function updateUsersPagination(totalPages, currentPage, category, term) {
+// 유저 페이지네이션 업데이트 함수, windowSize를 추가하여 유연성을 높임
+function updateUsersPagination(totalPages, currentPage, category, term, windowSize = 1) {
     const usersPagination = document.getElementById('users-pagination');
     usersPagination.innerHTML = '';
 
-    for (let i = 0; i < totalPages; i++) {
+    // '이전' 버튼 생성 및 추가
+    if (currentPage > 0) {
+        const prevButton = document.createElement('button');
+        prevButton.innerText = '<';
+        prevButton.addEventListener('click', function () {
+            fetchUsers(currentPage - 1, category, term);
+        });
+        usersPagination.appendChild(prevButton);
+    }
+
+    // 페이지 번호 버튼 생성 및 추가 (윈도우 범위 계산)
+    const startPage = Math.max(currentPage - windowSize, 0);
+    const endPage = Math.min(currentPage + windowSize + 1, totalPages);
+
+    for (let i = startPage; i < endPage; i++) {
         const button = document.createElement('button');
         button.innerText = i + 1;
         button.addEventListener('click', function () {
@@ -114,7 +174,18 @@ function updateUsersPagination(totalPages, currentPage, category, term) {
         }
         usersPagination.appendChild(button);
     }
+
+    // '다음' 버튼 생성 및 추가
+    if (currentPage < totalPages - 1) {
+        const nextButton = document.createElement('button');
+        nextButton.innerText = '>';
+        nextButton.addEventListener('click', function () {
+            fetchUsers(currentPage + 1, category, term);
+        });
+        usersPagination.appendChild(nextButton);
+    }
 }
+
 
 document.addEventListener('DOMContentLoaded', function () {
     // 현재 페이지 확인
