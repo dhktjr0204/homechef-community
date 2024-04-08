@@ -26,7 +26,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByEmail(String email);
 
     //신고횟수 n회 이상인 유저 조회
-    List<User> findByReportCountGreaterThan(int count);
+    Page<User> findByReportCountGreaterThanEqual(int reportCount, Pageable pageable);
+
 
     @Modifying
     @Query(value = "update user " +
@@ -50,4 +51,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // 닉네임을 포함하는 사용자 조회 (LIKE 쿼리)
     Page<User> findByNicknameContaining(String nickname, Pageable pageable);
+
 }

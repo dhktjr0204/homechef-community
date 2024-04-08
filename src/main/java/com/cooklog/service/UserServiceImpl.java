@@ -260,11 +260,10 @@ class UserServiceImpl implements UserService {
                     Role role = Role.valueOf(term.toUpperCase()); // 여기서 예외가 발생할 수 있음
                     users = userRepository.findByRole(role, pageable);
                 } catch (IllegalArgumentException e) {
-                    // 유효하지 않은 역할 값이 입력된 경우 처리
                     return Page.empty(pageable);
                 }
             }else {
-                users = Page.empty(pageable); // 또는 적절한 기본 처리
+                users = Page.empty(pageable);
             }
         return users.map(this::convertToUserDTO);
     }

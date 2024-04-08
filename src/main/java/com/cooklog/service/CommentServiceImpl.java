@@ -157,14 +157,6 @@ public class CommentServiceImpl implements CommentService {
 		);
 	}
 
-	@Override
-	public List<CommentDTO> getRepliesByCommentId(Long parentId, int page, int size) {
-		Pageable pageable = PageRequest.of(page, size);
-		Page<Comment> replies = commentRepository.findByParentCommentId(parentId, pageable);
-		return replies.stream()
-			.map(this::convertToDto)
-			.collect(Collectors.toList());
-	}
 
 	@Override
 	public Page<CommentDTO> searchComments(String category, String term, Pageable pageable) {

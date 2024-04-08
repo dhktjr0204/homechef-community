@@ -5,6 +5,7 @@
     <title>MyPage</title>
     <link rel="stylesheet" href="../../static/css/main/style.css" th:href="@{/css/main/style.css}"/>
     <link rel="stylesheet" href="../../static/css/myPage/myPage.css" th:href="@{/css/myPage/myPage.css}"/>
+    <link rel="stylesheet" href="../../static/css/main/ratingStyle.css" th:href="@{/css/main/ratingStyle.css}"/>
 </head>
 <body>
 <div th:replace="~{layout/header.html::main-header}"></div>
@@ -15,15 +16,23 @@
                 <img th:src="${user.profileImageUrl}" alt="프로필 사진">
             </figure>
             <div class="user-info-wrapper">
-                <p class="user-name" th:value="${user.idx}" th:text="${user.nickname}">example_user</p>
+                <div class="user-nickname-and-badge">
+                    <p class="user-nickname user-name" th:value="${user.idx}"
+                       th:classappend="${'user-role-' + user.role}" th:text="${user.nickname}">example_user</p>
+                    <span th:if="${user.role.toString().equals('USER')}">미식 초보</span>
+                    <span th:if="${user.role.toString().equals('USER2')}">요리 연습생</span>
+                    <span th:if="${user.role.toString().equals('USER3')}">요리 전문가</span>
+                </div>
+                <p class="user-badge" th:classappend="${'user-role-' + user.role}">
                 <div class="profile-stats">
                     <div class="board-count-container">
                         <span class="count-name">게시물</span>
                         <span th:text="${boards.size()}"></span>
                     </div>
                     <div class="follower-count">
-                        <a class="count-name" th:href="@{/user/{targetUserIdx}/follower(targetUserIdx=${user.idx})}">팔로워</a>
-                        <span th:text="${followCount.getFollowerCount()}" class = "follower-number">10</span>
+                        <a class="count-name"
+                           th:href="@{/user/{targetUserIdx}/follower(targetUserIdx=${user.idx})}">팔로워</a>
+                        <span th:text="${followCount.getFollowerCount()}" class="follower-number">10</span>
                     </div>
                     <div class="following-count">
                         <a class="count-name" th:href="@{/user/{targetUserIdx}/following(targetUserIdx=${user.idx})}">팔로잉</a>
@@ -62,13 +71,16 @@
 
     <div class="tabs">
         <button class="tab-button active" onclick="switchTab('Posts')">게시물</button>
-        <button th:if="${currentLoginUser.idx} == ${user.idx}"class="tab-button" onclick="switchTab('Bookmarks'); loadMyBookmarks()">북마크</button>
+        <button th:if="${currentLoginUser.idx} == ${user.idx}" class="tab-button"
+                onclick="switchTab('Bookmarks'); loadMyBookmarks()">북마크
+        </button>
     </div>
 
     <section class="board-list-container">
         <ul class="board-list">
             <li th:each="board: ${boards}">
-                    <img th:value="${board.id}" th:src="${board.imageUrl}" href="게시물 미리보기 이미지" class="image-item" onclick="clickBoardImage(this)">
+                <img th:value="${board.id}" th:src="${board.imageUrl}" href="게시물 미리보기 이미지" class="image-item"
+                     onclick="clickBoardImage(this)">
             </li>
         </ul>
         <div th:if="${boards.isEmpty()}" class="no-content-container">

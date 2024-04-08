@@ -34,23 +34,22 @@ public class ReportServiceImpl implements ReportService {
 
 
 	//4번이상 신고 당할시 신고 유저 관리 페이지에 표시.
-	public List<ReportedContentDTO> findReportedContents() {
-		List<ReportedContentDTO> reportedContents = new ArrayList<>();
-		List<User> reportedUsers = userRepository.findByReportCountGreaterThan(3);
+	public Page<ReportedContentDTO> findReportedContentsPageable(Pageable pageable) {
+		int reportThreshold = 4; // 신고 횟수 기준
+		Page<User> reportedUsersPage = userRepository.findByReportCountGreaterThanEqual(reportThreshold, pageable);
 
-		for (User user : reportedUsers) {
-			// 사용자가 블랙리스트에 있는지 여부를 확인
+		// 조회된 User 엔티티를 ReportedContentDTO로 변환
+		Page<ReportedContentDTO> reportedContentsPage = reportedUsersPage.map(user -> {
 			boolean isBlacklisted = blacklistRepository.findOneByUserIdx(user.getIdx()).isPresent();
-
-			reportedContents.add(new ReportedContentDTO(
+			return new ReportedContentDTO(
 				user.getNickname(),
 				user.getReportCount(),
 				user.getIdx(),
-				isBlacklisted // 블랙리스트 여부를 DTO에 설정
-			));
-		}
+				isBlacklisted
+			);
+		});
 
-		return reportedContents;
+		return reportedContentsPage;
 	}
 
 	//댓글 신고 기능
