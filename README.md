@@ -8,6 +8,11 @@ CookLog를 통해 자신의 요리를 업로드하고, 다른 사용자들의 �
 [클릭하여 페이지를 방문하세요](http://ec2-43-202-107-97.ap-northeast-2.compute.amazonaws.com:8080/)
 <br>
 
+<br>
+
+[프로젝트 시연 영상 보러가기](https://drive.google.com/file/d/1n36GnCkTfjnL7PUIUJsSjOQ3vE4twyKa/view?usp=drive_link)
+<br><br>
+
 # 👩‍👧‍👦 개발 인원 및 역할
 
 <table style="width: 100%;">
