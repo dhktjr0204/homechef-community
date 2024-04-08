@@ -1,6 +1,8 @@
 package com.cooklog.controller;
 
 import com.cooklog.dto.*;
+import com.cooklog.model.Role;
+import com.cooklog.model.User;
 import com.cooklog.validate.JoinValidator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

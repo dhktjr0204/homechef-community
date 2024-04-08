@@ -23,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -217,14 +218,36 @@ public class BoardController {
         return ResponseEntity.ok("/");
     }
 
-    //댓글 추가
+    /**
+     * 게시글에 댓글을 추가하는 API
+     * @param boardId 게시글 ID
+     * @param commentDTO 댓글 데이터 전송 객체
+     * @return ResponseEntity 객체를 통해 생성된 댓글 정보 또는 에러 메시지 반환
+     */
+    @ApiOperation(value = "댓글 추가", notes = "지정된 게시글에 새로운 댓글을 추가합니다.")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "댓글이 성공적으로 추가됨"),
+        @ApiResponse(code = 400, message = "잘못된 요청 구조"),
+        @ApiResponse(code = 404, message = "해당 게시글이 존재하지 않음"),
+        @ApiResponse(code = 500, message = "서버 내부 오류")
+    })
     @PostMapping("/{boardId}/comments")
     public ResponseEntity<CommentDTO> addComment(@PathVariable Long boardId, @RequestBody CommentDTO commentDTO) {
         CommentDTO savedComment = commentService.addComment(boardId, commentDTO);
         return ResponseEntity.ok(savedComment);
     }
 
-    // 댓글 수정
+    /** 댓글 수정 API
+    * @param commentId 수정할 댓글의 ID
+    * @param commentDTO 수정할 댓글 데이터
+    * @return ResponseEntity 객체를 통해 수정된 댓글 정보 또는 NotFound 에러 반환
+    */
+    @ApiOperation(value = "댓글 수정", notes = "지정된 ID의 댓글을 수정합니다.")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "댓글이 성공적으로 수정됨"),
+        @ApiResponse(code = 404, message = "해당 댓글이 존재하지 않음"),
+        @ApiResponse(code = 500, message = "서버 내부 오류")
+    })
     @PutMapping("/comments/{commentId}")
     public ResponseEntity<CommentDTO> updateComment(@PathVariable Long commentId, @RequestBody CommentDTO commentDTO) {
         CommentDTO updatedComment = commentService.updateComment(commentId, commentDTO);
@@ -235,37 +258,59 @@ public class BoardController {
         }
     }
 
-    //댓글 삭제
+    /** 댓글 삭제 API
+    * @param commentId 삭제할 댓글의 ID
+    * @return ResponseEntity 객체를 통해 삭제 성공 여부 반환
+    */
+    @ApiOperation(value = "댓글 삭제", notes = "지정된 ID의 댓글을 삭제합니다.")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "댓글이 성공적으로 삭제됨"),
+        @ApiResponse(code = 404, message = "해당 댓글이 존재하지 않음"),
+        @ApiResponse(code = 500, message = "서버 내부 오류")
+    })
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
         commentService.deleteComment(commentId);
         return ResponseEntity.ok().build();
     }
 
+    /** 게시글의 댓글 조회 API
+    * @param boardId 댓글을 조회할 게시글의 ID
+    * @param page 조회할 페이지 번호 (기본값: 0)
+    * @param limit 한 페이지 당 댓글 수 (기본값: 5)
+    * @return ResponseEntity 객체를 통해 페이지당 댓글 정보 반환
+    */
+    @ApiOperation(value = "게시글 댓글 조회", notes = "지정된 게시글 ID의 댓글을 페이지 단위로 조회합니다.")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "댓글 조회 성공"),
+        @ApiResponse(code = 404, message = "해당 게시글이 존재하지 않음"),
+        @ApiResponse(code = 500, message = "서버 내부 오류")
+    })
     @GetMapping("/{boardId}/comments")
     public ResponseEntity<?> getComments(
-            @PathVariable Long boardId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int limit) {
+        @PathVariable Long boardId,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int limit) {
 
         Page<CommentDTO> commentPage = commentService.getCommentsByBoardId(boardId, page, limit);
         return ResponseEntity.ok(commentPage);
     }
 
-    @GetMapping("/{parentId}/replies")
-    public ResponseEntity<List<CommentDTO>> getRepliesByCommentId(
-            @PathVariable Long parentId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
-    ) {
-        List<CommentDTO> replies = commentService.getRepliesByCommentId(parentId, page, size);
-        return ResponseEntity.ok(replies);
-    }
+    /** 게시글 신고 API
+    * @param boardId 신고할 게시글의 ID
+    * @return ResponseEntity 객체를 통해 신고 성공 여부 반환
+    */
+    @ApiOperation(value = "게시글 신고", notes = "지정된 게시글을 신고합니다.")
+    @ApiResponses({
+        @ApiResponse(code = 200, message = "게시글이 성공적으로 신고됨"),
+        @ApiResponse(code = 404, message = "해당 게시글이 존재하지 않음"),
+        @ApiResponse(code = 500, message = "서버 내부 오류")
+    })
     @PostMapping("/reportBoard/{boardId}")
     public ResponseEntity<?> reportBoard(@PathVariable Long boardId) {
-        logger.info("Reporting board with ID: " + boardId);
         reportService.reportBoard(boardId);
         return ResponseEntity.ok().build();
     }
+
 }
 

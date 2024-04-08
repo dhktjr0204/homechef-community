@@ -37,6 +37,7 @@
 		 // "/login", "/join", "/joinProc 에는 인증 없이 접근 가능하도록 - permitAll()
  		http
  			.authorizeHttpRequests((auth) -> auth
+				.requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**").permitAll()
  				.requestMatchers("/login","/join", "/joinProc", "/loginProc").permitAll()
  				.requestMatchers("/manager/*").hasAuthority("ADMIN")
 				.requestMatchers("/board/write", "/board/edit/*","/board/delete/*","/board/comments/*").hasAnyAuthority("USER", "USER2", "USER3", "ADMIN")
