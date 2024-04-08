@@ -78,21 +78,21 @@ CookLog를 통해 자신의 요리를 업로드하고, 다른 사용자들의 �
 
 # 🖼 UI
 
-|                            로그인 화면                             |                             회원가입 화면                            |
-|:-------------------------------------------------------------:|:--------------------------------------------------------------:|
-|   ![로그인 이미지](/src/main/resources/static/img/readMe/로그인.png)   |   ![회원가입 이미지](/src/main/resources/static/img/readMe/회원가입.png)  |
-|                          <b>마이페이지 화면                          |                          <b>프로필 수정 화면                          |
-| ![마이페이지 이미지](/src/main/resources/static/img/readMe/마이페이지.png) | ![프로필 수정 이미지](/src/main/resources/static/img/readMe/프로필수정.png) |
-|                           <b>북마크 화면                           |                          <b>팔로워,팔로잉 화면                         |
-|   ![북마크 이미지](/src/main/resources/static/img/readMe/북마크.png)   |    ![팔로워 이미지](/src/main/resources/static/img/readMe/팔로워.png)   |
-|                           <b>메인 화면                            |                            <b>게시글 화면                           |
-|  ![메인 이미지](/src/main/resources/static/img/readMe/메인페이지.png)   |  ![게시글 이미지](/src/main/resources/static/img/readMe/게시글_페이지.png) |
-|                           <b>검색 화면                            |                          <b>관리자 메인 화면                          |
+|                            로그인 화면                             |                             회원가입 화면                             |
+|:-------------------------------------------------------------:|:---------------------------------------------------------------:|
+|   ![로그인 이미지](/src/main/resources/static/img/readMe/로그인.png)   |   ![회원가입 이미지](/src/main/resources/static/img/readMe/회원가입.png)   |
+|                          <b>마이페이지 화면                          |                          <b>프로필 수정 화면                           |
+| ![마이페이지 이미지](/src/main/resources/static/img/readMe/마이페이지.png) | ![프로필 수정 이미지](/src/main/resources/static/img/readMe/프로필수정.png)  |
+|                           <b>북마크 화면                           |                          <b>팔로워,팔로잉 화면                          |
+|   ![북마크 이미지](/src/main/resources/static/img/readMe/북마크.png)   |    ![팔로워 이미지](/src/main/resources/static/img/readMe/팔로워.png)    |
+|                           <b>메인 화면                            |                            <b>게시글 화면                            |
+|  ![메인 이미지](/src/main/resources/static/img/readMe/메인페이지.png)   |  ![게시글 이미지](/src/main/resources/static/img/readMe/게시글_페이지.png)  |
+|                           <b>검색 화면                            |                          <b>관리자 메인 화면                           |
 |    ![검색 이미지](/src/main/resources/static/img/readMe/검색.png)    | ![관리자 메인 이미지](/src/main/resources/static/img/readMe/관리자_메인.png) |
-|                          <b>글 관리 화면                           |                           <b>댓글 관리 화면                          |
-|  ![글 관리 이미지](/src/main/resources/static/img/readMe/글_관리.png)  |  ![댓글 관리 이미지](/src/main/resources/static/img/readMe/댓글_관리.png) |
-|                        <b>신고 유저 관리 화면                         |                           <b>                          |
-| ![신고 관리 이미지](/src/main/resources/static/img/readMe/신고_관리.png) |      |
+|                          <b>글 관리 화면                           |                           <b>댓글 관리 화면                           |
+|  ![글 관리 이미지](/src/main/resources/static/img/readMe/글_관리.png)  |  ![댓글 관리 이미지](/src/main/resources/static/img/readMe/댓글_관리.png)  |
+|                        <b>신고 유저 관리 화면                         |                         <b>전체 유저 관리 화면                          |
+| ![신고 관리 이미지](/src/main/resources/static/img/readMe/신고_관리.png) |  ![유저 관리 이미지](/src/main/resources/static/img/readMe/유저_관리.png)  |
 
 
 # 👉 주요 기능
