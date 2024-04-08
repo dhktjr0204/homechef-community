@@ -2,6 +2,11 @@ package com.cooklog.controller;
 
 import com.cooklog.dto.*;
 import com.cooklog.validate.JoinValidator;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +30,11 @@ public class UserController {
 
     //로그인 유효성 검사
     @GetMapping("/login")
+    @Operation(summary = "로그인 페이지를 조회할 수 있는 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그인 HTML을 반환",
+                    content = @Content(mediaType = "text/html"))
+    })
     public String login(@RequestParam(value = "error", required = false)String error,
                         @RequestParam(value = "exception", required = false)String exception, Model model) {
 
@@ -36,6 +46,11 @@ public class UserController {
 
     //로그아웃
     @GetMapping("/logout")
+    @Operation(summary = "로그아웃 API", description = "회원의 세션을 무효화합니다. 메인 페이지로 돌아갑니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "로그아웃시 메인 페이지 HTML 반환",
+                    content = @Content(mediaType = "text/html"))
+    })
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext().getAuthentication());
         return "redirect:/login";
@@ -43,11 +58,22 @@ public class UserController {
 
     //회원가입 뷰
     @GetMapping("/join")
+    @Operation(summary = "회원가입 페이지를 조회할 수 있는 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원가입 HTML을 반환",
+                    content = @Content(mediaType = "text/html"))
+    })
     public String join() {
         return "user/join";
     }
 
     //회원가입 폼 처리 시 호출됨
+    @Operation(summary = "회원가입 API", description = "회원의 계정을 DB에 저장하고 로그인 페이지로 돌아갑니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "회원가입 시 로그인 페이지 HTML 반환",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(name="가입 성공 처리", value ="가입 성공" ))),
+    })
     @PostMapping("/joinProc")
     public ResponseEntity<?> joinProc(@ModelAttribute JoinDTO joinDTO, BindingResult result){
 
@@ -61,6 +87,11 @@ public class UserController {
 
     // 로그인 한 사용자 회원 탈퇴 (db에 업데이트 후 저장됨)
     @GetMapping("/quit")
+    @Operation(summary = "탈퇴 API", description = "회원의 계정을 탈퇴처리합니다. 로그인 페이지로 돌아갑니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "탈퇴 시 로그인 페이지 HTML 반환",
+                    content = @Content(mediaType = "text/html"))
+    })
     public String quit(@ModelAttribute UserDTO userDTO) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 

@@ -13,6 +13,11 @@ import com.cooklog.service.CustomIUserDetailsService;
 import com.cooklog.service.ReportService;
 import com.cooklog.validate.BoardCreateValidator;
 import com.cooklog.validate.BoardUpdateValidator;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 import org.slf4j.Logger;
@@ -48,6 +53,11 @@ public class BoardController {
     private final ReportService reportService;
 
     @GetMapping("/{id}")
+    @Operation(summary = "게시물을 조회할 수 있는 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시물 HTML을 반환",
+                content = @Content(mediaType = "text/html"))
+    })
     public String getBoard(@PathVariable Long id, Model model) {
         UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
 
@@ -64,6 +74,14 @@ public class BoardController {
     }
 
     @GetMapping("/write")
+    @Operation(summary = "게시물을 작성할 수 있는 페이지 조회 API", description = "유저가 게시물을 작성할 수 있는 페이지로 이동하는 API입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "게시물 작성 form HTML 반환",
+                content = @Content(mediaType = "text/html")),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 입력 값",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(name="존재하지 않는 게시물 수정 요청")))
+    })
     public String getWriteForm(Model model) {
         UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
 
@@ -74,6 +92,21 @@ public class BoardController {
     }
 
     @PostMapping("/write")
+    @Operation(summary = "게시물 작성 API", description = "유저가 게시물을 등록하면 내용들이 DB로 저장되고 자신이 작성한 게시글로 이동합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "유저가 작성한 게시물 HTML반환",
+                content = @Content(mediaType = "text/html")),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 유저 요청",
+                content = @Content(mediaType = "application/json",
+                    examples = @ExampleObject(name="인증되지 않은 유저 오류", value ="인증되지 않은 사용자입니다" ))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 입력 값",
+                content = @Content(mediaType = "application/json",
+                    examples = {
+                        @ExampleObject(name="게시글 본문 입력 오류", value ="콘텐츠 길이가 최대 길이를 초과하였습니다." ),
+                        @ExampleObject(name="게시물 태그 입력 오류", value ="태그가 최대 개수를 초과하였습니다." ),
+                        @ExampleObject(name="게시물 태그 입력 오류", value ="태그 길이가 최대 길이를 초과하였습니다. 태크 길이를 줄여주세요." )
+                }))
+    })
     public ResponseEntity<?> save(BoardCreateRequestDTO boardCreateRequestDTO,
                                   @RequestPart("images") List<MultipartFile> images,
                                   BindingResult result) {
@@ -96,6 +129,17 @@ public class BoardController {
     }
 
     @GetMapping("/edit/{id}")
+    @Operation(summary = "게시물을 수정할 수 있는 페이지 조회 API", description = "유저가 등록한 게시물을 수정할 수 있는 페이지를 조회하는 API입니다.")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "200", description = "게시물 수정 form HTML을 반환",
+                content = @Content(mediaType = "text/html")),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 유저 요청",
+                content = @Content(mediaType = "application/json",
+                    examples = @ExampleObject(name="인증되지 않은 유저 오류", value ="인증되지 않은 사용자입니다" ))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 입력 값",
+                content = @Content(mediaType = "application/json",
+                    examples = @ExampleObject(name="존재하지 않는 게시물 수정 요청")))
+    })
     public String getEditForm(@PathVariable Long id, Model model) {
 
         UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
@@ -115,6 +159,21 @@ public class BoardController {
     }
 
     @PutMapping("/edit/{id}")
+    @Operation(summary = "게시물을 수정할 수 있는 API", description = "유저가 등록한 게시물을 수정할 수 있는 API입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "수정된 게시물 HTML반환",
+                    content = @Content(mediaType = "text/html")),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 유저 요청",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(name="인증되지 않은 유저 오류", value ="인증되지 않은 사용자입니다" ))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 입력 값",
+                    content = @Content(mediaType = "application/json",
+                            examples = {
+                                    @ExampleObject(name="게시글 본문 입력 오류", value ="콘텐츠 길이가 최대 길이를 초과하였습니다." ),
+                                    @ExampleObject(name="게시물 태그 입력 오류", value ="태그가 최대 개수를 초과하였습니다." ),
+                                    @ExampleObject(name="게시물 태그 입력 오류", value ="태그 길이가 최대 길이를 초과하였습니다. 태크 길이를 줄여주세요." )
+                            }))
+    })
     public ResponseEntity<?> edit(@PathVariable Long id, BoardUpdateRequestDTO boardUpdateRequestDTO,
                                   @RequestPart(value = "images", required = false) List<MultipartFile> images,
                                   BindingResult result) {
@@ -136,6 +195,17 @@ public class BoardController {
     }
 
     @DeleteMapping("/delete/{id}")
+    @Operation(summary = "게시물을 삭제할 수 있는 API", description = "유저가 등록한 게시물을 삭제할 수 있는 API입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "메인 HTML을 반환",
+                    content = @Content(mediaType = "text/html")),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 유저 요청",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(name="인증되지 않은 유저 오류", value ="인증되지 않은 사용자입니다" ))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 입력 값",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(name="존재하지 않는 게시물 수정 요청")))
+    })
     public ResponseEntity<?> delete(@PathVariable Long id, @RequestParam("userId") Long userId) {
         UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
 
