@@ -18,7 +18,7 @@
         <h2>신고 유저 관리</h2>
     </div>
     <div class="search-container">
-        <form th:action="@{/manager/report-management/search}" method="get">
+        <form th:action="@{/manager/reports/search}" method="get">
             <div class="selectBox">
                 <input type="search" name="nickname" class="search-box report-search-box" placeholder="조회할 닉네임을 입력하세요.">
             </div>
@@ -50,14 +50,14 @@
         <div th:if="${totalPages != null}" class="pagination-container">
             <ul id="report-pagination">
                 <li th:if="${currentPage > 1}">
-                    <a th:href="@{/manager/report-management/search(nickname=${nickname}, page=${currentPage - 1})}">이전</a>
+                    <a th:href="@{/manager/reports/search(nickname=${nickname}, page=${currentPage - 1})}">이전</a>
                 </li>
                 <li th:each="pageNum : ${#numbers.sequence(1, totalPages)}">
-                    <a th:href="@{/manager/report-management/search(nickname=${nickname}, page=${pageNum -1})}"
+                    <a th:href="@{/manager/reports/search(nickname=${nickname}, page=${pageNum -1})}"
                        th:text="${pageNum}">[[${pageNum}]]</a>
                 </li>
                 <li th:if="${currentPage < totalPages}">
-                    <a th:href="@{/manager/report-management/search(nickname=${nickname}, page=${currentPage + 1})}">다음</a>
+                    <a th:href="@{/manager/reports/search(nickname=${nickname}, page=${currentPage + 1})}">다음</a>
                 </li>
             </ul>
         </div>
