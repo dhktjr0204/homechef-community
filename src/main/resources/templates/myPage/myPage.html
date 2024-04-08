@@ -22,6 +22,8 @@
                     <span th:if="${user.role.toString().equals('USER')}">미식 초보</span>
                     <span th:if="${user.role.toString().equals('USER2')}">요리 연습생</span>
                     <span th:if="${user.role.toString().equals('USER3')}">요리 전문가</span>
+                    <span th:if="${user.role.toString().equals('BLACK')}">블랙 리스트</span>
+                    <span th:if="${user.role.toString().equals('ADMIN')}">관리자</span>
                 </div>
                 <p class="user-badge" th:classappend="${'user-role-' + user.role}">
                 <div class="profile-stats">
