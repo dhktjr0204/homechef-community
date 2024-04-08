@@ -21,6 +21,11 @@ import com.cooklog.service.MyPageServiceImpl;
 import com.cooklog.service.UserService;
 import com.cooklog.validate.BoardUpdateValidator;
 import com.cooklog.validate.ProfileUpdateValidator;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +57,11 @@ public class MyPageController {
 
     // 마이페이지
     @GetMapping("/main/{id}")
+    @Operation(summary = "마이페이지 조회 API", description = "사용자의 마이페이지를 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "마이페이지 HTML 페이지 반환",
+                content = @Content(mediaType = "text/html"))
+    })
     public String getMyPage(@PathVariable Long id, Model model) {
 
         // 현재 로그인 된 유저 정보 가져오기
@@ -82,6 +92,14 @@ public class MyPageController {
     }
 
     @GetMapping("/edit/{userId}")
+    @Operation(summary = "프로필을 수정할 수 있는 페이지 조회 API", description = "유저가 프로필을 수정할 수 있는 페이지로 이동하는 API입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "프로필 수정 form HTML반환",
+                    content = @Content(mediaType = "text/html")),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 유저 요청",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(name="인증되지 않은 유저 오류", value ="인증되지 않은 사용자입니다" )))
+    })
     public String getProfileEditForm(@PathVariable Long userId, Model model) {
         UserDTO loginUserDTO = userDetailsService.getCurrentUserDTO();
 
@@ -94,6 +112,21 @@ public class MyPageController {
     }
 
     @PutMapping("/edit/{userId}")
+    @Operation(summary = "프로필을 수정할 수 있는 API", description = "유저가 프로필을 수정하면 DB에 저장하고 마이페이지로 이동하는 API입니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "마이페이지 HTML반환",
+                    content = @Content(mediaType = "text/html")),
+            @ApiResponse(responseCode = "401", description = "인증되지 않은 유저 요청",
+                    content = @Content(mediaType = "application/json",
+                            examples = @ExampleObject(name="인증되지 않은 유저 오류", value ="인증되지 않은 사용자입니다" ))),
+            @ApiResponse(responseCode = "400", description = "잘못된 요청 입력 값",
+                    content = @Content(mediaType = "application/json",
+                            examples = {
+                                    @ExampleObject(name="프로필 ID 입력 오류", value ="ID를 입력해주세요." ),
+                                    @ExampleObject(name="프로필 ID 입력 오류", value ="ID가 길이를 초과하였습니다. 20자 이하로 입력해 주세요." ),
+                                    @ExampleObject(name="인삿말 입력 오류", value ="인삿말이 길이를 초과하였습니다." )
+                            }))
+    })
     public ResponseEntity<?> updateProfile(@PathVariable Long userId,
                                            MyPageUpdateRequestDTO myPageUpdateRequestDTO,
                                            @RequestPart(value = "newImage", required = false) MultipartFile updateProfileImage,
