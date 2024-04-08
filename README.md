@@ -92,7 +92,7 @@ CookLog를 통해 자신의 요리를 업로드하고, 다른 사용자들의 �
 |                          <b>글 관리 화면                           |                           <b>댓글 관리 화면                          |
 |  ![글 관리 이미지](/src/main/resources/static/img/readMe/글_관리.png)  |  ![댓글 관리 이미지](/src/main/resources/static/img/readMe/댓글_관리.png) |
 |                        <b>신고 유저 관리 화면                         |                           <b>                          |
-| ![신고 관리 이미지](/src/main/resources/static/img/readMe/글_관리.png)  |      |
+| ![신고 관리 이미지](/src/main/resources/static/img/readMe/신고_관리.png) |      |
 
 
 # 👉 주요 기능
@@ -206,7 +206,13 @@ CookLog를 통해 자신의 요리를 업로드하고, 다른 사용자들의 �
 
 ## 9. 관리자 기능
 
+![관리자 이미지](/src/main/resources/static/img/readMe/관리자_메인.gif)
+
 ### [등급 기능]
+
+![마이페이지 이미지](/src/main/resources/static/img/readMe/마이페이지1.png)
+![마이페이지 이미지](/src/main/resources/static/img/readMe/마이페이지2.png)
+![마이페이지 이미지](/src/main/resources/static/img/readMe/마이페이지3.png)
 - 처음 로그인한 유저는 미식 초보로 분류됩니다.
 - 사용자가 작성한 글이 5개 이상일 경우 요리 연습생, 좋아요가 10개 이상인 경우는 요리전문가로 분류됩니다.
 - 등급은 마이페이지에서 아이콘으로 확인할 수 있습니다.
