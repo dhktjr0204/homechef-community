@@ -2,9 +2,7 @@ function bindMainReportEvent(button) {
     const boardArticle = button.closest('.board-container');
 
     const boardId = boardArticle.querySelector('.board-id').value;
-    console.log(`Reporting board with ID: ${boardId}`);
     const isConfirmed = confirm('이 게시글을 신고하시겠습니까?');
-    console.log(`Reporting board with ID: ${isConfirmed}`);
     if (isConfirmed) {
         fetch(`/board/reportBoard/${boardId}`, {
             method: 'POST', headers: {
@@ -306,7 +304,6 @@ function bindDeleteEvent() {
                 fetch(`/board/comments/${commentId}`, {method: 'DELETE'})
                     .then(response => {
                         if (!response.ok) throw new Error('Failed to delete comment');
-                        console.log('Comment deleted');
                         commentElement.remove();
                     })
                     .catch(error => console.error('Error:', error));
@@ -433,7 +430,6 @@ function deleteComment(commentId) {
             if (!response.ok) {
                 throw new Error('Failed to delete comment');
             }
-            console.log('Comment deleted');
             // 페이지에서 댓글 요소를 제거
             removeCommentElement(commentId);
         })

@@ -384,12 +384,11 @@ function updateBlacklistStatus(url, userId, isBlacklisted, errorMessage) {
             return response.json();
         })
         .then(data => {
-            alert(data.message);
+            alert(data.description); // data.message가 아닌 data.description으로 변경해야 합니다.
             window.location.reload(); // 응답을 받은 후 페이지 새로고침
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert(errorMessage);
+            alert(errorMessage); // 여기서 undefined가 뜬다면 이 위치가 문제입니다.
         });
 }
 
@@ -402,7 +401,9 @@ document.addEventListener('click', function(event) {
         const actionUrl = isBlacklisted ?
             `/manager/blacklist/remove/${userId}` :
             `/manager/blacklist/add/${userId}`;
-
-        updateBlacklistStatus(actionUrl, userId, isBlacklisted ? '블랙리스트에서 해제 중 오류가 발생했습니다.' : '블랙리스트에 추가 중 오류가 발생했습니다.');
+        const errorMessage = isBlacklisted ?
+            '블랙리스트에서 해제 중 오류가 발생했습니다.' :
+            '블랙리스트에 추가 중 오류가 발생했습니다.';
+        updateBlacklistStatus(actionUrl, userId, isBlacklisted, errorMessage);
     }
 });
