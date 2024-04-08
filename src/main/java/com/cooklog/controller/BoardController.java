@@ -1,29 +1,10 @@
 package com.cooklog.controller;
 
-import com.cooklog.dto.BoardCreateRequestDTO;
-import com.cooklog.dto.BoardDTO;
-import com.cooklog.dto.BoardUpdateRequestDTO;
-import com.cooklog.dto.CommentDTO;
-import com.cooklog.dto.UserDTO;
-import com.cooklog.exception.user.NotValidateUserException;
-import com.cooklog.model.Board;
-import com.cooklog.service.BoardService;
-import com.cooklog.service.CommentService;
-import com.cooklog.service.CustomIUserDetailsService;
-import com.cooklog.service.ReportService;
-import com.cooklog.validate.BoardCreateValidator;
-import com.cooklog.validate.BoardUpdateValidator;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,9 +20,26 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
+import com.cooklog.dto.BoardCreateRequestDTO;
+import com.cooklog.dto.BoardDTO;
+import com.cooklog.dto.BoardUpdateRequestDTO;
+import com.cooklog.dto.CommentDTO;
+import com.cooklog.dto.UserDTO;
+import com.cooklog.exception.user.NotValidateUserException;
+import com.cooklog.model.Board;
+import com.cooklog.service.BoardService;
+import com.cooklog.service.CommentService;
+import com.cooklog.service.CustomIUserDetailsService;
+import com.cooklog.service.ReportService;
+import com.cooklog.validate.BoardCreateValidator;
+import com.cooklog.validate.BoardUpdateValidator;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequestMapping("/board")
@@ -148,7 +146,7 @@ public class BoardController {
         Board findBoard = boardService.getBoard(id, loginUserDTO.getIdx());
         BoardDTO board=boardService.convertBoardToDTO(findBoard,loginUserDTO.getIdx());
 
-        //만약 인증되지 않은 사용자라면 404페이지 리턴
+        //만약 인증되지 않은 사용자라면 "404"페이지 리턴
         if (!board.getUserId().equals(loginUserDTO.getIdx()) || loginUserDTO.isDeleted()) {
             return "error/404";
         }
@@ -224,12 +222,12 @@ public class BoardController {
      * @param commentDTO 댓글 데이터 전송 객체
      * @return ResponseEntity 객체를 통해 생성된 댓글 정보 또는 에러 메시지 반환
      */
-    @ApiOperation(value = "댓글 추가", notes = "지정된 게시글에 새로운 댓글을 추가합니다.")
+    @Operation(summary = "댓글 추가", description = "지정된 게시글에 새로운 댓글을 추가합니다.")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "댓글이 성공적으로 추가됨"),
-        @ApiResponse(code = 400, message = "잘못된 요청 구조"),
-        @ApiResponse(code = 404, message = "해당 게시글이 존재하지 않음"),
-        @ApiResponse(code = 500, message = "서버 내부 오류")
+        @ApiResponse(responseCode = "200", description = "댓글이 성공적으로 추가됨"),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청 구조"),
+        @ApiResponse(responseCode = "404", description = "해당 게시글이 존재하지 않음"),
+        @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PostMapping("/{boardId}/comments")
     public ResponseEntity<CommentDTO> addComment(@PathVariable Long boardId, @RequestBody CommentDTO commentDTO) {
@@ -242,11 +240,11 @@ public class BoardController {
     * @param commentDTO 수정할 댓글 데이터
     * @return ResponseEntity 객체를 통해 수정된 댓글 정보 또는 NotFound 에러 반환
     */
-    @ApiOperation(value = "댓글 수정", notes = "지정된 ID의 댓글을 수정합니다.")
+    @Operation(summary = "댓글 수정", description = "지정된 ID의 댓글을 수정합니다.")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "댓글이 성공적으로 수정됨"),
-        @ApiResponse(code = 404, message = "해당 댓글이 존재하지 않음"),
-        @ApiResponse(code = 500, message = "서버 내부 오류")
+        @ApiResponse(responseCode = "200", description = "댓글이 성공적으로 수정됨"),
+        @ApiResponse(responseCode = "404", description = "해당 댓글이 존재하지 않음"),
+        @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PutMapping("/comments/{commentId}")
     public ResponseEntity<CommentDTO> updateComment(@PathVariable Long commentId, @RequestBody CommentDTO commentDTO) {
@@ -262,11 +260,11 @@ public class BoardController {
     * @param commentId 삭제할 댓글의 ID
     * @return ResponseEntity 객체를 통해 삭제 성공 여부 반환
     */
-    @ApiOperation(value = "댓글 삭제", notes = "지정된 ID의 댓글을 삭제합니다.")
+    @Operation(summary = "댓글 삭제", description = "지정된 ID의 댓글을 삭제합니다.")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "댓글이 성공적으로 삭제됨"),
-        @ApiResponse(code = 404, message = "해당 댓글이 존재하지 않음"),
-        @ApiResponse(code = 500, message = "서버 내부 오류")
+        @ApiResponse(responseCode = "200", description = "댓글이 성공적으로 삭제됨"),
+        @ApiResponse(responseCode = "404", description = "해당 댓글이 존재하지 않음"),
+        @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @DeleteMapping("/comments/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long commentId) {
@@ -280,11 +278,11 @@ public class BoardController {
     * @param limit 한 페이지 당 댓글 수 (기본값: 5)
     * @return ResponseEntity 객체를 통해 페이지당 댓글 정보 반환
     */
-    @ApiOperation(value = "게시글 댓글 조회", notes = "지정된 게시글 ID의 댓글을 페이지 단위로 조회합니다.")
+    @Operation(summary = "게시글 댓글 조회", description = "지정된 게시글 ID의 댓글을 페이지 단위로 조회합니다.")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "댓글 조회 성공"),
-        @ApiResponse(code = 404, message = "해당 게시글이 존재하지 않음"),
-        @ApiResponse(code = 500, message = "서버 내부 오류")
+        @ApiResponse(responseCode = "200", description = "댓글 조회 성공"),
+        @ApiResponse(responseCode = "404", description = "해당 게시글이 존재하지 않음"),
+        @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @GetMapping("/{boardId}/comments")
     public ResponseEntity<?> getComments(
@@ -300,11 +298,11 @@ public class BoardController {
     * @param boardId 신고할 게시글의 ID
     * @return ResponseEntity 객체를 통해 신고 성공 여부 반환
     */
-    @ApiOperation(value = "게시글 신고", notes = "지정된 게시글을 신고합니다.")
+    @Operation(summary = "게시글 신고", description = "지정된 게시글을 신고합니다.")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "게시글이 성공적으로 신고됨"),
-        @ApiResponse(code = 404, message = "해당 게시글이 존재하지 않음"),
-        @ApiResponse(code = 500, message = "서버 내부 오류")
+        @ApiResponse(responseCode = "200", description = "게시글이 성공적으로 신고됨"),
+        @ApiResponse(responseCode = "404", description = "해당 게시글이 존재하지 않음"),
+        @ApiResponse(responseCode = "500", description = "서버 내부 오류")
     })
     @PostMapping("/reportBoard/{boardId}")
     public ResponseEntity<?> reportBoard(@PathVariable Long boardId) {
