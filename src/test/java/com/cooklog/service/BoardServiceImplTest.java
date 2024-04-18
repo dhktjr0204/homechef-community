@@ -14,9 +14,11 @@ import com.cooklog.repository.TagRepository;
 import com.cooklog.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
@@ -47,7 +49,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class BoardServiceImplTest {
     @Mock
     private UserRepository userRepository;
@@ -219,8 +221,6 @@ class BoardServiceImplTest {
 
         List<Board> boardList = Arrays.asList(createBoard(1L), createBoard(2L));
         Page<Board> boardPage = new PageImpl<>(boardList);
-        when(boardRepository.findBoardsByTagNames(Arrays.asList(tags.split(",")), pageable))
-                .thenReturn(Optional.of(boardPage));
 
         //when
         boardService.findBoardsByTags(tags, userId, lastBoardId, pageable);
